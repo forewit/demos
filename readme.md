@@ -1,3 +1,3 @@
-# Home
 - [Brand](/brand)
 - [App](/canvas)
+- [Javascript Modules](/js-modules)
