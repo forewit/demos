@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+
+    <link rel="stylesheet" href="./style/style.css">
+    <!--<link rel="stylesheet" href="./style/normalize.css">-->
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="stylesheet" type="text/css" href="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.css" />
+</head>
+
+<body>
+    <!--FOR DEBUGGING-->
+    <div id="log" style="position: absolute; right: 0; top: 0;"></div>
+    <div id="loader"></div>
+
+
+    <div id="page-container">
+        <div id="top-curve">
+            <svg viewBox="0,-1,15,3" preserveAspectRatio="none">
+                <path
+                    d="M0,-1L0,0.5953426729871301S0.5,0.30781179577053286,1.5,0.8023214469435165S2.5,0.9762340161287983,3.5,0.773468130523862S4.5,0.5537839765541981,5.5,0.13454203760140304S6.5,0.6567715441777324,7.5,0.5130288642957324S8.5,0.22704280233413687,9.5,0.026348203399236603S10.5,0.0234313278310585,11.5,0.06161153899414762S12.5,0.5999277325727683,13.5,0.2366771301159316S14.5,0.18114454083330078,15,0.6123340791241829L15,-1Z">
+                    <animate attributeName="d" begin="none"
+                        from="M0,-1L0,0.5953426729871301S0.5,0.30781179577053286,1.5,0.8023214469435165S2.5,0.9762340161287983,3.5,0.773468130523862S4.5,0.5537839765541981,5.5,0.13454203760140304S6.5,0.6567715441777324,7.5,0.5130288642957324S8.5,0.22704280233413687,9.5,0.026348203399236603S10.5,0.0234313278310585,11.5,0.06161153899414762S12.5,0.5999277325727683,13.5,0.2366771301159316S14.5,0.18114454083330078,15,0.6123340791241829L15,-1Z"
+                        to="M0,-1L0,0.5953426729871301S0.5,0.30781179577053286,1.5,0.8023214469435165S2.5,0.9762340161287983,3.5,0.773468130523862S4.5,0.5537839765541981,5.5,0.13454203760140304S6.5,0.6567715441777324,7.5,0.5130288642957324S8.5,0.22704280233413687,9.5,0.026348203399236603S10.5,0.0234313278310585,11.5,0.06161153899414762S12.5,0.5999277325727683,13.5,0.2366771301159316S14.5,0.18114454083330078,15,0.6123340791241829L15,-1Z" />
+                </path>
+            </svg>
+        </div>
+
+        <div class="content-grid">
+            <div class="header-grid">
+                <div class="home">
+                    <svg id="nav-icon-home" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+                        <path fill="#D6B12D"
+                            d="M4.204.232c.576.673 1.189 1.315 1.754 1.999a325.84 325.84 0 01-3.565-.006C2.982 1.553 3.546.84 4.204.232zM1.052 2.256c.274.074.549.147.825.217-.333.79-.638 1.588-.986 2.37.011-.675.049-1.345.108-2.016l.053-.571zm1.031.438c.623 1.046 1.271 2.084 1.819 3.171-1.005-.088-2.014-.143-3.021-.206.406-.986.777-1.986 1.202-2.965zM3.279.729c-.356.444-.697.925-1.111 1.316-.216.273-.638 0-.919-.015.466-.309.943-.6 1.413-.905.205-.133.411-.264.617-.396zM2.296 2.49c1.25.026 2.503.017 3.753.003a874.622 874.622 0 00-1.862 3.244C3.53 4.669 2.923 3.573 2.296 2.49zM1.204 5.956a54.62 54.62 0 012.832.182c.008.508.006 1.014-.007 1.523-.948-.56-1.868-1.162-2.825-1.705z" />
+                    </svg>
+                </div>
+                <div class="logon">
+                </div>
+                <div class="options" onclick="openOptionsMenu()">
+                    <svg id="nav-icon-options" fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+                        <path
+                            d="M48,8C25.909,8,8,25.909,8,48c0,22.091,17.909,40,40,40s40-17.909,40-40C88,25.909,70.091,8,48,8z M73.23,65.546  c0,2.714-2.208,4.923-4.923,4.923H33.846c-2.714,0-4.923-2.209-4.923-4.923v-1.443c0-2.715,2.209-4.924,4.923-4.924h34.461  c2.715,0,4.923,2.209,4.923,4.924V65.546z M73.23,48.721c0,2.715-2.208,4.924-4.923,4.924H43.692c-2.715,0-4.923-2.209-4.923-4.924  v-1.442c0-2.714,2.208-4.923,4.923-4.923h24.615c2.715,0,4.923,2.208,4.923,4.923V48.721z M73.23,31.898  c0,2.714-2.208,4.923-4.923,4.923H27.692c-2.715,0-4.923-2.208-4.923-4.923v-1.444c0-2.714,2.208-4.923,4.923-4.923h40.615  c2.715,0,4.923,2.209,4.923,4.923V31.898z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="menu"></div>
+            <div class="main"></div>
+            <div class="footer"></div>
+        </div>
+        <div id="overlay" onclick="closeOptionsMenu()"></div>
+        <div id="options-menu">
+            <div>item 1</div>
+            <div>item 2</div>
+            <div>item 3</div>
+            <div>item 4</div>
+            <div id="firebaseui-auth-container" lang="en"></div>
+        </div>
+
+        <div id="bottom-curve">
+            <svg viewBox="0,-1,7,3" preserveAspectRatio="none">
+                <path
+                    d="M0,2L0,0.2564839860315448S0.5,0.327639428039695,1.5,0.2924015733689904S2.5,0.30914304207072935,3.5,0.5810798724988991S4.5,0.025777932730115326,5.5,0.38330594581960037S6.5,0.14636497299003726,7,0.5153200407064101L7,2Z">
+                    <animate attributeName="d" begin="none"
+                        from="M0,2L0,0.2564839860315448S0.5,0.327639428039695,1.5,0.2924015733689904S2.5,0.30914304207072935,3.5,0.5810798724988991S4.5,0.025777932730115326,5.5,0.38330594581960037S6.5,0.14636497299003726,7,0.5153200407064101L7,2Z"
+                        to="M0,2L0,0.2564839860315448S0.5,0.327639428039695,1.5,0.2924015733689904S2.5,0.30914304207072935,3.5,0.5810798724988991S4.5,0.025777932730115326,5.5,0.38330594581960037S6.5,0.14636497299003726,7,0.5153200407064101L7,2Z" />
+                </path>
+            </svg>
+        </div>
+    </div>
+
+
+
+    <!--setup firebase-->
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyAsBkU7NKqKn9gAV07V_21AkQMw3ZJQ9hQ",
+            authDomain: "canvas-2fdd2.firebaseapp.com",
+            databaseURL: "https://canvas-2fdd2.firebaseio.com",
+            projectId: "canvas-2fdd2",
+            storageBucket: "canvas-2fdd2.appspot.com",
+            messagingSenderId: "989212373436",
+            appId: "1:989212373436:web:2491b895c5a13ec3007bb9"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(config);
+    </script>
+
+    <!--scripts-->
+    <script src="./scripts/app.js"></script>
+</body>
+
+</html>
