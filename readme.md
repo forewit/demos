@@ -1,3 +1,3 @@
 # Home
-[Brand](/brand)
-[App](/canvas)
+- [Brand](/brand)
+- [App](/canvas)
