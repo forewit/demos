@@ -2,6 +2,6 @@
 - [App](/canvas)
 - [Book](/book)
 - [Brand](/brand)
-- [Dice](/dice)
+- [Dice roller](/dice)
 - [Javascript modules](/js-modules)
 - [swffg dice](/swdice)
