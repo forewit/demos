@@ -1,9 +1,9 @@
 
-- [App](/canvas)
+- [Canvas App](/canvas)
 - [Book](/book)
 - [Brand](/brand)
 - [Dice roller](/dice)
 - [Firebase](/firebase)
-- [Javascript modules](/js-modules)
-- [Leaerning rust](/learning-rust)
+- [Typescript modules](/ts-modules)
+- [learning rust](/rust)
 - [swffg dice](/swdice)
