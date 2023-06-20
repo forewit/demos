@@ -1,0 +1,11 @@
+#node_modules and pnpm
+node_modules
+**/node_modules
+
+# build and dist
+build
+**/build
+.svelte
+.svelte-kit
+**/.svelte
+**/.svelte-kit
