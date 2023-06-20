@@ -1,0 +1,1 @@
+new TextEncoder;function o({params:e}){return{title:e.slug.split("-").map(t=>t[0].toUpperCase()+t.slice(1)).join(" "),url:`/markdown/${e.slug}.md`}}const r=!0,l=Object.freeze(Object.defineProperty({__proto__:null,load:o,prerender:r},Symbol.toStringTag,{value:"Module"}));export{l as _,o as l,r as p};
