@@ -2,7 +2,7 @@
 
 # The Wonders of the Stars {.centered}
 
-{!/images/moon.svg @dark .centered}
+{#solar-system !/images/solar-system-animation.svg @dark .centered}
 
 ## Introduction
 Stars have fascinated humanity for centuries with their radiant beauty and celestial mystery. These luminous spheres of hot gas scattered across the vast expanse of the universe ignite our imagination and invite us to contemplate the wonders of the cosmos. In this article, we will delve into the captivating realm of stars, exploring their types, life cycles, and their significance in our universe.
@@ -41,7 +41,7 @@ After a star's explosive demise, what remains depends on its mass. Low- to mediu
 ## Conclusion
 Staring up at the night sky, we witness an awe-inspiring display of countless stars, each with its own story and place in the universe. From the birth of protostars to the explosive grandeur of supernovae, stars captivate us with their beauty and reveal the remarkable mechanisms at work in the cosmos. By studying and understanding stars, we gain valuable insights into the vastness and intricacies of the universe we call home.
 
-{!/images/sun.svg @light .centered}
+{#sun !/images/sun.svg @light .centered}
 
 }
 
@@ -50,6 +50,12 @@ Staring up at the night sky, we witness an awe-inspiring display of countless st
   padding: 0 20px;
   max-width: 680px;
   margin: 0 auto;
+}
+#solar-system {
+  width:500px;
+}
+#sun {
+  height: 100px;
 }
 main {
   transition: background-color 0.5s, color 0.5s;
