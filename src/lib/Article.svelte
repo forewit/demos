@@ -174,10 +174,6 @@
   :global(.indent) {
     padding-left: 30px;
   }
-  :global(img) {
-    height: 100px;
-    width: 100px;
-  }
   :global(h1) {
     font-size: 2em;
   }
