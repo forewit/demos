@@ -1,6 +1,6 @@
 # centered header {.centered #id} level 1 (id: id)
 
-{{.blue} text in the div
+{{.blue} text in the div 
 p-tag in blue outlined div. break above div and below inside div
 
 }
