@@ -26,10 +26,13 @@
         - state: starts with @ and is the "state" html attribute of the heading/image/paragraph tag (you can have multiple states)
         */
           line = line.trim(); // remove whitespace from the start and end of the line (needed for DEV)
-          
-          //regex with lookbehind: /(?<=\{)[^{}]+(?=\})/g 
-          const metadata = line.match(/\{([^{}]+)\}/g)?.map((m) => m.replace(/(\{|\})/g, "")) || []; // get all the metadata tags in the line
- 
+
+          //regex with lookbehind: /(?<=\{)[^{}]+(?=\})/g
+          const metadata =
+            line
+              .match(/\{([^{}]+)\}/g)
+              ?.map((m) => m.replace(/(\{|\})/g, "")) || []; // get all the metadata tags in the line
+
           let lineID = "",
             lineClasses = [],
             lineStates = [];
@@ -37,9 +40,13 @@
           for (let i = 0; i < metadata.length; i++) {
             const data = metadata[i];
             const url = data.match(/!([^ ]+)/)?.[1];
-            const id = data.match(/#([^ ]+)/)?.[1]; 
-            const classes = data.match(/(^\.| \.)([^ ]+)/g)?.map((c) => c.replace(/(^\.| \.)/, "")) || []; 
-            const states = data.match(/@([^ ]+)/g)?.map((s) => s.replace(/@/, "")) || [];
+            const id = data.match(/#([^ ]+)/)?.[1];
+            const classes =
+              data
+                .match(/(^\.| \.)([^ ]+)/g)
+                ?.map((c) => c.replace(/(^\.| \.)/, "")) || [];
+            const states =
+              data.match(/@([^ ]+)/g)?.map((s) => s.replace(/@/, "")) || [];
 
             // if there is a url, replace that metadata tag {} with an image tag
             if (url) {
@@ -59,7 +66,6 @@
             }
           }
 
-
           // if line starts with "#", it's a heading
           if (line.startsWith("#")) {
             const level = line.match(/^(#+)/)?.[0].length || 1;
@@ -68,7 +74,7 @@
             return `<h${level}${lineID ? ` id="${lineID}"` : ""}${
               lineClasses.length > 0 ? ` class="${lineClasses.join(" ")}"` : ""
             }${
-              lineStates.length > 0? ` state="${lineStates.join(" ")}"` : ""
+              lineStates.length > 0 ? ` state="${lineStates.join(" ")}"` : ""
             }>${text}</h${level}>`;
           }
 
@@ -152,14 +158,13 @@
   });
 </script>
 
-<main bind:this={main} style="height: calc(100% - {offsetTop}px);">
-  <slot />
-</main>
+<main bind:this={main} style="height: calc(100% - {offsetTop}px);" />
 
 <style>
   main {
     overflow: auto;
     scroll-behavior: smooth;
+    overflow: overlay;
   }
   :global(.centered) {
     text-align: center;
@@ -181,5 +186,24 @@
   }
   :global(h3) {
     font-size: 1.17em;
+  }
+
+  /*
+ *  Scrollbar Styles
+ */
+
+  main::-webkit-scrollbar-track {
+    background-color: transparent;
+    margin-block: 0.2em;
+  }
+
+  main::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: transparent;
+  }
+
+  main::-webkit-scrollbar-thumb {
+    border-radius: 100vw;
+    background-color: lightslategrey;
   }
 </style>
