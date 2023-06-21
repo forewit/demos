@@ -14,7 +14,7 @@ final paragraph (1 break above - 6 breaks below)
 
 
 
-{!/images/sun.svg @dark} text after image
+{!/images/sun.svg @dark}  
 <style>
     .blue {
         border: 1px solid blue;
