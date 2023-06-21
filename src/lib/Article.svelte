@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HtmlTag, onMount } from "svelte/internal";
+  import { onMount } from "svelte/internal";
 
   export let markdownURL: string;
   export let offsetTop: number = 0;
@@ -13,8 +13,8 @@
     return (
       css +
       markdown
-        .replace(/\r\n<style>[\s\S]*?<\/style>/g, "")
-        .split("\r\n")
+        .replace(/\n<style>[\s\S]*?<\/style>/g, "")
+        .split("\n")
         .map((line) => {
           /*
         if a line ends with {}, then it includes metadata
@@ -25,28 +25,29 @@
         - class: starts with . and is the class of the heading/image/pargraph tag (you can have multiple classes)
         - state: starts with @ and is the "state" html attribute of the heading/image/paragraph tag (you can have multiple states)
         */
-          const metadata = line.match(/(?<=\{)[^{}]+(?=\})/g) || [];
-
+          line = line.trim(); // remove whitespace from the start and end of the line (needed for DEV)
+          
+          //regex with lookbehind: /(?<=\{)[^{}]+(?=\})/g 
+          const metadata = line.match(/\{([^{}]+)\}/g)?.map((m) => m.replace(/(\{|\})/g, "")) || []; // get all the metadata tags in the line
+ 
           let lineID = "",
             lineClasses = [],
             lineStates = [];
 
           for (let i = 0; i < metadata.length; i++) {
             const data = metadata[i];
-            const url = data.match(/(?<=!)[^ ]+/)?.[0];
-            const id = data.match(/(?<=#)[^ ]+/)?.[0];
-            const classes = data.match(/(?<=^\.| \.)[^ ]+/g) || [];
-            const states = data.match(/(?<=@)[^ ]+/g) || [];
+            const url = data.match(/!([^ ]+)/)?.[1];
+            const id = data.match(/#([^ ]+)/)?.[1]; 
+            const classes = data.match(/(^\.| \.)([^ ]+)/g)?.map((c) => c.replace(/(^\.| \.)/, "")) || []; 
+            const states = data.match(/@([^ ]+)/g)?.map((s) => s.replace(/@/, "")) || [];
 
             // if there is a url, replace that metadata tag {} with an image tag
             if (url) {
               line = line.replace(
                 `{${data}}`,
-                `<img src="${url}" alt="${url}"${
-                  id ? ` id="${id}"` : ""
-                }${classes.length ? ` class="${classes.join(" ")}"` : ""}${
-                  states.length ? ` state="${states.join(" ")}"` : ""
-                }/>`
+                `<img src="${url}" alt="${url}"${id ? ` id="${id}"` : ""}${
+                  classes.length ? ` class="${classes.join(" ")}"` : ""
+                }${states.length ? ` state="${states.join(" ")}"` : ""}/>`
               );
             } else {
               lineID = id;
@@ -58,15 +59,16 @@
             }
           }
 
+
           // if line starts with "#", it's a heading
           if (line.startsWith("#")) {
             const level = line.match(/^(#+)/)?.[0].length || 1;
             const text = line.replace(/^(#+\s*)/, "").trim();
 
             return `<h${level}${lineID ? ` id="${lineID}"` : ""}${
-              lineClasses.length ? ` class="${lineClasses.join(" ")}"` : ""
+              lineClasses.length > 0 ? ` class="${lineClasses.join(" ")}"` : ""
             }${
-              lineStates.length ? ` state="${lineStates.join(" ")}"` : ""
+              lineStates.length > 0? ` state="${lineStates.join(" ")}"` : ""
             }>${text}</h${level}>`;
           }
 
@@ -75,9 +77,9 @@
             const text = line.replace(/^{/, "").replace(/}$/, "").trim();
 
             return `<div${lineID ? ` id="${lineID}"` : ""}${
-              lineClasses.length ? ` class="${lineClasses.join(" ")}"` : ""
+              lineClasses.length > 0 ? ` class="${lineClasses.join(" ")}"` : ""
             }${
-              lineStates.length ? ` state="${lineStates.join(" ")}"` : ""
+              lineStates.length > 0 ? ` state="${lineStates.join(" ")}"` : ""
             }>${text}${line.endsWith("}") ? "</div>" : ""}`;
           }
 
@@ -98,9 +100,9 @@
           // otherwise, its a paragraph
           else {
             return `<p${lineID ? ` id="${lineID}"` : ""}${
-              lineClasses.length ? ` class="${lineClasses.join(" ")}"` : ""
+              lineClasses.length > 0 ? ` class="${lineClasses.join(" ")}"` : ""
             }${
-              lineStates.length ? ` state="${lineStates.join(" ")}"` : ""
+              lineStates.length > 0 ? ` state="${lineStates.join(" ")}"` : ""
             }>${line}</p>`;
           }
         })
@@ -158,7 +160,6 @@
   main {
     overflow: auto;
     scroll-behavior: smooth;
-    transition: background-color 0.5s, color 0.5s;
   }
   :global(.centered) {
     text-align: center;
