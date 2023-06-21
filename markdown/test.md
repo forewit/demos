@@ -7,14 +7,14 @@ p-tag in blue outlined div. break above div and below inside div
 inline image w/ blue outline:{!/images/leaf.svg .blue}text after image (blue text) {.blue-text}
 text
 
-final paragraph (1 break above - 6 breaks below)
+final paragraph blue text & blue outline (1 break above - 6 breaks below) {.blue .blue-text}
 
 
 
 
 
 
-{!/images/sun.svg @dark}  
+{!/images/sun.svg @dark}
 <style>
     .blue {
         border: 1px solid blue;
@@ -25,5 +25,8 @@ final paragraph (1 break above - 6 breaks below)
     .dark {
         color: #fff;
         background-color: #333;
+    }
+    main {
+        transition: background-color 0.5s, color 0.5s;
     }
 </style>

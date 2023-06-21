@@ -47,9 +47,12 @@ Staring up at the night sky, we witness an awe-inspiring display of countless st
 
 <style>
 #page {
-  padding: 0 30px;
+  padding: 0 20px;
   max-width: 680px;
   margin: 0 auto;
+}
+main {
+  transition: background-color 0.5s, color 0.5s;
 }
 .dark {
   background-color: #333;
