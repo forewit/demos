@@ -1,23 +1,26 @@
 # centered header {.centered #id} level 1 (id: id)
 
-{{.blue}
-paragraph in blue outlined div. break above div and below inside div
+{{.blue} text in the div
+p-tag in blue outlined div. break above div and below inside div
 
 }
-inline image w/ blue outline:{!/images/leaf.svg .blue}
+inline image w/ blue outline:{!/images/leaf.svg .blue}text after image (blue text) {.blue-text}
 text
 
-final paragraph (break above)
+final paragraph (1 break above - 6 breaks below)
 
 
 
 
 
 
-{!/images/sun.svg @dark}
+{!/images/sun.svg @dark} text after image
 <style>
     .blue {
         border: 1px solid blue;
+    }
+    .blue-text {
+        color: blue;
     }
     .dark {
         color: #fff;
