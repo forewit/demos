@@ -51,7 +51,7 @@ Staring up at the night sky, we witness an awe-inspiring display of countless st
   margin: 0 auto;
 }
 #solar-system {
-  width:500px;
+  width:450px;
 }
 #sun {
   height: 100px;
