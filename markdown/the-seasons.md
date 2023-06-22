@@ -51,10 +51,12 @@ Staring up at the night sky, we witness an awe-inspiring display of countless st
   margin: 0 auto;
 }
 #solar-system {
-  width:450px;
+  /*max width 500px, but it should be as wide as possible*/
+  width: 100%;
+  max-width: 500px;
 }
 #sun {
-  height: 100px;
+  width: 100px;
 }
 main {
   transition: background-color 0.5s, color 0.5s;
