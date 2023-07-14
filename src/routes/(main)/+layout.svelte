@@ -11,6 +11,9 @@
   <a href="/board" class:selected={$page.url.pathname === `/board`}
     >board</a
   >
+  <a href="/aivs" class:selected={$page.url.pathname === `/aivs`}
+    >aivs</a
+  >
   <a href="/blog" class:selected={$page.url.pathname === `/blog`}
     >blog</a
   >
