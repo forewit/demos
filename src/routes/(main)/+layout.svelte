@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { page } from "$app/stores";
 </script>
 
@@ -11,8 +11,8 @@
   <a href="/board" class:selected={$page.url.pathname === `/board`}
     >board</a
   >
-  <a href="/aivs" class:selected={$page.url.pathname === `/aivs`}
-    >aivs</a
+  <a href="/mlgl" class:selected={$page.url.pathname === `/mlgl`}
+    >mlgl</a
   >
   <a href="/blog" class:selected={$page.url.pathname === `/blog`}
     >blog</a

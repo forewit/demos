@@ -1,16 +1,15 @@
-<!-- backpropagation algorthm & visualization-->
 <script lang="ts">
-function onSubmit(e: any) {
-  console.log(e)
-}
+  import * as ml from "$lib/mlgl";
+
+  function onSubmit(e: any) {
+    ml.ml_init();
+  }
 </script>
 
 <!-- HTML -->
 <form id="form" on:submit={onSubmit}>
-  <input type="checkbox" id="option_1">
+  <input type="checkbox" id="option_1" />
   <label for="option_1">Enable option one</label>
-  <br>
+  <br />
   <button type="submit">Run</button>
 </form>
-
-

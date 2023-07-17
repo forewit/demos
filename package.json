@@ -19,7 +19,8 @@
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^4.2.0",
-		"gh-pages": "^5.0.0"
+		"gh-pages": "^5.0.0",
+		"@webgpu/types": "^0.1.34"
 
 	},
 	"type": "module"
