@@ -8,7 +8,8 @@
 		"preview": "vite preview",
 		"deploy": "touch build/.nojekyll && gh-pages -d build -t true",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"save":"git add . && git commit -am 'na' && git push origin main && build && deploy"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
