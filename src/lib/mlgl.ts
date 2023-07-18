@@ -3,27 +3,45 @@
  * training and visualization of simple neural networks
  * using webgl compute shaders.
  * 
+ * RESOURCES:
  * Typescript webgpu types: https://www.npmjs.com/package/@webgpu/types
  * js bitwise operations: https://www.w3schools.com/js/js_bitwise.asp
  * ML in shaders: https://www.diva-portal.org/smash/get/diva2:829298/FULLTEXT01.pdf
  * Neural Net in shader: https://github.com/SCRN-VRC/SimpNet-Deep-Learning-in-a-Shader
  * WebGPU Compute pipeline: https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePipeline
  * Compute shader in practice: https://webgpu.github.io/webgpu-samples/samples/gameOfLife#main.ts
+ * 
+ * NOTES:
+ * WebGPU API: https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API
+ * The GPU stack:
+ * web app > logical device > adapter > native gpu api > gpu
+ * 
+ * 
+ * Process
+ * 1. create shader modules (packaged wgsl code)
+ * 2. setup the canvas context (optional for compute only pipelines)
+ * 3. store data in buffers or textures on the gpu
+ * 4. create pipelines (describe data structure, bindings, shaders, and resource layouts)
+ *      A. render pipeline (vertex and fragment stages)
+ *      B. compute pipeline (singe compute stage)
+ * 5. run a pass (compute or rendering)
+ *      A. command encoder -- sets of commands for the GPU
+ *      B. encoder object -- the commands run on that object
+ *      C. command list -- specifies which pipeline, buffers, and how many draw operations
+ *      D. merge it all into a command buffer
  */
 
 
-// Utility Functions ********************
+//! Utility Functions ********************
 function sigmoid(x: number): number { return 1 / 1 + Math.exp(-x) }
 function logit(x: number): number { return Math.log(x / (1 - x)) }
-// **************************************
 
-// Exports ******************************
+//! Exports ******************************
 export function ml_train() { } // returns a model
 export function ml_run() { } // returns output of a model given inputs
 export let ml_init = initWebGPU
-// **************************************
 
-// Setup webgpu *************************
+//! Setup webgpu *************************
 // Define global buffer size
 const BUFFER_SIZE = 64; // bytes (must be multiple of 4)
 
@@ -51,24 +69,23 @@ fn main(
 `;
 
 async function initWebGPU() {
-  // 1: request adapter and device
+  //! 1: request adapter and device
   if (!navigator.gpu) {
     throw Error('WebGPU not supported.');
   }
 
-  const adapter = await navigator.gpu.requestAdapter();
-  if (!adapter) {
-    throw Error('Couldn\'t request WebGPU adapter.');
-  }
+  const adapter = await navigator.gpu.requestAdapter({powerPreference: "high-performance"}); // or "low-power"
+  if (!adapter) throw Error('Couldn\'t request WebGPU adapter.');
+  if (adapter.isFallbackAdapter) console.warn("WebGPU is using a fallback adapter!")
 
-  const device = await adapter.requestDevice();
+  const device = await adapter.requestDevice(); // you can pass options to request a device with specific GPU features
 
-  // 2: Create a shader module from the shader template literal
+  //! 2: Create a shader module from the shader template literal
   const shaderModule = device.createShaderModule({
     code: shader
   });
 
-  // 3: Create an output buffer to read GPU calculations to, and a staging buffer to be mapped for JavaScript access
+  //! 3: Create an output buffer to read GPU calculations to, and a staging buffer to be mapped for JavaScript access
 
   const output = device.createBuffer({
     size: BUFFER_SIZE,
@@ -80,7 +97,7 @@ async function initWebGPU() {
     usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST
   });
 
-  // 4: Create a GPUBindGroupLayout to define the bind group structure, create a GPUBindGroup from it,
+  //! 4: Create a GPUBindGroupLayout to define the bind group structure, create a GPUBindGroup from it,
   // then use it to create a GPUComputePipeline
 
   const bindGroupLayout =
@@ -114,13 +131,13 @@ async function initWebGPU() {
     }
   });
 
-  // 5: Create GPUCommandEncoder to issue commands to the GPU
+  //! 5: Create GPUCommandEncoder to issue commands to the GPU
   const commandEncoder = device.createCommandEncoder();
 
-  // 6: Initiate render pass
+  //! 6: Initiate render pass
   const passEncoder = commandEncoder.beginComputePass();
     
-  // 7: Issue commands
+  //! 7: Issue commands
   passEncoder.setPipeline(computePipeline);
   passEncoder.setBindGroup(0, bindGroup);
   passEncoder.dispatchWorkgroups(Math.ceil(BUFFER_SIZE / 64));
@@ -137,7 +154,7 @@ async function initWebGPU() {
     BUFFER_SIZE
   );
 
-  // 8: End frame by passing array of command buffers to command queue for execution
+  //! 8: End frame by passing array of command buffers to command queue for execution
   device.queue.submit([commandEncoder.finish()]);
 
   // map staging buffer to read results back to JS
@@ -152,4 +169,3 @@ async function initWebGPU() {
   stagingBuffer.unmap();
   console.log(new Float32Array(data));
 }
-// **************************************
