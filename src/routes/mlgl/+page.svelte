@@ -11,5 +11,7 @@
   <input type="checkbox" id="option_1" />
   <label for="option_1">Enable option one</label>
   <br />
-  <button type="submit">Run</button>
+  <button type="submit">Run ml_init</button>
 </form>
+
+<button on:click={ml.ml_test}>Run ml_test</button>

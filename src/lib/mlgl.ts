@@ -16,6 +16,7 @@
  * The GPU stack:
  * web app > logical device > adapter > native gpu api > gpu
  * 
+ * todo: consider bindgroup best practices: https://toji.dev/webgpu-best-practices/bind-groups.html
  * 
  * Process
  * 1. create shader modules (packaged wgsl code)
@@ -34,15 +35,18 @@
  * todo: learn types of gpu buffers 
  */
 
+// imports
+import gpu from "$lib/gpu";
 
 // Utility Functions ********************
-function sigmoid(x: number): number { return 1 / 1 + Math.exp(-x) }
-function logit(x: number): number { return Math.log(x / (1 - x)) }
+//function sigmoid(x: number): number { return 1 / 1 + Math.exp(-x) }
+//function logit(x: number): number { return Math.log(x / (1 - x)) }
 
 // Exports ******************************
-export function ml_train() { } // returns a model
-export function ml_run() { } // returns output of a model given inputs
+//export function ml_train() { } // returns a model
+//export function ml_run() { } // returns output of a model given inputs
 export let ml_init = initWebGPU
+export let ml_test = test
 
 // Setup webgpu *************************
 // Define global buffer size
@@ -73,6 +77,13 @@ fn main(
 }
 `;
 
+async function test() {
+  gpu.compute(shader,
+    { usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC },
+    { usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC },
+    { usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST })
+}
+
 async function initWebGPU() {
   // 1: request adapter and device
   if (!navigator.gpu) {
@@ -97,7 +108,7 @@ async function initWebGPU() {
   });
 
   const outputBuffer2 = device.createBuffer({
-    size:  BUFFER_SIZE,
+    size: BUFFER_SIZE,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC
   });
 
@@ -124,7 +135,7 @@ async function initWebGPU() {
       resource: {
         buffer: outputBuffer,
       }
-    },{
+    }, {
       binding: 1,
       resource: {
         buffer: outputBuffer2,
@@ -142,15 +153,13 @@ async function initWebGPU() {
   passEncoder.setPipeline(computePipeline);
   passEncoder.setBindGroup(0, bindGroup);
   passEncoder.dispatchWorkgroups(Math.ceil(BUFFER_SIZE / 64));
-  passEncoder.setBindGroup(1, bindGroup);
-  passEncoder.dispatchWorkgroups(Math.ceil(BUFFER_SIZE / 64));
 
   // End the render pass
   passEncoder.end();
 
   // Copy output buffer to staging buffer
   commandEncoder.copyBufferToBuffer(
-    outputBuffer2,
+    outputBuffer,
     0, // Source offset
     stagingBuffer,
     0, // Destination offset
