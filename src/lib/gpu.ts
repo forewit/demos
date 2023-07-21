@@ -43,8 +43,8 @@ const DEFAULT_BUFFER_SIZE = 1000, // todo: set to max buffer size availalbe on g
 type Binding = {
     binding: number,
     usage: GPUBufferUsageFlags,
+    byteSize: number,
     data?: Float32Array
-    size?: number,
 }
 
 // setup a webgpu compute pipeline
@@ -72,17 +72,24 @@ async function compute(shader: string, number_of_workgroups: number, ...bindings
         }
     })
 
-    // create uniform & output buffers used by the shader
+    // create input & output buffers used by the shader
     const shaderBuffers = bindings.map(binding => {
         return {
             binding: binding.binding,
             GPUBuffer: device.createBuffer({
                 usage: binding.usage,
-                size: binding.size ? binding.size : (binding.data ? binding.data.byteLength : DEFAULT_BUFFER_SIZE)
+                size: binding.byteSize
             }),
             data: binding.data
         }
     });
+
+    // write input buffers
+    for (const buffer of shaderBuffers) {
+        if (buffer.data) {
+            device.queue.writeBuffer(buffer.GPUBuffer, 0, buffer.data, 0, buffer.data.length)
+        }
+    }
 
     // create staging buffers used to copy data back to JS
     const stagingBuffers = shaderBuffers
@@ -143,7 +150,5 @@ async function compute(shader: string, number_of_workgroups: number, ...bindings
         data[buffer.binding] = new Float32Array(copyArrayBuffer.slice(0));
         buffer.destination.unmap();
     }
-
-    console.log(data);
     return data;
 }   
