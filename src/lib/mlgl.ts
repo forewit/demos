@@ -79,9 +79,8 @@ fn main(
 
 async function test() {
   gpu.compute(shader,
-    { usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC },
-    { usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC },
-    { usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST })
+    { binding: 0, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC },
+    { binding: 1, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC })
 }
 
 async function initWebGPU() {
