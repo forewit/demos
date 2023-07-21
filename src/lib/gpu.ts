@@ -1,7 +1,33 @@
 /**
- * init gpu
+
+ * RESOURCES:
+ * Typescript webgpu types: https://www.npmjs.com/package/@webgpu/types
+ * js bitwise operations: https://www.w3schools.com/js/js_bitwise.asp
+ * WebGPU Compute pipeline: https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePipeline
+ * Compute shader in practice: https://webgpu.github.io/webgpu-samples/samples/gameOfLife#main.ts
  * 
- * run shader
+ * NOTES:
+ * WebGPU API: https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API
+ * The GPU stack:
+ * web app > logical device > adapter > native gpu api > gpu
+ * 
+ * todo: consider bindgroup best practices: https://toji.dev/webgpu-best-practices/bind-groups.html
+ * 
+ * Process
+ * 1. create shader modules (packaged wgsl code)
+ * 2. setup the canvas context (optional for compute only pipelines)
+ * 3. store data in buffers or textures on the gpu
+ *    buffer types: index, uniform, vertex, storage, map_write, copy_dst, indirect, etc... |
+ * 4. create pipelines (describe data structure, bindings, shaders, and resource layouts)
+ *      A. render pipeline (vertex and fragment stages)
+ *      B. compute pipeline (singe compute stage)
+ * 5. run a pass (compute or rendering)
+ *      A. command encoder -- sets of commands for the GPU
+ *      B. encoder object -- the commands run on that object
+ *      C. command list -- specifies which pipeline, buffers, and how many draw operations
+ *      D. merge it all into a command buffer
+ * 
+ * todo: learn types of gpu buffers 
  */
 
 //! --------- exports -------------
@@ -11,9 +37,10 @@ let gpu = {
 export default gpu;
 //! -------------------------------
 
-const DEFAULT_BUFFER_SIZE = 1000; // todo: set to max buffer size availalbe on gpu
+const DEFAULT_BUFFER_SIZE = 1000, // todo: set to max buffer size availalbe on gpu
+    DEFAULT_WORKGROUP_SIZE = 8;
 
-type Buffer = {
+type Binding = {
     binding: number,
     usage: GPUBufferUsageFlags,
     data?: Float32Array
@@ -21,8 +48,7 @@ type Buffer = {
 }
 
 // setup a webgpu compute pipeline
-async function compute(shader: string, ...bindings: Buffer[]) {
-
+async function compute(shader: string, number_of_workgroups: number, ...bindings: Binding[]) {
     // check compatibility
     if (!navigator.gpu) throw Error('WebGPU not supported.');
 
@@ -87,7 +113,7 @@ async function compute(shader: string, ...bindings: Buffer[]) {
     const passEncoder = commandEncoder.beginComputePass();
     passEncoder.setPipeline(computePipeline);
     passEncoder.setBindGroup(0, bindGroup);
-    passEncoder.dispatchWorkgroups(Math.ceil(DEFAULT_BUFFER_SIZE / 64));
+    passEncoder.dispatchWorkgroups(number_of_workgroups);
     passEncoder.end();
 
     // Copy output buffers to staging buffers
