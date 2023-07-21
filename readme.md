@@ -42,7 +42,7 @@ deploy to gh-pages
 npm run deploy
 ```
 
-magic --> commit > build > deploy
+magic ---> commit > build > deploy
 ```bash
 npm run magic
 ```
