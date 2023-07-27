@@ -1,40 +1,52 @@
 <script lang="ts">
   import gpu from "$lib/gpu";
+  import mlgl from "$lib/mlgl";
+  import { onMount } from "svelte";
 
   async function onSubmit() {
     let data = new Float32Array(
       Array.from({ length: 32 }, (_, index) => index)
     );
-    const BATCHES = 2;
 
-    const shader = `
+    const workgroup_size_bytes = 8;
+    const number_of_workgroups = 4;
+
+    const shader = /* wgsl */`
 @group(0) @binding(0) var<storage> input: array<f32>;
 @group(0) @binding(1) var<storage, read_write> output: array<f32>;
 
-@compute @workgroup_size(${data.byteLength/BATCHES})
-fn main(@builtin(local_invocation_id) local_id : vec3<u32>) {
-
-  output[local_id.x] = input[local_id.x];
+@compute @workgroup_size(${workgroup_size_bytes})
+fn main(
+  @builtin(local_invocation_id) local_id : vec3<u32>, 
+  @builtin(global_invocation_id) global_id : vec3<u32>,
+  @builtin(workgroup_id) workgroup_id : vec3<u32>
+) {
+  output[global_id.x] = f32(global_id.x)*1000 + f32(local_id.x) + 0*input[0];
+  //output[global_id.x] = f32(workgroup_id.x);
 }`;
 
     let result = gpu.compute(
       shader,
-      BATCHES,
+      number_of_workgroups,
       {
-        binding: 0,
+        id: 0,
         byteSize: data.byteLength,
         data: data,
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
       },
       {
-        binding: 1,
+        id: 1,
         byteSize: data.byteLength,
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
       }
     ).then(result => {
-      console.log(result);
+      console.log(result[1]);
     })
   }
+
+  onMount(()=>{
+    mlgl.test();
+  });
 </script>
 
 <!-- HTML -->

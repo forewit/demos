@@ -37,11 +37,8 @@ let gpu = {
 export default gpu;
 //! -------------------------------
 
-const DEFAULT_BUFFER_SIZE = 1000, // todo: set to max buffer size availalbe on gpu
-    DEFAULT_WORKGROUP_SIZE = 8;
-
 type Binding = {
-    binding: number,
+    id: number,
     usage: GPUBufferUsageFlags,
     byteSize: number,
     data?: Float32Array
@@ -75,7 +72,7 @@ async function compute(shader: string, number_of_workgroups: number, ...bindings
     // create input & output buffers used by the shader
     const shaderBuffers = bindings.map(binding => {
         return {
-            binding: binding.binding,
+            binding: binding.id,
             GPUBuffer: device.createBuffer({
                 usage: binding.usage,
                 size: binding.byteSize
