@@ -8,14 +8,14 @@
       Array.from({ length: 32 }, (_, index) => index)
     );
 
-    const workgroup_size_bytes = 8;
+    const workgroup_size = 8;
     const number_of_workgroups = 4;
 
     const shader = /* wgsl */`
 @group(0) @binding(0) var<storage> input: array<f32>;
 @group(0) @binding(1) var<storage, read_write> output: array<f32>;
 
-@compute @workgroup_size(${workgroup_size_bytes})
+@compute @workgroup_size(${workgroup_size})
 fn main(
   @builtin(local_invocation_id) local_id : vec3<u32>, 
   @builtin(global_invocation_id) global_id : vec3<u32>,
@@ -25,7 +25,7 @@ fn main(
   //output[global_id.x] = f32(workgroup_id.x);
 }`;
 
-    let result = gpu.compute(
+    gpu.compute(
       shader,
       number_of_workgroups,
       {
@@ -46,6 +46,7 @@ fn main(
 
   onMount(()=>{
     mlgl.test();
+    onSubmit();
   });
 </script>
 

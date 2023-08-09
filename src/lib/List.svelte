@@ -12,7 +12,7 @@
 
   function addCard() {
     cards.update((cards) => [...cards, { id: Date.now() }]);
-  }
+  } 
 
   function removeCard(cardId: number) {
     cards.update((cards) => cards.filter((card) => card.id !== cardId));
