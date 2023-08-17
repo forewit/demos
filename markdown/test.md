@@ -29,8 +29,4 @@ final paragraph blue text & blue outline (1 break above - 6 breaks below) {.blue
     main {
         transition: background-color 0.5s, color 0.5s;
     }
-    img {
-        width: 100px;
-        height: 100px;
-    }
 </style>
