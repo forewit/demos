@@ -2,7 +2,7 @@
   import Typewriter from "$lib/Components/Typewriter.svelte";
 
   let typewriter: Typewriter;
-  let text = "Hey 👋,\n\nTalk to you soon 🎉,\n\nForewit";
+  let text = "Hey 👋,\n\nYou made it here 🎉\n\nForewit";
 
 </script>
 

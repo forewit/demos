@@ -39,13 +39,20 @@
   <title>Fireworks</title>
 </svelte:head>
 
-<Fireworks bind:this={fireworks} />
+<div id="container">
+    <Fireworks bind:this={fireworks} />
 
-<div id="button-container">
-  <button on:click={launch}>Go</button>
+    <div id="button-container">
+      <button on:click={launch}>Go</button>
+    </div>
 </div>
 
 <style>
+    #container {
+        width: 100%;
+        height: 100%;
+        background: #234;
+    }
   #button-container {
     position: absolute;
     bottom: 30%;
