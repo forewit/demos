@@ -174,20 +174,9 @@
   :global(.indent) {
     padding-left: 30px;
   }
-  :global(h1) {
-    font-size: 2em;
-  }
-  :global(h2) {
-    font-size: 1.5em;
-  }
-  :global(h3) {
-    font-size: 1.17em;
-  }
-
   /*
  *  Scrollbar Styles
  */
-
   main::-webkit-scrollbar-track {
     background-color: transparent;
     margin-block: 0.2em;

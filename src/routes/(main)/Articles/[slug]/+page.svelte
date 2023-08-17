@@ -1,7 +1,7 @@
 
 <script lang="ts">
   /** @type {import('./$types').PageData}*/
-  import Article  from "$lib/Components/Article.svelte";
+  import Article from "$lib/Components/Article.svelte";
 
   export let data: { title: string, url: string };
 </script>
