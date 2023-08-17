@@ -6,8 +6,8 @@
     notchTop = 0;
 
   function handleOrientation() {
-    notchRight = screen.orientation.type == "landscape-primary" ? 1 : 0;
-    notchLeft = screen.orientation.type == "landscape-secondary" ? 1 : 0;
+    notchLeft = screen.orientation.type == "landscape-primary" ? 1 : 0;
+    notchRight = screen.orientation.type == "landscape-secondary" ? 1 : 0;
     notchTop = screen.orientation.type == "portrait-primary" ? 1 : 0;
   }
 
