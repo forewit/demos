@@ -37,12 +37,13 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
-deploy to gh-pages
+
+## deploy to gh-pages
+Install : `npm install gh-pages --save-dev`
+add "deploy" script: `"deploy": "touch build/.nojekyll && gh-pages -d build -t true"``
+add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origin main && vite build && touch build/.nojekyll && gh-pages -d build -t true"``
+
 ```bash
 npm run deploy
-```
-
-magic ---> commit > build > deploy
-```bash
 npm run magic
 ```

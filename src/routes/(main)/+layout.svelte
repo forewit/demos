@@ -3,19 +3,17 @@
 </script>
 
 <nav>
-  <a href="/" class:selected={$page.url.pathname === `/`}>Home</a>
-  <a
-    href="/trello"
-    class:selected={$page.url.pathname === `/trello`}>trello</a
+  <a href="/" class:selected={$page.url.pathname === `/`} >
+    <img src="/images/pen.svg" alt="Home" style="width:1em">
+  </a>
+  <a href="/Articles" class:selected={$page.url.pathname === `/Articles`}
+    >Articles</a
   >
-  <a href="/board" class:selected={$page.url.pathname === `/board`}
-    >board</a
+  <a href="/Fireworks" class:selected={$page.url.pathname === `/Fireworks`}
+    >Fireworks</a
   >
-  <a href="/mlgl" class:selected={$page.url.pathname === `/mlgl`}
-    >mlgl</a
-  >
-  <a href="/blog" class:selected={$page.url.pathname === `/blog`}
-    >blog</a
+  <a href="/Typewriter" class:selected={$page.url.pathname === `/Typewriter`}
+    >Typewriter</a
   >
 </nav>
 

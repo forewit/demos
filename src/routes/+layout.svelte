@@ -61,7 +61,7 @@
   /* Import the Ysabeau font */
   @font-face {
     font-family: "Poltawski Nowy";
-    src: url("/fonts/Poltawski Nowy/PoltawskiNowy-VariableFont_wght.ttf")
+    src: url("/fonts/PoltawskiNowy.ttf")
       format("truetype");
     font-weight: normal;
     font-style: normal;
