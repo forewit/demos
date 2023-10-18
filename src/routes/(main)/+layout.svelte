@@ -3,8 +3,8 @@
 </script>
 
 <nav>
-  <a href="/" class:selected={$page.url.pathname === `/`} >
-    <img src="/images/pen.svg" alt="Home" style="width:1em">
+  <a href="/" class:selected={$page.url.pathname === `/`}>
+    <img src="/images/pen.svg" alt="Home" style="width:1em" />
   </a>
   <a href="/Articles" class:selected={$page.url.pathname === `/Articles`}
     >Articles</a
@@ -20,9 +20,18 @@
   >
 </nav>
 
-<slot />
+<div class="content">
+  <slot />
+</div>
 
 <style>
+  .content {
+    position: absolute;
+    width: 100%;
+    /* offset height by size of the nav bar */
+    height: calc(100% - 50px); 
+  }
+
   nav {
     height: 50px;
     display: flex;

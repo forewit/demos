@@ -25,16 +25,16 @@
 </svelte:head>
 
 <div
-  id="container"
+  class="container"
   style="--notch-left: {notchLeft}; --notch-right: {notchRight}; --notch-top: {notchTop};"
 >
-  <div id="content">
+  <div class="content">
     <slot />
   </div>
 </div>
 
 <style>
-  #container {
+  .container {
     /* make fullscreen */
     position: fixed;
     top: 0;
@@ -48,7 +48,7 @@
     margin-top: calc(env(safe-area-inset-top) * var(--notch-top));
   }
 
-  #content {
+  .content {
     /* fill container */
     position: absolute;
     width: 100%;
@@ -61,8 +61,7 @@
   /* Import the Ysabeau font */
   @font-face {
     font-family: "Poltawski Nowy";
-    src: url("/fonts/PoltawskiNowy.ttf")
-      format("truetype");
+    src: url("/fonts/PoltawskiNowy.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
   }
