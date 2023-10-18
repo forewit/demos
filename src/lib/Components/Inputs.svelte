@@ -70,14 +70,4 @@
   input {
     justify-self: left;
   }
-
-  input[type="text"] {
-  }
-  input[type="checkbox"] {
-    justify-self: start;
-  }
-  input[type="color"] {
-  }
-  input[type="number"] {
-  }
 </style>
