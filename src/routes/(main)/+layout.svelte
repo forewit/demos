@@ -15,6 +15,9 @@
   <a href="/Typewriter" class:selected={$page.url.pathname === `/Typewriter`}
     >Typewriter</a
   >
+  <a href="/Drawing" class:selected={$page.url.pathname === `/Drawing`}
+    >Drawing</a
+  >
 </nav>
 
 <slot />
