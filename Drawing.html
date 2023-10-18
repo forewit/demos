@@ -7,6 +7,7 @@
 		<meta http-equiv="content-security-policy" content="">
 		<link href="./_app/immutable/assets/_layout.c8d34ada.css" rel="stylesheet">
 		<link href="./_app/immutable/assets/_layout.9d2dcd29.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/_page.6b7792fe.css" rel="stylesheet">
 		<link rel="modulepreload" href="./_app/immutable/entry/start.2e39d2af.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index.1c987778.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.1015a47d.js">
@@ -16,7 +17,7 @@
 		<link rel="modulepreload" href="./_app/immutable/chunks/_layout.da46b06b.js">
 		<link rel="modulepreload" href="./_app/immutable/entry/(main)-layout.svelte.1612f950.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/stores.2bf5ee1c.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/(main)-page.svelte.08e1da7c.js"><title>Home</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-n3ior8_START --><!-- HEAD_svelte-n3ior8_END -->
+		<link rel="modulepreload" href="./_app/immutable/entry/(main)-Drawing-page.svelte.2b6bf58c.js"><title>Drawing</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-9tg5sj_START --><!-- HEAD_svelte-9tg5sj_END -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
@@ -24,16 +25,15 @@
 
 
 
-<div id="container" style="--notch-left: 0; --notch-right: 0; --notch-top: 0;" class="svelte-7uv86s"><div id="content" class="svelte-7uv86s"><nav class="svelte-87wlnk"><a href="/" class="svelte-87wlnk selected"><img src="/images/pen.svg" alt="Home" style="width:1em"></a>
+<div id="container" style="--notch-left: 0; --notch-right: 0; --notch-top: 0;" class="svelte-7uv86s"><div id="content" class="svelte-7uv86s"><nav class="svelte-87wlnk"><a href="/" class="svelte-87wlnk"><img src="/images/pen.svg" alt="Home" style="width:1em"></a>
   <a href="/Articles" class="svelte-87wlnk">Articles</a>
   <a href="/Fireworks" class="svelte-87wlnk">Fireworks</a>
   <a href="/Typewriter" class="svelte-87wlnk">Typewriter</a>
-  <a href="/Drawing" class="svelte-87wlnk">Drawing</a></nav>
+  <a href="/Drawing" class="svelte-87wlnk selected">Drawing</a></nav>
 
 
 
-
-<h1>Home</h1></div>
+<canvas class="svelte-cff504"></canvas></div>
 </div>
 
 
@@ -54,7 +54,7 @@
 						import("./_app/immutable/entry/app.73790e4a.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 2, 3],
+							node_ids: [0, 2, 6],
 							data,
 							form: null,
 							error: null
