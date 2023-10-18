@@ -37,7 +37,7 @@
         title: "color",
         type: "color",
         onInput: onNameChange,
-        value: "#333333",
+        value: "#ff0000",
       },
       { title: "enabled", type: "checkbox", onInput: onCheckboxChange },
     ]}
