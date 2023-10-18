@@ -49,7 +49,7 @@
 <style>
   .inputs-container {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
   }
 </style>
