@@ -1,3 +1,6 @@
+// Dependancies:
+// Drawing.ts >> Gestures.ts
+
 <script lang="ts">
  import Drawing from "$lib/modules/drawing";
   import { onMount } from "svelte";
