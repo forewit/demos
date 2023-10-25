@@ -47,3 +47,9 @@ add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origi
 npm run deploy
 npm run magic
 ```
+
+## firebase auth
+
+install: `npm install firebase`
+configure in `//lib/firebase/firebase.client.js`
+environment variables: `/.env` (naming convention for keys "VITE_NAME")

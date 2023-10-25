@@ -9,3 +9,6 @@ build
 .svelte-kit
 **/.svelte
 **/.svelte-kit
+
+#env variables
+.env
