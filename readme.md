@@ -52,4 +52,4 @@ npm run magic
 
 install: `npm install firebase`
 configure in `//lib/firebase/firebase.client.js`
-environment variables: `/.env` (naming convention for keys "VITE_NAME")
+store environment variables from firebase console: `/.env` (naming convention for keys "VITE_NAME")
