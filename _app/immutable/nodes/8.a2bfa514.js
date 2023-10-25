@@ -4,4 +4,4 @@ import{S as P,i as F,s as M,k as w,q as v,l as g,m as k,r as T,h as f,p as G,b a
 
 You made it here 🎉
 
-Forewit`;function Z(l,e,t){let s;function r(n){J[n?"unshift":"push"](()=>{s=n,t(0,s)})}return[s,r]}class ee extends P{constructor(e){super(),F(this,e,Z,W,M,{})}}export{ee as default};
+Forewit`;function Z(l,e,t){let s;function r(n){J[n?"unshift":"push"](()=>{s=n,t(0,s)})}return[s,r]}class ee extends P{constructor(e){super(),F(this,e,Z,W,M,{})}}export{ee as component};
