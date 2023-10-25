@@ -51,5 +51,6 @@ npm run magic
 ## firebase auth
 
 install: `npm install firebase`
-configure in `//lib/firebase/firebase.client.js`
+configure in `$lib/firebase/firebase.client.js`
 store environment variables from firebase console: `/.env` (naming convention for keys "VITE_NAME")
+Svelte Store for firebase auth: `stores/authStore.ts`

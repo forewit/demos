@@ -18,6 +18,9 @@
   <a href="/Drawing" class:selected={$page.url.pathname === `/Drawing`}
     >Drawing</a
   >
+  <a href="/Firebase" class:selected={$page.url.pathname === `/Firebase`}
+  >Firebase</a
+>
 </nav>
 
 <div class="content">
