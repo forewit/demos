@@ -7,8 +7,8 @@
 
   async function handleSubmit() {
     try {
-      await authHandlers.login(email, password);
       failedLogin = false;
+      await authHandlers.login(email, password);
     } catch (err) {
       console.log(err);
       failedLogin = true;
@@ -36,7 +36,7 @@
       placeholder="Password"
       required
     />
-    {#if failedLogin}
+    {#if !failedLogin}
       <p class="error">Failed to login!</p>
     {/if}
     <input type="submit" value="Login" class="btn" />
@@ -48,8 +48,7 @@
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 300px;
-    width: 90%;
+    width: 305px;
     background-color: #fff;
     padding: 20px 24px;
     border-radius: 8px;
@@ -59,7 +58,7 @@
     display: grid;
     grid-template-columns: min-content max-content 1fr;
     grid-template-rows: 40px 40px 40px;
-    gap: 10px 16px;
+    row-gap: 10px;
     grid-template-areas:
       "logo email email"
       "logo pass pass"
@@ -68,6 +67,7 @@
 
   .logo {
     height: 120px;
+    padding-right: 16px;
     align-self: center;
     pointer-events: none;
     grid-area: logo;
@@ -83,9 +83,10 @@
     color: red;
     font-size: 12px;
     align-self: center;
+    justify-self: left;
     border: 1px solid red;
     border-radius: 4px;
-    padding: 5px;
+    padding: 5px 6px;
   }
 
   .password,
@@ -109,8 +110,8 @@
   }
 
   .btn {
-    padding: 10px 20px;
-    margin: 2px 0px;
+    margin: 2px 0;
+    padding: 0 18px;
     background-color: #00a1a7; /* Google blue */
     color: #fff;
     border: none;
