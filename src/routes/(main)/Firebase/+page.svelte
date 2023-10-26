@@ -52,6 +52,7 @@
     <input type="text" bind:value={newText} />
     <input type="submit" value="Save!" />
   </form>
+  
   <p>{data.text}</p>
 {:else if $authStore.isLoading}
   <div>Loading...</div>
