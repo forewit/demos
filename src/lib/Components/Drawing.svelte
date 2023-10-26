@@ -1,23 +1,22 @@
-// Dependancies:
-// Drawing.ts >> Gestures.ts
+<!-- Dependancies: Drawing.ts >> Gestures.ts -->
 
 <script lang="ts">
- import Drawing from "$lib/modules/drawing";
+  import Drawing from "$lib/modules/drawing";
   import { onMount } from "svelte";
 
- let canvas: HTMLCanvasElement;
+  let canvas: HTMLCanvasElement;
 
- onMount(()=>{
+  onMount(() => {
     new Drawing(canvas);
- })
+  });
 </script>
 
-<canvas bind:this={canvas}></canvas>
+<canvas bind:this={canvas} />
 
 <style>
-    canvas {
-        background: cornsilk;
-        width: 100%;
-        height: 100%;
-    }
+  canvas {
+    background: cornsilk;
+    width: 100%;
+    height: 100%;
+  }
 </style>
