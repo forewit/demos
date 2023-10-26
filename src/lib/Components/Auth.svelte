@@ -36,7 +36,7 @@
       placeholder="Password"
       required
     />
-    {#if !failedLogin}
+    {#if failedLogin}
       <p class="error">Failed to login!</p>
     {/if}
     <input type="submit" value="Login" class="btn" />
