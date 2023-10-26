@@ -3,59 +3,44 @@
 
   let email = "";
   let password = "";
+  let failedLogin = false;
 
   async function handleSubmit() {
-    if (!email || !password) return;
-
-    // handle login
     try {
       await authHandlers.login(email, password);
+      failedLogin = false;
     } catch (err) {
       console.log(err);
+      failedLogin = true;
     }
 
-    // listen for reactive auth changes
-    if ($authStore.currentUser) {
-      // do something like redirecting on success
-      //window.location.href = '/Firebase/privatedashboard'
+    if (!$authStore.currentUser) {
+      // failed login
     }
   }
 </script>
 
-<!-- <div class="container">
-  <h1>Log In</h1>
-  <form>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" bind:value={email} type="email" placeholder="Email" />
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        id="password"
-        bind:value={password}
-        type="password"
-        placeholder="Password"
-      />
-    </div>
-    <div class="form-group">
-      <button on:click={handleSubmit}>Log In</button>
-    </div>
-  </form>
-</div> -->
-<div class="container">
-  <img src="./images/pen.svg" alt="logo" />
-  <form>
-    <input id="email" bind:value={email} type="email" placeholder="Email" />
+  <form class="container" on:submit={handleSubmit}>
+    <img class="logo" src="./images/pen.svg" alt="logo" />
     <input
-      id="password"
+      class="email"
+      bind:value={email}
+      type="email"
+      placeholder="Email"
+      required
+    />
+    <input
+      class="password"
       bind:value={password}
       type="password"
       placeholder="Password"
+      required
     />
-    <button class="login-btn" on:click={handleSubmit}>Next</button>
+    {#if failedLogin}
+      <p class="error">Failed to login!</p>
+    {/if}
+    <input type="submit" value="Login" class="btn" />
   </form>
-</div>
 
 <style>
   .container {
@@ -66,52 +51,76 @@
     max-width: 300px;
     width: 90%;
     background-color: #fff;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 24px;
+    padding: 20px 24px;
     border-radius: 8px;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
     font-size: 14px;
-    display: flex;
-  }
 
-  img {
-    max-height: 100px;
-  }
-
-  form {
     display: grid;
-    grid-auto-flow: row;
-    row-gap: 10px;
+    grid-template-columns: min-content max-content 1fr;
+    grid-template-rows: 40px 40px 40px;
+    gap: 10px 16px;
+    grid-template-areas:
+      "logo email email"
+      "logo pass pass"
+      "logo error btn";
   }
 
-  form input {
+  .logo {
+    height: 120px;
+    align-self: center;
+    pointer-events: none;
+    grid-area: logo;
+  }
+  .email {
+    grid-area: email;
+  }
+  .password {
+    grid-area: pass;
+  }
+  .error {
+    grid-area: error;
+    color: red;
+    font-size: 12px;
+    align-self: center;
+    border: 1px solid red;
+    border-radius: 4px;
+    padding: 5px;
+  }
+
+  .password,
+  .email {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc; /* Lighter border */
+    border: 1px solid #ccc;
     border-radius: 4px;
     outline: none;
   }
-  form input:focus {
+
+  .password:focus,
+  .email:focus {
     border: 2px solid #00a1a7;
     padding: 9px;
   }
 
-  form input::placeholder {
+  .password::placeholder,
+  .email::placeholder {
     color: #ccc;
   }
 
-  button {
+  .btn {
     padding: 10px 20px;
+    margin: 2px 0px;
     background-color: #00a1a7; /* Google blue */
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     justify-self: right;
+    grid-area: btn;
   }
 
-  button:hover {
+  .btn:hover {
     background-color: #006f74; /* Darker blue for hover */
   }
 </style>

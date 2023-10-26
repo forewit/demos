@@ -4,7 +4,7 @@
 
 <nav>
   <a href="/" class:selected={$page.url.pathname === `/`}>
-    <img src="/images/pen.svg" alt="Home" style="width:1em" />
+    <img src="/images/pen-square.svg" alt="Home" style="width:1em" />
   </a>
   <a href="/Articles" class:selected={$page.url.pathname === `/Articles`}
     >Articles</a
@@ -28,6 +28,9 @@
 </div>
 
 <style>
+  img {
+    align-self: center;
+  }
   .content {
     position: absolute;
     width: 100%;

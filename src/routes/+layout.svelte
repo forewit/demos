@@ -68,11 +68,11 @@
 
   :global(*) {
     box-sizing: border-box;
+    font-family: "Poltawski Nowy";
     margin: 0;
     padding: 0;
   }
   :global(html, body) {
-    font-family: "Poltawski Nowy";
     background: lightskyblue;
   }
 </style>
