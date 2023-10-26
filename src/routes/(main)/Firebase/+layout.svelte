@@ -1,7 +1,7 @@
 <script lang="ts">
   import { auth } from "$lib/firebase/firebase.client";
   import { onMount } from "svelte";
-  import { authStore } from "../../../stores/authStore";
+import { authStore } from "../../../stores/authStore";
     
     onMount(()=>{
         const unsubscribe = auth.onAuthStateChanged((user) => {
