@@ -2,37 +2,57 @@
   import Auth from "$lib/Components/Auth.svelte";
   import { db } from "$lib/firebase/firebase.client";
   import { doc, setDoc } from "firebase/firestore";
-  import { authHandlers, authStore } from "../../../stores/authStore";
+  import {
+    authHandlers,
+    authStore,
+    type UserData,
+  } from "../../../stores/authStore";
+  import type { User } from "firebase/auth";
 
-  let email: string | null | undefined;
-  let data = {}
+  let user: User;
+  let data: UserData;
+  let newText = "";
 
-
-  async function saveData() {
-    // verify authentication
+  // save data object to firestore
+  async function publish() {
     if (!$authStore.currentUser) return;
-
     try {
       const userRef = doc(db, "users", $authStore.currentUser.uid);
-      await setDoc(userRef, data, {merge: true});
+      await setDoc(userRef, data, { merge: true });
+      console.log("Save successful!");
     } catch (err) {
-      console.log("there was an error saving data!", err);
+      console.log("There was an error saving data!", err);
     }
   }
 
+  // update the authStore with new user data
+  function updateStoreUserData(newData: UserData) {
+    authStore.update((curr) => {
+      return {
+        ...curr,
+        data: newData,
+      };
+    });
+
+    publish();
+  }
+
+  // pull updates from the store
   authStore.subscribe((curr) => {
-    email = curr?.currentUser?.email;
-    data = curr?.data
+    if (curr.currentUser) user = curr.currentUser;
+    if (curr.data) data = curr.data;
   });
 </script>
 
-
 {#if $authStore.currentUser}
-  <div>Current User: {email}</div>
+  <div>Current User: {user.email}</div>
   <button on:click={authHandlers.logout}>Logout</button>
 
-  <button on:click={()=>{data = {text: "hi2"}; saveData();}}>Save!</button>
-
+  <form on:submit={()=>{updateStoreUserData({text:newText})}}>
+    <input type="text" bind:value={newText} />
+    <input type="submit" value="Save!" />
+  </form>
+  <p>{data.text}</p>
 {:else if $authStore.isLoading}
   <div>Loading...</div>
 {:else}

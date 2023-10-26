@@ -10,12 +10,8 @@
       failedLogin = false;
       await authHandlers.login(email, password);
     } catch (err) {
-      console.log("Login failed!", err);
+      console.log("Login failed!");
       failedLogin = true;
-    }
-
-    if (!$authStore.currentUser) {
-      // failed login
     }
   }
 </script>

@@ -2,10 +2,15 @@ import { signInWithEmailAndPassword, signOut, type User} from "firebase/auth";
 import { writable } from "svelte/store";
 import { auth } from "../lib/firebase/firebase.client";
 
+
+export type UserData = {
+    text?: string
+}
+
 export const authStore = writable({
     isLoading: true,
     currentUser: <User | null>null,
-    data: {}
+    data: <UserData | null>null
 })
 
 export const authHandlers = {
