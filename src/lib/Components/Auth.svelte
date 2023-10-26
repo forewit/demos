@@ -10,7 +10,7 @@
       failedLogin = false;
       await authHandlers.login(email, password);
     } catch (err) {
-      console.log(err);
+      console.log("Login failed!", err);
       failedLogin = true;
     }
 
