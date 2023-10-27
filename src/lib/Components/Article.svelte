@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte/internal";
+  import { page } from "$app/stores";
 
+  let pathname = $page.url;
   export let markdownURL: string;
   export let offsetTop: number = 0;
 
@@ -52,7 +54,7 @@
             if (url) {
               line = line.replace(
                 `{${data}}`,
-                `<img src="${url}" alt="${url}"${id ? ` id="${id}"` : ""}${
+                `<img src="${pathname}${url}" alt="${url}"${id ? ` id="${id}"` : ""}${
                   classes.length ? ` class="${classes.join(" ")}"` : ""
                 }${states.length ? ` state="${states.join(" ")}"` : ""}/>`
               );
