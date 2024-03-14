@@ -2,9 +2,10 @@
   import { onMount } from "svelte/internal";
   import { page } from "$app/stores";
   import { dev } from "$app/environment";
+  import { base } from "$app/paths";
 
 
-  let pathname = dev ? "" : $page.url;
+  let pathname = dev ? "" : base;
   export let markdownURL: string;
   export let offsetTop: number = 0;
 
