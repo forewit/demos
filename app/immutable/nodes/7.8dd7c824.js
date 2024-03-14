@@ -1,6 +1,188 @@
 import{S as o,i as p,s,M as d,e as i,N as c,b as h,I as a,h as m}from"../chunks/index.b8f8e0ce.js";const u=`<!DOCTYPE html>\r
 <html>\r
   <head>\r
+    <script>  \r
+      var characters = [];\r
+  \r
+      function addCharacterForm() {\r
+        var formContainer = document.getElementById("formContainer");\r
+        var newForm = document\r
+          .querySelector(".characterForm")\r
+          .cloneNode(true);\r
+        formContainer.appendChild(newForm);\r
+      }\r
+  \r
+      function removeCharacterForm() {\r
+        var formContainer = document.getElementById("formContainer");\r
+        var formCount = formContainer.childElementCount;\r
+        if (formCount > 1) {\r
+          formContainer.removeChild(formContainer.lastChild);\r
+        }\r
+      }\r
+  \r
+      function submitForm() {\r
+        var forms = document.querySelectorAll(".characterForm");\r
+        characters = Array.from(forms).map((form) => {\r
+          return {\r
+            id: form.querySelector(".name").value,\r
+            hp: Number(form.querySelector(".hp").value),\r
+            attack: Number(form.querySelector(".attack").value),\r
+            heal: Number(form.querySelector(".heal").value),\r
+            defense_attack: Number(form.querySelector(".defense").value),\r
+            wins: 0,\r
+          };\r
+        });\r
+        document.getElementById("results").textContent = simulate(\r
+          characters,\r
+          document.getElementById("iterations").value,\r
+          { log_turns: false, log_games: false }\r
+        );\r
+      }\r
+  \r
+      function simulate(players, iterations, options) {\r
+        options = options || {};\r
+  \r
+        console.log(players, iterations, options);\r
+  \r
+        console.log(\r
+          "%cStarting simulation...",\r
+          "color:green; font-size:16px; font-weight: bold;"\r
+        );\r
+        // play rounds of the game\r
+        for (let i = 0; i < iterations; i++) {\r
+          // copy the player data to use in this iteration\r
+          let iteration_players = JSON.parse(JSON.stringify(players));\r
+  \r
+          // chose a random starting player\r
+          let current_player_index = Math.floor(\r
+            Math.random() * players.length\r
+          );\r
+  \r
+          // log the start of the game\r
+          let game_log = \`%cGame \${i + 1}... \${\r
+            players[current_player_index].id\r
+          } starts, \`;\r
+  \r
+          // play a game\r
+          while (true) {\r
+            // end the round if everyone is dead\r
+            if (iteration_players.every((player) => player.hp <= 0)) {\r
+              // log a tie\r
+              game_log += \`Tie!\`;\r
+              break;\r
+            }\r
+  \r
+            // end the round if one player is alive and add a win\r
+            if (\r
+              iteration_players.filter((player) => player.hp > 0).length === 1\r
+            ) {\r
+              players[iteration_players.findIndex((player) => player.hp > 0)]\r
+                .wins++;\r
+              // log a win\r
+              game_log += \`\${\r
+                iteration_players[\r
+                  iteration_players.findIndex((player) => player.hp > 0)\r
+                ].id\r
+              } wins!\`;\r
+              break;\r
+            }\r
+  \r
+            // otherwise, play a turn\r
+            // make sure current player is alive\r
+  \r
+            while (iteration_players[current_player_index].hp <= 0) {\r
+              current_player_index =\r
+                (current_player_index + 1) % iteration_players.length;\r
+            }\r
+  \r
+            // get targetable enemies (there will always at least be one)\r
+            let targetable_enemies = iteration_players.filter(\r
+              (player) =>\r
+                player.hp > 0 &&\r
+                player.id !== iteration_players[current_player_index].id\r
+            );\r
+            let target_id =\r
+              targetable_enemies[\r
+                Math.floor(Math.random() * targetable_enemies.length)\r
+              ].id;\r
+            let target_index = iteration_players.findIndex(\r
+              (player) => player.id === target_id\r
+            );\r
+  \r
+            // log the player hp changes\r
+            let player_hp_change = 0;\r
+            let target_hp_change = 0;\r
+  \r
+            // if you can heal and there are more than 1 enemies alive, then heal\r
+            if (\r
+              iteration_players[current_player_index].heal > 0 &&\r
+              targetable_enemies.length > 1\r
+            ) {\r
+              iteration_players[current_player_index].hp +=\r
+                iteration_players[current_player_index].heal;\r
+  \r
+              //update hp changes\r
+              player_hp_change +=\r
+                iteration_players[current_player_index].heal;\r
+            }\r
+            // otherwise, attack the target and take damage from the target's "defense_attack"\r
+            else {\r
+              iteration_players[target_index].hp -=\r
+                iteration_players[current_player_index].attack;\r
+              iteration_players[current_player_index].hp -=\r
+                iteration_players[target_index].defense_attack;\r
+  \r
+              //update hp changes\r
+              player_hp_change -=\r
+                iteration_players[target_index].defense_attack;\r
+              target_hp_change -=\r
+                iteration_players[current_player_index].attack;\r
+            }\r
+  \r
+            // log a summary of the turn. example: attacker ❤️[current health] ([health change]) ⚔️ slayer ❤️[current health] ([health change])\r
+            if (options.log_turns) {\r
+              console.log(\r
+                \`\${iteration_players[current_player_index].id} \${iteration_players[current_player_index].hp}(\${player_hp_change}) ⚔️ \${target_id} \${iteration_players[target_index].hp}(\${target_hp_change})\`\r
+              );\r
+            }\r
+  \r
+            // next player\r
+            current_player_index =\r
+              (current_player_index + 1) % iteration_players.length;\r
+          }\r
+          // log game\r
+          if (options.log_games) console.log(game_log, "font-weight: bold;");\r
+        }\r
+  \r
+        // log the simulation results\r
+        let winner_id = players.reduce((a, b) =>\r
+          a.wins > b.wins ? a : b\r
+        ).id;\r
+        console.log(\r
+          "%cResults...",\r
+          "color:green; font-size:16px; font-weight: bold;"\r
+        );\r
+        console.log(\r
+          players\r
+            .map(\r
+              (player) =>\r
+                \`\${player.id === winner_id ? "🏆" : ""}\${player.id}:\${\r
+                  player.wins\r
+                }\`\r
+            )\r
+            .join(" | ")\r
+        );\r
+  \r
+        return players\r
+          .map(\r
+            (player) =>\r
+              \`\${player.id === winner_id ? "🏆" : ""}\${player.id}: \${\r
+                player.wins\r
+              }\`\r
+          )\r
+          .join(" | ");\r
+      }\r
+    <\/script>\r
     <title>Game Character Form</title>\r
     <style>\r
       #mainContainer {\r
@@ -279,190 +461,7 @@ import{S as o,i as p,s,M as d,e as i,N as c,b as h,I as a,h as m}from"../chunks/
           value="1000"\r
         />\r
       </div>\r
-      <div id="results">Simulation results here...</div>\r
-\r
-      <script>\r
-        var characters = [];\r
-\r
-        function addCharacterForm() {\r
-          var formContainer = document.getElementById("formContainer");\r
-          var newForm = document\r
-            .querySelector(".characterForm")\r
-            .cloneNode(true);\r
-          formContainer.appendChild(newForm);\r
-        }\r
-\r
-        function removeCharacterForm() {\r
-          var formContainer = document.getElementById("formContainer");\r
-          var formCount = formContainer.childElementCount;\r
-          if (formCount > 1) {\r
-            formContainer.removeChild(formContainer.lastChild);\r
-          }\r
-        }\r
-\r
-        function submitForm() {\r
-          var forms = document.querySelectorAll(".characterForm");\r
-          characters = Array.from(forms).map((form) => {\r
-            return {\r
-              id: form.querySelector(".name").value,\r
-              hp: Number(form.querySelector(".hp").value),\r
-              attack: Number(form.querySelector(".attack").value),\r
-              heal: Number(form.querySelector(".heal").value),\r
-              defense_attack: Number(form.querySelector(".defense").value),\r
-              wins: 0,\r
-            };\r
-          });\r
-          document.getElementById("results").textContent = simulate(\r
-            characters,\r
-            document.getElementById("iterations").value,\r
-            { log_turns: false, log_games: false }\r
-          );\r
-        }\r
-\r
-        function simulate(players, iterations, options) {\r
-          options = options || {};\r
-\r
-          console.log(players, iterations, options);\r
-\r
-          console.log(\r
-            "%cStarting simulation...",\r
-            "color:green; font-size:16px; font-weight: bold;"\r
-          );\r
-          // play rounds of the game\r
-          for (let i = 0; i < iterations; i++) {\r
-            // copy the player data to use in this iteration\r
-            let iteration_players = JSON.parse(JSON.stringify(players));\r
-\r
-            // chose a random starting player\r
-            let current_player_index = Math.floor(\r
-              Math.random() * players.length\r
-            );\r
-\r
-            // log the start of the game\r
-            let game_log = \`%cGame \${i + 1}... \${\r
-              players[current_player_index].id\r
-            } starts, \`;\r
-\r
-            // play a game\r
-            while (true) {\r
-              // end the round if everyone is dead\r
-              if (iteration_players.every((player) => player.hp <= 0)) {\r
-                // log a tie\r
-                game_log += \`Tie!\`;\r
-                break;\r
-              }\r
-\r
-              // end the round if one player is alive and add a win\r
-              if (\r
-                iteration_players.filter((player) => player.hp > 0).length === 1\r
-              ) {\r
-                players[iteration_players.findIndex((player) => player.hp > 0)]\r
-                  .wins++;\r
-                // log a win\r
-                game_log += \`\${\r
-                  iteration_players[\r
-                    iteration_players.findIndex((player) => player.hp > 0)\r
-                  ].id\r
-                } wins!\`;\r
-                break;\r
-              }\r
-\r
-              // otherwise, play a turn\r
-              // make sure current player is alive\r
-\r
-              while (iteration_players[current_player_index].hp <= 0) {\r
-                current_player_index =\r
-                  (current_player_index + 1) % iteration_players.length;\r
-              }\r
-\r
-              // get targetable enemies (there will always at least be one)\r
-              let targetable_enemies = iteration_players.filter(\r
-                (player) =>\r
-                  player.hp > 0 &&\r
-                  player.id !== iteration_players[current_player_index].id\r
-              );\r
-              let target_id =\r
-                targetable_enemies[\r
-                  Math.floor(Math.random() * targetable_enemies.length)\r
-                ].id;\r
-              let target_index = iteration_players.findIndex(\r
-                (player) => player.id === target_id\r
-              );\r
-\r
-              // log the player hp changes\r
-              let player_hp_change = 0;\r
-              let target_hp_change = 0;\r
-\r
-              // if you can heal and there are more than 1 enemies alive, then heal\r
-              if (\r
-                iteration_players[current_player_index].heal > 0 &&\r
-                targetable_enemies.length > 1\r
-              ) {\r
-                iteration_players[current_player_index].hp +=\r
-                  iteration_players[current_player_index].heal;\r
-\r
-                //update hp changes\r
-                player_hp_change +=\r
-                  iteration_players[current_player_index].heal;\r
-              }\r
-              // otherwise, attack the target and take damage from the target's "defense_attack"\r
-              else {\r
-                iteration_players[target_index].hp -=\r
-                  iteration_players[current_player_index].attack;\r
-                iteration_players[current_player_index].hp -=\r
-                  iteration_players[target_index].defense_attack;\r
-\r
-                //update hp changes\r
-                player_hp_change -=\r
-                  iteration_players[target_index].defense_attack;\r
-                target_hp_change -=\r
-                  iteration_players[current_player_index].attack;\r
-              }\r
-\r
-              // log a summary of the turn. example: attacker ❤️[current health] ([health change]) ⚔️ slayer ❤️[current health] ([health change])\r
-              if (options.log_turns) {\r
-                console.log(\r
-                  \`\${iteration_players[current_player_index].id} \${iteration_players[current_player_index].hp}(\${player_hp_change}) ⚔️ \${target_id} \${iteration_players[target_index].hp}(\${target_hp_change})\`\r
-                );\r
-              }\r
-\r
-              // next player\r
-              current_player_index =\r
-                (current_player_index + 1) % iteration_players.length;\r
-            }\r
-            // log game\r
-            if (options.log_games) console.log(game_log, "font-weight: bold;");\r
-          }\r
-\r
-          // log the simulation results\r
-          let winner_id = players.reduce((a, b) =>\r
-            a.wins > b.wins ? a : b\r
-          ).id;\r
-          console.log(\r
-            "%cResults...",\r
-            "color:green; font-size:16px; font-weight: bold;"\r
-          );\r
-          console.log(\r
-            players\r
-              .map(\r
-                (player) =>\r
-                  \`\${player.id === winner_id ? "🏆" : ""}\${player.id}:\${\r
-                    player.wins\r
-                  }\`\r
-              )\r
-              .join(" | ")\r
-          );\r
-\r
-          return players\r
-            .map(\r
-              (player) =>\r
-                \`\${player.id === winner_id ? "🏆" : ""}\${player.id}: \${\r
-                  player.wins\r
-                }\`\r
-            )\r
-            .join(" | ");\r
-        }\r
-      <\/script>\r
+      <div id="results">You may need to refresh for the page to function properly...</div>\r
     </div>\r
   </body>\r
 </html>\r
