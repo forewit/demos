@@ -47,6 +47,7 @@ add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origi
 npm run deploy
 npm run magic
 ```
+See: https://github.com/metonym/sveltekit-gh-pages
 
 ## firebase auth
 
