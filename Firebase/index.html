@@ -7,17 +7,19 @@
 		
 		<link href="../app/immutable/assets/0.0798f6d6.css" rel="stylesheet">
 		<link href="../app/immutable/assets/2.8ea31655.css" rel="stylesheet">
-		<link href="../app/immutable/assets/6.a003a65c.css" rel="stylesheet">
-		<link rel="modulepreload" href="../app/immutable/entry/start.5ebe48e5.js">
+		<link href="../app/immutable/assets/9.98fccc1f.css" rel="stylesheet">
+		<link rel="modulepreload" href="../app/immutable/entry/start.d1b04c74.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.b8f8e0ce.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/singletons.a3244cf5.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/singletons.75e552ac.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.845e7d6c.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/paths.7612e531.js">
-		<link rel="modulepreload" href="../app/immutable/entry/app.3895ab57.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/0.a03e1a7f.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/2.13a36d93.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/stores.96cb57bf.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/6.afcde6bc.js"><title>The Seasons</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-tef83d_START --><!-- HEAD_svelte-tef83d_END -->
+		<link rel="modulepreload" href="../app/immutable/chunks/paths.73014598.js">
+		<link rel="modulepreload" href="../app/immutable/entry/app.1f158fd5.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/0.6da5dee3.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/2.64297897.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/stores.77a7657d.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/3.1c3b3671.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/authStore.d2222fe0.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/9.5d7d7000.js"><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
@@ -34,9 +36,7 @@
   <a href="/demos/Firebase" class="svelte-1jg84mk">Firebase</a>
 <a href="/demos/DiceThronesSim" class="svelte-1jg84mk">Dice Thrones Simulator</a></nav>
 
-<div class="content svelte-1jg84mk">
-
-<main style="height: calc(100% - 50px);" class="svelte-gipc32"></main>
+<div class="content svelte-1jg84mk"><div>Loading...</div>
 </div></div>
 </div>
 
@@ -44,7 +44,7 @@
 			
 			<script>
 				{
-					__sveltekit_1qc3qxn = {
+					__sveltekit_llibw5 = {
 						assets: "/demos",
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
@@ -52,14 +52,14 @@
 
 					const element = document.currentScript.parentElement;
 
-					const data = [null,null,null];
+					const data = [null,null,null,null];
 
 					Promise.all([
-						import("../app/immutable/entry/start.5ebe48e5.js"),
-						import("../app/immutable/entry/app.3895ab57.js")
+						import("../app/immutable/entry/start.d1b04c74.js"),
+						import("../app/immutable/entry/app.1f158fd5.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 2, 6],
+							node_ids: [0, 2, 3, 9],
 							data,
 							form: null,
 							error: null
