@@ -1,5 +1,7 @@
 <script lang="ts">
   import { authHandlers, authStore } from "../../stores/authStore";
+  import { base } from "$app/paths";
+
 
   let email = "";
   let password = "";
@@ -17,7 +19,7 @@
 </script>
 
   <form class="container" on:submit={handleSubmit}>
-    <img class="logo" src="./images/pen.svg" alt="logo" />
+    <img class="logo" src="{base}/images/pen.svg" alt="logo" />
     <input
       class="email"
       bind:value={email}
