@@ -1,27 +1,28 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { base } from "$app/paths";
 </script>
 
 <nav>
   <a href="/" class:selected={$page.url.pathname === `/`}>
-    <img src="/images/pen-square.svg" alt="Home" style="width:1em" />
+    <img src="{base}/images/pen-square.svg" alt="Home" style="width:1em" />
   </a>
-  <a href="/Articles" class:selected={$page.url.pathname === `/Articles`}
+  <a href="{base}/Articles" class:selected={$page.url.pathname === `/Articles`}
     >Articles</a
   >
-  <a href="/Fireworks" class:selected={$page.url.pathname === `/Fireworks`}
+  <a href="{base}/Fireworks" class:selected={$page.url.pathname === `/Fireworks`}
     >Fireworks</a
   >
-  <a href="/Typewriter" class:selected={$page.url.pathname === `/Typewriter`}
+  <a href="{base}/Typewriter" class:selected={$page.url.pathname === `/Typewriter`}
     >Typewriter</a
   >
-  <a href="/Drawing" class:selected={$page.url.pathname === `/Drawing`}
+  <a href="{base}/Drawing" class:selected={$page.url.pathname === `/Drawing`}
     >Drawing</a
   >
-  <a href="/Firebase" class:selected={$page.url.pathname === `/Firebase`}
+  <a href="{base}/Firebase" class:selected={$page.url.pathname === `/Firebase`}
   >Firebase</a
 >
-<a href="/DiceThronesSim" class:selected={$page.url.pathname === `/DiceThronesSim`}
+<a href="{base}/DiceThronesSim" class:selected={$page.url.pathname === `/DiceThronesSim`}
   >Dice Thrones Simulator</a
 >
 </nav>
