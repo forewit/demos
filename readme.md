@@ -53,5 +53,14 @@ npm run magic
 1. install: `npm install firebase`
 2. configure in `$lib/firebase/firebase.client.js`
 3. store environment variables from firebase console: `/.env` (naming convention for keys "VITE_NAME")
+
+```env
+VITE_APIKEY=
+VITE_AUTHDOMAIN=
+VITE_PROJECTID=
+VITE_STORAGEBUCKET=
+VITE_MESSAGINGSENDERID=
+VITE_APPID=
+```
 4. Svelte Store for firebase auth & handlers: `stores/authStore.js`
 5. TIP: use +layout.svelte to subscribe to auth updates and keep the Svelte Store up-to-date
