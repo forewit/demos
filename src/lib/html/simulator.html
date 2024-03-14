@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game Character Form</title>
+    <style>
+      #mainContainer {
+        background-color: #f0f0f0; /* Change this to your preferred color */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: black;
+        overflow: hidden;
+      }
+
+      #formContainer {
+        width: 80%;
+        max-width: 600px; /* Adjust this value as needed */
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 10px;
+      }
+
+      #formContainer input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .characterForm {
+        display: flex;
+        column-gap: 6px;
+        padding: 3px;
+      }
+      .inputWrapper {
+        position: relative;
+      }
+      .inputWrapper::after {
+        pointer-events: none;
+        content: attr(data-emoji);
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.5;
+      }
+      #buttonContainer {
+        position: absolute;
+        top: 20%;
+        margin-top: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 10px;
+        display: flex;
+        column-gap: 3px;
+        padding: 13px;
+      }
+      #results {
+        position: absolute;
+        padding: 10px;
+        top: 15%;
+        color: white;
+      }
+      #iterations {
+        width: 100px;
+      }
+      .area {
+        position: absolute;
+        background: #4e54c8;
+        background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+        width: 100%;
+        height: 100vh;
+      }
+
+      .circles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .circles li {
+        position: absolute;
+        display: block;
+        list-style: none;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        animation: animate 25s linear infinite;
+        bottom: -150px;
+      }
+
+      .circles li:nth-child(1) {
+        left: 25%;
+        width: 80px;
+        height: 80px;
+        animation-delay: 0s;
+      }
+
+      .circles li:nth-child(2) {
+        left: 10%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 2s;
+        animation-duration: 12s;
+      }
+
+      .circles li:nth-child(3) {
+        left: 70%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 4s;
+      }
+
+      .circles li:nth-child(4) {
+        left: 40%;
+        width: 60px;
+        height: 60px;
+        animation-delay: 0s;
+        animation-duration: 18s;
+      }
+
+      .circles li:nth-child(5) {
+        left: 65%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 0s;
+      }
+
+      .circles li:nth-child(6) {
+        left: 75%;
+        width: 110px;
+        height: 110px;
+        animation-delay: 3s;
+      }
+
+      .circles li:nth-child(7) {
+        left: 35%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 7s;
+      }
+
+      .circles li:nth-child(8) {
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        animation-delay: 15s;
+        animation-duration: 45s;
+      }
+
+      .circles li:nth-child(9) {
+        left: 20%;
+        width: 15px;
+        height: 15px;
+        animation-delay: 2s;
+        animation-duration: 35s;
+      }
+
+      .circles li:nth-child(10) {
+        left: 85%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 0s;
+        animation-duration: 11s;
+      }
+
+      @keyframes animate {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+          border-radius: 0;
+        }
+
+        100% {
+          transform: translateY(-1000px) rotate(720deg);
+          opacity: 0;
+          border-radius: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mainContainer">
+      <div class="area">
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+
+      <div id="formContainer">
+        <div class="characterForm">
+          <div class="inputWrapper" data-emoji="👤">
+            <input type="text" value="Joe" class="name" name="name" />
+          </div>
+          <div class="inputWrapper" data-emoji="❤️‍🩹">
+            <input type="number" value="30" class="hp" name="hp" />
+          </div>
+          <div class="inputWrapper" data-emoji="⚔️">
+            <input type="number" value="9" class="attack" name="attack" />
+          </div>
+          <div class="inputWrapper" data-emoji="💖">
+            <input type="number" value="0" class="heal" name="heal" />
+          </div>
+          <div class="inputWrapper" data-emoji="🛡️">
+            <input type="number" value="1" class="defense" name="defense" />
+          </div>
+        </div>
+        <div class="characterForm">
+          <div class="inputWrapper" data-emoji="👤">
+            <input type="text" value="Sam" class="name" name="name" />
+          </div>
+          <div class="inputWrapper" data-emoji="❤️‍🩹">
+            <input type="number" value="30" class="hp" name="hp" />
+          </div>
+          <div class="inputWrapper" data-emoji="⚔️">
+            <input type="number" value="9" class="attack" name="attack" />
+          </div>
+          <div class="inputWrapper" data-emoji="💖">
+            <input type="number" value="0" class="heal" name="heal" />
+          </div>
+          <div class="inputWrapper" data-emoji="🛡️">
+            <input type="number" value="1" class="defense" name="defense" />
+          </div>
+        </div>
+        <div class="characterForm">
+          <div class="inputWrapper" data-emoji="👤">
+            <input type="text" value="Paladin" class="name" name="name" />
+          </div>
+          <div class="inputWrapper" data-emoji="❤️‍🩹">
+            <input type="number" value="30" class="hp" name="hp" />
+          </div>
+          <div class="inputWrapper" data-emoji="⚔️">
+            <input type="number" value="9" class="attack" name="attack" />
+          </div>
+          <div class="inputWrapper" data-emoji="💖">
+            <input type="number" value="3" class="heal" name="heal" />
+          </div>
+          <div class="inputWrapper" data-emoji="🛡️">
+            <input type="number" value="1" class="defense" name="defense" />
+          </div>
+        </div>
+      </div>
+      <div id="buttonContainer">
+        <button onclick="removeCharacterForm()">➖</button>
+        <button onclick="addCharacterForm()">➕</button>
+        <div style="width: 20px"></div>
+        <button onclick="submitForm()">▶️</button>
+        <input
+          id="iterations"
+          type="number"
+          placeholder="Interations"
+          name="iterations"
+          value="1000"
+        />
+      </div>
+      <div id="results">Simulation results here...</div>
+
+      <script>
+        var characters = [];
+
+        function addCharacterForm() {
+          var formContainer = document.getElementById("formContainer");
+          var newForm = document
+            .querySelector(".characterForm")
+            .cloneNode(true);
+          formContainer.appendChild(newForm);
+        }
+
+        function removeCharacterForm() {
+          var formContainer = document.getElementById("formContainer");
+          var formCount = formContainer.childElementCount;
+          if (formCount > 1) {
+            formContainer.removeChild(formContainer.lastChild);
+          }
+        }
+
+        function submitForm() {
+          var forms = document.querySelectorAll(".characterForm");
+          characters = Array.from(forms).map((form) => {
+            return {
+              id: form.querySelector(".name").value,
+              hp: Number(form.querySelector(".hp").value),
+              attack: Number(form.querySelector(".attack").value),
+              heal: Number(form.querySelector(".heal").value),
+              defense_attack: Number(form.querySelector(".defense").value),
+              wins: 0,
+            };
+          });
+          document.getElementById("results").textContent = simulate(
+            characters,
+            document.getElementById("iterations").value,
+            { log_turns: false, log_games: false }
+          );
+        }
+
+        function simulate(players, iterations, options) {
+          options = options || {};
+
+          console.log(players, iterations, options);
+
+          console.log(
+            "%cStarting simulation...",
+            "color:green; font-size:16px; font-weight: bold;"
+          );
+          // play rounds of the game
+          for (let i = 0; i < iterations; i++) {
+            // copy the player data to use in this iteration
+            let iteration_players = JSON.parse(JSON.stringify(players));
+
+            // chose a random starting player
+            let current_player_index = Math.floor(
+              Math.random() * players.length
+            );
+
+            // log the start of the game
+            let game_log = `%cGame ${i + 1}... ${
+              players[current_player_index].id
+            } starts, `;
+
+            // play a game
+            while (true) {
+              // end the round if everyone is dead
+              if (iteration_players.every((player) => player.hp <= 0)) {
+                // log a tie
+                game_log += `Tie!`;
+                break;
+              }
+
+              // end the round if one player is alive and add a win
+              if (
+                iteration_players.filter((player) => player.hp > 0).length === 1
+              ) {
+                players[iteration_players.findIndex((player) => player.hp > 0)]
+                  .wins++;
+                // log a win
+                game_log += `${
+                  iteration_players[
+                    iteration_players.findIndex((player) => player.hp > 0)
+                  ].id
+                } wins!`;
+                break;
+              }
+
+              // otherwise, play a turn
+              // make sure current player is alive
+
+              while (iteration_players[current_player_index].hp <= 0) {
+                current_player_index =
+                  (current_player_index + 1) % iteration_players.length;
+              }
+
+              // get targetable enemies (there will always at least be one)
+              let targetable_enemies = iteration_players.filter(
+                (player) =>
+                  player.hp > 0 &&
+                  player.id !== iteration_players[current_player_index].id
+              );
+              let target_id =
+                targetable_enemies[
+                  Math.floor(Math.random() * targetable_enemies.length)
+                ].id;
+              let target_index = iteration_players.findIndex(
+                (player) => player.id === target_id
+              );
+
+              // log the player hp changes
+              let player_hp_change = 0;
+              let target_hp_change = 0;
+
+              // if you can heal and there are more than 1 enemies alive, then heal
+              if (
+                iteration_players[current_player_index].heal > 0 &&
+                targetable_enemies.length > 1
+              ) {
+                iteration_players[current_player_index].hp +=
+                  iteration_players[current_player_index].heal;
+
+                //update hp changes
+                player_hp_change +=
+                  iteration_players[current_player_index].heal;
+              }
+              // otherwise, attack the target and take damage from the target's "defense_attack"
+              else {
+                iteration_players[target_index].hp -=
+                  iteration_players[current_player_index].attack;
+                iteration_players[current_player_index].hp -=
+                  iteration_players[target_index].defense_attack;
+
+                //update hp changes
+                player_hp_change -=
+                  iteration_players[target_index].defense_attack;
+                target_hp_change -=
+                  iteration_players[current_player_index].attack;
+              }
+
+              // log a summary of the turn. example: attacker ❤️[current health] ([health change]) ⚔️ slayer ❤️[current health] ([health change])
+              if (options.log_turns) {
+                console.log(
+                  `${iteration_players[current_player_index].id} ${iteration_players[current_player_index].hp}(${player_hp_change}) ⚔️ ${target_id} ${iteration_players[target_index].hp}(${target_hp_change})`
+                );
+              }
+
+              // next player
+              current_player_index =
+                (current_player_index + 1) % iteration_players.length;
+            }
+            // log game
+            if (options.log_games) console.log(game_log, "font-weight: bold;");
+          }
+
+          // log the simulation results
+          let winner_id = players.reduce((a, b) =>
+            a.wins > b.wins ? a : b
+          ).id;
+          console.log(
+            "%cResults...",
+            "color:green; font-size:16px; font-weight: bold;"
+          );
+          console.log(
+            players
+              .map(
+                (player) =>
+                  `${player.id === winner_id ? "🏆" : ""}${player.id}:${
+                    player.wins
+                  }`
+              )
+              .join(" | ")
+          );
+
+          return players
+            .map(
+              (player) =>
+                `${player.id === winner_id ? "🏆" : ""}${player.id}: ${
+                  player.wins
+                }`
+            )
+            .join(" | ");
+        }
+      </script>
+    </div>
+  </body>
+</html>

@@ -21,6 +21,9 @@
   <a href="/Firebase" class:selected={$page.url.pathname === `/Firebase`}
   >Firebase</a
 >
+<a href="/DiceThronesSim" class:selected={$page.url.pathname === `/DiceThronesSim`}
+  >Dice Thrones Simulator</a
+>
 </nav>
 
 <div class="content">
