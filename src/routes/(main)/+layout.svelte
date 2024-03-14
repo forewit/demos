@@ -4,25 +4,25 @@
 </script>
 
 <nav>
-  <a href="/" class:selected={$page.url.pathname === `/`}>
+  <a href="{base}/" class:selected={$page.url.pathname === `${base}/`}>
     <img src="{base}/images/pen-square.svg" alt="Home" style="width:1em" />
   </a>
-  <a href="{base}/Articles" class:selected={$page.url.pathname === `/Articles`}
+  <a href="{base}/Articles" class:selected={$page.url.pathname === `${base}/Articles`}
     >Articles</a
   >
-  <a href="{base}/Fireworks" class:selected={$page.url.pathname === `/Fireworks`}
+  <a href="{base}/Fireworks" class:selected={$page.url.pathname === `${base}/Fireworks`}
     >Fireworks</a
   >
-  <a href="{base}/Typewriter" class:selected={$page.url.pathname === `/Typewriter`}
+  <a href="{base}/Typewriter" class:selected={$page.url.pathname === `${base}/Typewriter`}
     >Typewriter</a
   >
-  <a href="{base}/Drawing" class:selected={$page.url.pathname === `/Drawing`}
+  <a href="{base}/Drawing" class:selected={$page.url.pathname === `${base}/Drawing`}
     >Drawing</a
   >
-  <a href="{base}/Firebase" class:selected={$page.url.pathname === `/Firebase`}
+  <a href="{base}/Firebase" class:selected={$page.url.pathname === `${base}/Firebase`}
   >Firebase</a
 >
-<a href="{base}/DiceThronesSim" class:selected={$page.url.pathname === `/DiceThronesSim`}
+<a href="{base}/DiceThronesSim" class:selected={$page.url.pathname === `${base}/DiceThronesSim`}
   >Dice Thrones Simulator</a
 >
 </nav>
