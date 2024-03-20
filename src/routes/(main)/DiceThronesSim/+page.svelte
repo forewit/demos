@@ -1,6 +1,41 @@
 <script>
   // @ts-nocheck
 
+  import Fireworks from "$lib/Components/Fireworks.svelte";
+
+  let fireworks;
+
+  function launch() {
+    fireworks.launch(
+      3,
+      {
+        color: "lightgreen",
+        left: 40,
+        top: 30,
+        initialLeft: 45,
+        initialTop: 45,
+        size: 30,
+      },
+      {
+        color: "red",
+        left: 60,
+        top: 30,
+        initialLeft: 55,
+        initialTop: 50,
+        delay: 0.25,
+      },
+      {
+        color: "yellow",
+        left: 50,
+        top: 20,
+        initialLeft: 50,
+        initialTop: 45,
+        delay: 0.5,
+        size: 50,
+      }
+    );
+  }
+
   // Initial message to be displayed
   let message = "Simulation results here...";
 
@@ -60,6 +95,7 @@
         log_turns: false,
         log_games: false,
       });
+	  launch();
     }, 0);
   }
 
@@ -200,6 +236,8 @@
 </script>
 
 <div id="mainContainer">
+  <Fireworks bind:this={fireworks} />
+
   <div id="formContainer">
     {#each characters as character, i}
       <div class="characterForm">
@@ -303,7 +341,7 @@
     width: 100px;
   }
   #overlayContainer {
-	background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(4px);
@@ -311,13 +349,13 @@
     padding: 13px;
     position: absolute;
     top: 20%;
-	display: flex;
-	flex-direction: column;
-	row-gap: 15px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
   }
   #buttonContainer {
     display: flex;
-	column-gap: 3px;
+    column-gap: 3px;
     flex-wrap: wrap;
   }
   #results {
@@ -326,7 +364,7 @@
   }
 
   #mainContainer {
-    background: hsl(210 6% 87%); /* Change this to your preferred color */
+    background: #234; /* Change this to your preferred color */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -335,41 +373,6 @@
     width: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: black;
-    overflow: hidden;
-    background-size: 200px;
-    background-image: url('data:image/svg+xml,<svg viewBox="-7.5 -2.5 15 10" xmlns="http://www.w3.org/2000/svg">\
-		<circle id="d" fill="hsl(210 6%25 80%25)" r="0.3" />\
-<g transform="translate(5 0)">\
-    <use href="%23d" />\
-    <use x="1" y="1" href="%23d" />\
-    <use x="-1" y="1" href="%23d" />\
-    <use x="-1" y="-1" href="%23d" />\
-    <use x="1" y="-1" href="%23d" />\
-</g>\
-<g transform="translate(-5 0)">\
-    <use x="1" y="1" href="%23d" />\
-    <use x="-1" y="1" href="%23d" />\
-    <use x="-1" y="-1" href="%23d" />\
-    <use x="1" y="-1" href="%23d" />\
-</g>\
-<g transform="translate(0 5)">\
-    <use x="1" href="%23d" />\
-    <use x="-1" href="%23d" />\
-    <use x="1" y="1" href="%23d" />\
-    <use x="-1" y="1" href="%23d" />\
-    <use x="-1" y="-1" href="%23d" />\
-    <use x="1" y="-1" href="%23d" />\
-</g>\
-<g transform="translate(5 5)">\
-    <use x="-1" y="1" href="%23d" />\
-    <use x="1" y="-1" href="%23d" />\
-</g>\
-<g transform="translate(-5 5)">\
-    <use href="%23d" />\
-    <use x="-1" y="1" href="%23d" />\
-    <use x="1" y="-1" href="%23d" />\
-</g>\
-</svg>');
+    color: white;
   }
 </style>
