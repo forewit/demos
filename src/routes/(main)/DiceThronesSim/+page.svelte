@@ -10,28 +10,28 @@
       3,
       {
         color: "lightgreen",
-        left: 40,
-        top: 30,
+        left: 50,
+        top: 50,
         initialLeft: 45,
-        initialTop: 45,
+        initialTop: 100,
         size: 30,
       },
       {
         color: "red",
-        left: 60,
-        top: 30,
-        initialLeft: 55,
-        initialTop: 50,
+        left: 50,
+        top: 50,
+        initialLeft: 50,
+        initialTop: 100,
         delay: 0.25,
       },
       {
         color: "yellow",
         left: 50,
-        top: 20,
-        initialLeft: 50,
-        initialTop: 45,
+        top: 40,
+        initialLeft: 55,
+        initialTop: 100,
         delay: 0.5,
-        size: 50,
+        size: 60,
       }
     );
   }
@@ -95,7 +95,7 @@
         log_turns: false,
         log_games: false,
       });
-	  launch();
+      launch();
     }, 0);
   }
 
@@ -281,15 +281,14 @@
   </div>
   <div id="overlayContainer">
     <div id="buttonContainer">
-      <button on:click={removeCharacterForm}>➖</button>
-      <button on:click={addCharacterForm}>➕</button>
+      <button on:click={removeCharacterForm}>-</button>
+      <button on:click={addCharacterForm}>+</button>
       <div style="width: 20px"></div>
-      <button on:click={submitForm}>▶️</button>
+      <button on:click={submitForm}>▶</button>
       <input
         bind:value={iterations}
-        id="iterations"
+        id="iterations"	
         type="number"
-        placeholder="Interations"
         name="iterations"
       />
     </div>
@@ -312,8 +311,10 @@
   #formContainer input {
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ddd;
   }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -339,6 +340,11 @@
   }
   #iterations {
     width: 100px;
+    border-radius: 5px;
+	padding-left: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ddd;
   }
   #overlayContainer {
     background: rgba(255, 255, 255, 0.1);
@@ -355,8 +361,21 @@
   }
   #buttonContainer {
     display: flex;
-    column-gap: 3px;
+    column-gap: 5px;
     flex-wrap: wrap;
+  }
+  button {
+    background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 5px;
+	padding: 3px 7px;
+	color: #ddd;
+  }
+  button:hover {
+	background: rgba(255, 255, 255, 0.3);
+  }
+  button:active {
+	background: rgba(255, 255, 255, 0.5);
   }
   #results {
     text-align: center;
@@ -373,6 +392,6 @@
     width: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: white;
+    color: #ddd;
   }
 </style>
