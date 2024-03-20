@@ -287,7 +287,7 @@
       <button on:click={submitForm}>▶</button>
       <input
         bind:value={iterations}
-        id="iterations"	
+        id="iterations"
         type="number"
         name="iterations"
       />
@@ -316,6 +316,9 @@
     background-color: rgba(255, 255, 255, 0.2);
     color: #ddd;
   }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -341,7 +344,7 @@
   #iterations {
     width: 100px;
     border-radius: 5px;
-	padding-left: 8px;
+    padding-left: 8px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     background-color: rgba(255, 255, 255, 0.2);
     color: #ddd;
@@ -366,16 +369,16 @@
   }
   button {
     background: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	border-radius: 5px;
-	padding: 3px 7px;
-	color: #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    padding: 3px 7px;
+    color: #ddd;
   }
   button:hover {
-	background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.3);
   }
   button:active {
-	background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
   }
   #results {
     text-align: center;
