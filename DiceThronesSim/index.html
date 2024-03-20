@@ -7,18 +7,18 @@
 		
 		<link href="../app/immutable/assets/0.0798f6d6.css" rel="stylesheet">
 		<link href="../app/immutable/assets/2.8ea31655.css" rel="stylesheet">
-		<link href="../app/immutable/assets/7.8400e133.css" rel="stylesheet">
+		<link href="../app/immutable/assets/7.91a93b9b.css" rel="stylesheet">
 		<link href="../app/immutable/assets/Fireworks.c8075173.css" rel="stylesheet">
-		<link rel="modulepreload" href="../app/immutable/entry/start.89c4e617.js">
+		<link rel="modulepreload" href="../app/immutable/entry/start.7fa9cffd.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.35df80cc.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/singletons.18b6ce98.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/singletons.97740caa.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.8e2f2d60.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/paths.798b245f.js">
-		<link rel="modulepreload" href="../app/immutable/entry/app.bc849ff0.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/paths.87610038.js">
+		<link rel="modulepreload" href="../app/immutable/entry/app.71689bd4.js">
 		<link rel="modulepreload" href="../app/immutable/nodes/0.84ad671e.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/2.4b5e86fd.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/stores.cbc6c39c.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/7.d3970c42.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/2.0f54ad34.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/stores.6c104efc.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/7.31f3468b.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/Fireworks.0ee6385d.js"><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
@@ -34,17 +34,17 @@
   <a href="/demos/Typewriter" class="svelte-1jg84mk">Typewriter</a>
   <a href="/demos/Drawing" class="svelte-1jg84mk">Drawing</a>
   <a href="/demos/Firebase" class="svelte-1jg84mk">Firebase</a>
-<a href="/demos/DiceThronesSim" class="svelte-1jg84mk">Dice Thrones Simulator</a></nav>
+<a href="/demos/DiceThronesSim" class="svelte-1jg84mk selected">Dice Thrones Simulator</a></nav>
 
-<div class="content svelte-1jg84mk"><div id="mainContainer" class="svelte-eg630n">
+<div class="content svelte-1jg84mk"><div id="mainContainer" class="svelte-zc0v0o">
 
-  <div id="formContainer" class="svelte-eg630n"></div>
-  <div id="overlayContainer" class="svelte-eg630n"><div id="buttonContainer" class="svelte-eg630n"><button>➖</button>
-      <button>➕</button>
+  <div id="formContainer" class="svelte-zc0v0o"></div>
+  <div id="overlayContainer" class="svelte-zc0v0o"><div id="buttonContainer" class="svelte-zc0v0o"><button class="svelte-zc0v0o">-</button>
+      <button class="svelte-zc0v0o">+</button>
       <div style="width: 20px"></div>
-      <button>▶️</button>
-      <input id="iterations" type="number" placeholder="Interations" name="iterations" class="svelte-eg630n" value="100000"></div>
-    <pre id="results" class="svelte-eg630n">Simulation results here...</pre></div>
+      <button class="svelte-zc0v0o">▶</button>
+      <input id="iterations" type="number" name="iterations" class="svelte-zc0v0o" value="100000"></div>
+    <pre id="results" class="svelte-zc0v0o">Simulation results here...</pre></div>
 </div>
 </div></div>
 </div>
@@ -53,7 +53,7 @@
 			
 			<script>
 				{
-					__sveltekit_zkw4xc = {
+					__sveltekit_160cifs = {
 						assets: "/demos",
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
@@ -64,8 +64,8 @@
 					const data = [null,null,null];
 
 					Promise.all([
-						import("../app/immutable/entry/start.89c4e617.js"),
-						import("../app/immutable/entry/app.bc849ff0.js")
+						import("../app/immutable/entry/start.7fa9cffd.js"),
+						import("../app/immutable/entry/app.71689bd4.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2, 7],
