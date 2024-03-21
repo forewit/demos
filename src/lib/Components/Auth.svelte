@@ -17,7 +17,6 @@
     }
   }
 </script>
-
   <form class="container" on:submit={handleSubmit}>
     <img class="logo" src="{base}/images/pen.svg" alt="logo" />
     <input

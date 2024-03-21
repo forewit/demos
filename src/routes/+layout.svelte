@@ -55,7 +55,7 @@
     height: 100%;
 
     /* temporary */
-    background: aliceblue;
+    background: #333;
   }
 
   /* Import the Ysabeau font */

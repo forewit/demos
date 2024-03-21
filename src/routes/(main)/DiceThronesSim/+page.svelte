@@ -374,11 +374,12 @@
     padding: 3px 7px;
     color: #ddd;
   }
-  button:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
+  
   button:active {
     background: rgba(255, 255, 255, 0.5);
+  }
+  button:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
   #results {
     text-align: center;

@@ -11,4 +11,3 @@
 <!-- TODO: generate this list from the file system -->
 <a href="{base}/Articles/test">test</a>
 <a href="{base}/Articles/the-seasons">The Seasons</a>
-
