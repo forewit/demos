@@ -4,27 +4,40 @@
 </script>
 
 <nav>
-  <a href="{base}/" class:selected={$page.url.pathname === `${base}/`}>
-    <img src="{base}/images/pen-square.svg" alt="Home" style="width:1em" />
+  <a class="homeButton" href="{base}/">
+    <img src="{base}/images/pen-square.svg" alt="Home" />
   </a>
-  <a href="{base}/Articles" class:selected={$page.url.pathname === `${base}/Articles/`}
-    >Articles</a
+  <a
+    class="navButton"
+    href="{base}/Articles"
+    class:selected={$page.url.pathname === `${base}/Articles/`}>Articles</a
   >
-  <a href="{base}/Fireworks" class:selected={$page.url.pathname === `${base}/Fireworks/`}
-    >Fireworks</a
+  <a
+    class="navButton"
+    href="{base}/Fireworks"
+    class:selected={$page.url.pathname === `${base}/Fireworks/`}>Fireworks</a
   >
-  <a href="{base}/Typewriter" class:selected={$page.url.pathname === `${base}/Typewriter/`}
-    >Typewriter</a
+  <a
+    class="navButton"
+    href="{base}/Typewriter"
+    class:selected={$page.url.pathname === `${base}/Typewriter/`}>Typewriter</a
   >
-  <a href="{base}/Drawing" class:selected={$page.url.pathname === `${base}/Drawing/`}
-    >Drawing</a
+  <a
+    class="navButton"
+    href="{base}/Drawing"
+    class:selected={$page.url.pathname === `${base}/Drawing/`}>Drawing</a
   >
-  <a href="{base}/Firebase" class:selected={$page.url.pathname === `${base}/Firebase/`}
-  >Firebase</a
->
-<a href="{base}/DiceThronesSim" class:selected={$page.url.pathname === `${base}/DiceThronesSim/`}
-  >Dice Thrones Simulator</a
->
+  <a
+    class="navButton"
+    href="{base}/Firebase"
+    class:selected={$page.url.pathname === `${base}/Firebase/`}>Firebase</a
+  >
+  <a
+    class="navButton"
+    href="{base}/DiceThronesSim"
+    class:selected={$page.url.pathname === `${base}/DiceThronesSim/`}
+    >Dice Thrones Simulator</a
+  >
 </nav>
 
 <div class="content">
@@ -39,20 +52,28 @@
     position: absolute;
     width: 100%;
     /* offset height by size of the nav bar */
-    height: calc(100% - 50px); 
+    height: calc(100% - 50px);
   }
 
-  nav {
-    height: 50px;
+  #navContainer {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .homeButton {
+    width: 2em;
+  }
+  nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     background-color: #333;
     padding: 10px;
-    column-gap: 10px;
+    gap: 10px;
   }
 
-  a {
+  .navButton {
     background-color: #444;
     color: white;
     text-decoration: none;
@@ -62,11 +83,11 @@
     border-radius: 4px;
   }
 
-  a:hover {
+  .navButton:hover {
     background-color: #555;
   }
 
-  a.selected {
+  .selected {
     background-color: #777;
   }
 </style>

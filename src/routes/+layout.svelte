@@ -73,6 +73,6 @@
     padding: 0;
   }
   :global(html, body) {
-    background: lightskyblue;
+    background: #333;
   }
 </style>
