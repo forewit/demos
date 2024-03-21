@@ -2,6 +2,7 @@
   // @ts-nocheck
 
   import Fireworks from "$lib/Components/Fireworks.svelte";
+  import { onMount } from "svelte";
 
   let fireworks;
 
@@ -37,15 +38,17 @@
   }
 
   // Initial message to be displayed
-  let message = "Simulation results here...";
+  let message = "Press  ▶  to simulate";
 
   // Array to hold the characters
   let characters = [];
 
   // Add three characters to start with
-  addCharacterForm();
-  addCharacterForm();
-  addCharacterForm();
+  onMount(() => {
+    addCharacterForm();
+    addCharacterForm();
+    addCharacterForm();
+  });
 
   // Number of iterations for the simulation
   let iterations = 100000;
@@ -238,47 +241,54 @@
 <div id="mainContainer">
   <Fireworks bind:this={fireworks} />
 
-  <div id="formContainer">
-    {#each characters as character, i}
-      <div class="characterForm">
-        <div class="inputWrapper" data-emoji="👤">
-          <input
-            bind:value={character.id}
-            type="text"
-            class="name"
-            name="name"
-          />
+  {#if characters.length > 0}
+    <div id="formContainer">
+      {#each characters as character, i}
+        <div class="characterForm">
+          <div class="inputWrapper" data-emoji="👤">
+            <input
+              bind:value={character.id}
+              type="text"
+              class="name"
+              name="name"
+            />
+          </div>
+          <div class="inputWrapper" data-emoji="❤️‍🩹">
+            <input
+              bind:value={character.hp}
+              type="number"
+              class="hp"
+              name="hp"
+            />
+          </div>
+          <div class="inputWrapper" data-emoji="⚔️">
+            <input
+              bind:value={character.attack}
+              type="number"
+              class="attack"
+              name="attack"
+            />
+          </div>
+          <div class="inputWrapper" data-emoji="💖">
+            <input
+              bind:value={character.heal}
+              type="number"
+              class="heal"
+              name="heal"
+            />
+          </div>
+          <div class="inputWrapper" data-emoji="🛡️">
+            <input
+              bind:value={character.defense_attack}
+              type="number"
+              class="defense"
+              name="defense"
+            />
+          </div>
         </div>
-        <div class="inputWrapper" data-emoji="❤️‍🩹">
-          <input bind:value={character.hp} type="number" class="hp" name="hp" />
-        </div>
-        <div class="inputWrapper" data-emoji="⚔️">
-          <input
-            bind:value={character.attack}
-            type="number"
-            class="attack"
-            name="attack"
-          />
-        </div>
-        <div class="inputWrapper" data-emoji="💖">
-          <input
-            bind:value={character.heal}
-            type="number"
-            class="heal"
-            name="heal"
-          />
-        </div>
-        <div class="inputWrapper" data-emoji="🛡️">
-          <input
-            bind:value={character.defense_attack}
-            type="number"
-            class="defense"
-            name="defense"
-          />
-        </div>
-      </div>
-    {/each}
-  </div>
+      {/each}
+    </div>
+  {/if}
   <div id="overlayContainer">
     <div id="buttonContainer">
       <button on:click={removeCharacterForm}>-</button>
@@ -374,7 +384,7 @@
     padding: 3px 7px;
     color: #ddd;
   }
-  
+
   button:active {
     background: rgba(255, 255, 255, 0.5);
   }

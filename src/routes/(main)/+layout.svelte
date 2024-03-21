@@ -62,6 +62,10 @@
     width: 100%;
     background: whitesmoke;
     overflow: scroll;
+
+    /* account for notch */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
   .homeButton {
     width: 2em;
@@ -70,9 +74,13 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    background-color: #333;
     padding: 10px;
     gap: 10px;
+
+    /* account for notch */
+    margin-left: calc(var(--notch-area-left) + var(--notch-area-right));
+    margin-right: calc(var(--notch-area-left) + var(--notch-area-right));
+    margin-top: var(--notch-area-top);
   }
 
   .navButton {

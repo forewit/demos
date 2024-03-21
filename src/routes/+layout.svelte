@@ -1,14 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  let notchLeft = 0,
-    notchRight = 0,
-    notchTop = 0;
-
   function handleOrientation() {
-    notchLeft = screen.orientation.type == "landscape-primary" ? 1 : 0;
-    notchRight = screen.orientation.type == "landscape-secondary" ? 1 : 0;
-    notchTop = screen.orientation.type == "portrait-primary" ? 1 : 0;
+    document.documentElement.style.setProperty("--is-notch-left", screen.orientation.type == "landscape-primary" ? "1" : "0")
+    document.documentElement.style.setProperty("--is-notch-right", screen.orientation.type == "landscape-secondary" ? "1" : "0");
+    document.documentElement.style.setProperty("--is-notch-top", screen.orientation.type == "portrait-primary" ? "1" : "0");
   }
 
   onMount(() => {
@@ -24,10 +20,7 @@
   />
 </svelte:head>
 
-<div
-  class="container"
-  style="--notch-left: {notchLeft}; --notch-right: {notchRight}; --notch-top: {notchTop};"
->
+<div class="container">
   <div class="content">
     <slot />
   </div>
@@ -41,11 +34,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-
-    /* add margin to account for notch */
-    margin-left: calc(env(safe-area-inset-left) * var(--notch-left));
-    margin-right: calc(env(safe-area-inset-right) * var(--notch-right));
-    margin-top: calc(env(safe-area-inset-top) * var(--notch-top));
   }
 
   .content {
@@ -53,9 +41,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-
-    /* temporary */
-    background: #333;
   }
 
   /* Import the Ysabeau font */
@@ -65,7 +50,16 @@
     font-weight: normal;
     font-style: normal;
   }
-
+  :root {
+    --is-notch-left: 0;
+    --is-notch-right: 0;
+    --is-notch-top: 0;
+  }
+  :global(:root) {
+    --notch-area-left: calc(env(safe-area-inset-left) * var(--is-notch-left));
+    --notch-area-right: calc(env(safe-area-inset-right) * var(--is-notch-right));
+    --notch-area-top: calc(env(safe-area-inset-top) * var(--is-notch-top));
+  }
   :global(*) {
     box-sizing: border-box;
     font-family: "Poltawski Nowy";
