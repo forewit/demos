@@ -9,7 +9,7 @@
     "theme_color": "#333333",
     "icons": [
         {
-            "src": "images/feathers_512.png",
+            "src": "images/pen-square_512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
