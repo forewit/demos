@@ -10,7 +10,7 @@
     "icons": [
         {
             "src": "images/pen-square.svg",
-            "size": "150x150",
+            "size": "any",
             "type": "image/svg+xml",
             "purpose": "any"
         }
