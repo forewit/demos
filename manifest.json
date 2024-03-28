@@ -2,7 +2,7 @@
     "id": "forewit-github-io-demos",
     "short_name": "Demos",
     "name": "Forewit Github Demos",
-    "start_url": "/",
+    "start_url": "/demos",
     "icons": [
       {
         "src": "images/logo_512.png",
