@@ -4,6 +4,10 @@
 </script>
 
 <div class="grid">
+
+  <div class="content">
+    <slot />
+  </div>
   <nav>
     <a class="homeButton" href="{base}/">
       <img src="{base}/images/pen-square.svg" alt="Home" />
@@ -41,10 +45,6 @@
       >Dice Thrones Simulator</a
     >
   </nav>
-
-  <div class="content">
-    <slot />
-  </div>
 </div>
 
 <style>
@@ -54,7 +54,7 @@
   .grid {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr;
+    grid-template-rows: 1fr max-content ;
     height: 100%;
   }
   .content {
@@ -62,10 +62,7 @@
     width: 100%;
     background: whitesmoke;
     overflow: scroll;
-
-    /* account for notch */
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    margin-top: env(safe-area-inset-top);
   }
   .homeButton {
     width: 2em;
@@ -76,11 +73,6 @@
     flex-wrap: wrap;
     padding: 10px;
     gap: 10px;
-
-    /* account for notch */
-    margin-left: calc(var(--notch-area-left) + var(--notch-area-right));
-    margin-right: calc(var(--notch-area-left) + var(--notch-area-right));
-    margin-top: var(--notch-area-top);
   }
 
   .navButton {

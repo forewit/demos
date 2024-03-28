@@ -1,16 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
 
-  function handleOrientation() {
-    document.documentElement.style.setProperty("--is-notch-left", screen.orientation.type == "landscape-primary" ? "1" : "0")
-    document.documentElement.style.setProperty("--is-notch-right", screen.orientation.type == "landscape-secondary" ? "1" : "0");
-    document.documentElement.style.setProperty("--is-notch-top", screen.orientation.type == "portrait-primary" ? "1" : "0");
-  }
-
-  onMount(() => {
-    screen.orientation.onchange = handleOrientation;
-    handleOrientation();
-  });
 </script>
 
 <svelte:head>
@@ -50,15 +39,8 @@
     font-weight: normal;
     font-style: normal;
   }
-  :root {
-    --is-notch-left: 0;
-    --is-notch-right: 0;
-    --is-notch-top: 0;
-  }
   :global(:root) {
-    --notch-area-left: calc(env(safe-area-inset-left) * var(--is-notch-left));
-    --notch-area-right: calc(env(safe-area-inset-right) * var(--is-notch-right));
-    --notch-area-top: calc(env(safe-area-inset-top) * var(--is-notch-top));
+    --theme-background: #333;
   }
   :global(*) {
     box-sizing: border-box;
