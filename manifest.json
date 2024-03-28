@@ -2,19 +2,17 @@
     "name": "Forewit Github Demos",
     "short_name": "Demos",
     "description": "Github pages as a PWA",
-
     "start_url": "/demos/",
     "scope": "/demos/",
-
     "display": "minimal-ui",
     "background_color": "#333333",
     "theme_color": "#333333",
-
     "icons": [
-      {
-        "src": "logo_512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
+        {
+            "src": "images/pen-square.svg.png",
+            "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
     ]
 }
