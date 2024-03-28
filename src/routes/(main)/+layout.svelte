@@ -4,7 +4,6 @@
 </script>
 
 <div class="grid">
-
   <div class="content">
     <slot />
   </div>
@@ -45,6 +44,7 @@
       >Dice Thrones Simulator</a
     >
   </nav>
+  
 </div>
 
 <style>
@@ -53,11 +53,14 @@
   }
   .grid {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr max-content ;
     height: 100%;
+
+    grid-template:
+      "content" 1fr
+      "nav" max-content;
   }
   .content {
+    grid-area: "content";
     position: relative;
     width: 100%;
     background: whitesmoke;
@@ -68,6 +71,7 @@
     width: 2em;
   }
   nav {
+    grid-area: "nav";
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
