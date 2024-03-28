@@ -4,7 +4,7 @@
     "description": "Github pages as a PWA",
     "start_url": "/demos/",
     "scope": "/demos/",
-    "display": "minimal-ui",
+    "display": "standalone",
     "background_color": "#333333",
     "theme_color": "#333333",
     "icons": [
