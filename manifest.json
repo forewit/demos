@@ -2,16 +2,16 @@
     "id": "forewit-github-io-demos",
     "short_name": "Demos",
     "name": "Forewit Github Demos",
-    "start_url": "/demos",
+    "start_url": "/demos/",
+    "scope": "/demos/",
     "icons": [
       {
-        "src": "images/logo_512.png",
+        "src": "/demos/images/logo_512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
     ],
     "background_color": "#333333",
-    "display": "standalone",
-    "scope": "/demos",
-    "theme_color": "#333333"
+    "theme_color": "#333333",
+    "display": "minimal-ui"
 }
