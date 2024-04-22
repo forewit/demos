@@ -12,7 +12,11 @@ npm create svelte@latest
 
 # create a new project in my-app
 npm create svelte@latest my-app
+
+# install static adapter for static sites
+npm i -D @sveltejs/adapter-static
 ```
+
 
 ## Developing
 
@@ -40,8 +44,8 @@ You can preview the production build with `npm run preview`.
 
 ## deploy to gh-pages
 Install : `npm install gh-pages --save-dev`
-add "deploy" script: `"deploy": "touch build/.nojekyll && gh-pages -d build -t true"``
-add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origin main && vite build && touch build/.nojekyll && gh-pages -d build -t true"``
+add "deploy" script: `"deploy": "touch build/.nojekyll && gh-pages -d build -t true"`` to package.json
+add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origin main && vite build && touch build/.nojekyll && gh-pages -d build -t true"`` to package.json
 
 ```bash
 npm run deploy

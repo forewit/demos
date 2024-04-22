@@ -7,7 +7,6 @@
 
   let pathname = dev ? "" : base;
   export let markdownURL: string;
-  export let offsetTop: number = 0;
 
   let main: HTMLElement;
 
@@ -163,13 +162,14 @@
   });
 </script>
 
-<main bind:this={main} style="height: calc(100% - {offsetTop}px);" />
+<main bind:this={main}/>
 
 <style>
   main {
     overflow: auto;
     scroll-behavior: smooth;
     overflow: overlay;
+    height: 100%;
   }
   :global(.centered) {
     text-align: center;

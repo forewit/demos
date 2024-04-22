@@ -52,6 +52,7 @@
   
   onMount(() => {
     if (DeviceIsPhone()) document.body.classList.add("isPhone");
+
   });
 </script>
 
