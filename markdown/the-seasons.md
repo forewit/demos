@@ -6,6 +6,8 @@
 ## Introduction
 Stars have fascinated humanity for centuries with their radiant beauty and celestial mystery. These luminous spheres of hot gas scattered across the vast expanse of the universe ignite our imagination and invite us to contemplate the wonders of the cosmos. In this article, we will delve into the captivating realm of stars, exploring their types, life cycles, and their significance in our universe.
 
+
+
 ## Types of Stars
 Stars come in various sizes, colors, and luminosities. They can be classified into different types based on their characteristics:
 
