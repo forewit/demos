@@ -136,10 +136,10 @@
 ©©©`,
   };
 
-  let input = "Beef";
-  let text = ":cut_of_meat:";
-  let fill = ":chaos:";
-  let border = ":tomato:";
+  let input = "boom";
+  let text = ":hmmm:";
+  let fill = ":nuclear_bomb:";
+  let border = ":sunny:";
 
   let output = "";
   let message = "";
