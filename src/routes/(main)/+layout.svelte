@@ -45,9 +45,10 @@
     >
     <a
       class="navButton"
-      href="{base}/FastEmoji"
-      class:selected={$page.url.pathname === `${base}/FastEmoji/`}
-      >Fast Emoji</a
+      href="{base}/Ascii"
+      class:selected={$page.url.pathname === `${base}/Ascii/`}
+      style="font-family: monospace;"
+      >Ascii</a
     >
   </nav>
   

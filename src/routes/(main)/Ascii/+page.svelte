@@ -134,6 +134,11 @@
 ¶©¶
 ©¶¶
 ©©©`,
+    " ": `¶¶
+¶¶
+¶¶
+¶¶
+¶¶`,
   };
 
   let input = "hi";
@@ -159,7 +164,7 @@
   }
 
   function isInputValid() {
-    let lettersRegex = /^[A-Za-z]+$/;
+    let lettersRegex = /^[A-Za-z ]+$/;
     return input.match(lettersRegex) || input == "";
   }
   function updateOutput() {
@@ -201,9 +206,11 @@
     newOutput = "±" + buffer + "±\n" + newOutput + "±" + buffer + "±";
 
     // add border to top and bottom
-    let borderFill = "±".repeat(newOutput.split("\n")[0].length);
-    newOutput = borderFill + "\n" + newOutput + "\n" + borderFill;
-
+    if (border != "") {
+      let borderFill = "±".repeat(newOutput.split("\n")[0].length);
+      newOutput = borderFill + "\n" + newOutput + "\n" + borderFill;
+    }
+    
     // replace "¶" with "fill"
     newOutput = newOutput.replaceAll("¶", fill);
 
@@ -219,6 +226,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Ascii</title>
+</svelte:head>
+
 <div class="grid">
   <h3>Input</h3>
   <input name="input" type="text" bind:value={input} />
@@ -231,7 +242,12 @@
   <input name="border" type="text" bind:value={border} />
   <h3>Output</h3>
   {#key [input, text, fill, border]}
-    <textarea spellcheck="false" id="output" name="output" value={updateOutput()}></textarea>
+    <textarea
+      spellcheck="false"
+      id="output"
+      name="output"
+      value={updateOutput()}
+    ></textarea>
   {/key}
 
   <div class="buttons">
@@ -256,6 +272,9 @@
   }
   h3 {
     padding-top: 10px;
+  }
+  input {
+    font-family: monospace;
   }
   #btn-clear {
     height: 1.8rem;
