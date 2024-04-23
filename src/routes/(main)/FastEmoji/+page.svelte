@@ -136,10 +136,10 @@
 ©©©`,
   };
 
-  let input = "boom";
-  let text = ":hmmm:";
-  let fill = ":nuclear_bomb:";
-  let border = ":sunny:";
+  let input = "hi";
+  let text = "**";
+  let fill = "  ";
+  let border = "||";
 
   let output = "";
   let message = "";
@@ -168,8 +168,8 @@
     // "±" = border
 
     if (input == "") {
-        output = "";
-        return "";
+      output = "";
+      return "";
     }
 
     // make sure the input is all letters
@@ -220,9 +220,9 @@
 </script>
 
 <div class="grid">
-  <h3>Text to convert</h3>
+  <h3>Input</h3>
   <input name="input" type="text" bind:value={input} />
-  <h3>Replacement emojis</h3>
+  <h3>Replacement characters</h3>
   <label for="text">Text:</label>
   <input name="text" type="text" bind:value={text} />
   <label for="fill">Fill:</label>
@@ -231,7 +231,7 @@
   <input name="border" type="text" bind:value={border} />
   <h3>Output</h3>
   {#key [input, text, fill, border]}
-    <textarea id="output" name="output" value={updateOutput()}></textarea>
+    <textarea spellcheck="false" id="output" name="output" value={updateOutput()}></textarea>
   {/key}
 
   <div class="buttons">
@@ -286,5 +286,6 @@
   }
   #output {
     height: 200px;
+    font-family: monospace;
   }
 </style>
