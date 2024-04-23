@@ -167,7 +167,10 @@
     // "©" = text
     // "±" = border
 
-    if (input == "") return "";
+    if (input == "") {
+        output = "";
+        return "";
+    }
 
     // make sure the input is all letters
     if (!isInputValid()) {
