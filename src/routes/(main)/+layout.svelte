@@ -43,6 +43,12 @@
       class:selected={$page.url.pathname === `${base}/DiceThronesSim/`}
       >Dice Thrones Simulator</a
     >
+    <a
+      class="navButton"
+      href="{base}/FastEmoji"
+      class:selected={$page.url.pathname === `${base}/FastEmoji/`}
+      >Fast Emoji</a
+    >
   </nav>
   
 </div>

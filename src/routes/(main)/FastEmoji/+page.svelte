@@ -1,145 +1,146 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import { base } from "$app/paths";
 
   let letterMasks = {
-    a: `00100
-00110
-01010
-01111
-10001`,
-    b: `1110
-1001
-1110
-1001
-1111`,
-    c: `0111
-1000
-1000
-1000
-0111`,
-    d: `1110
-1001
-1001
-1001
-1110`,
-    e: `111
-100
-111
-100
-111`,
-    f: `111
-100
-111
-100
-100`,
-    g: `0111
-1000
-1011
-1001
-0111`,
-    h: `1001
-1001
-1111
-1001
-1001`,
-    i: `111
-010
-010
-010
-111`,
-    j: `1111
-0010
-0010
-1010
-1110`,
-    k: `1011
-1100
-1110
-1011
-1001`,
-    l: `100
-100
-100
-100
-111`,
-    m: `10001
-11011
-10101
-10101
-10101`,
-    n: `1001
-1101
-1111
-1011
-1001`,
-    o: `1111
-1001
-1001
-1001
-1111`,
-    p: `111
-101
-111
-100
-100`,
-    q: `01100
-10010
-10010
-10110
-01111`,
-    r: `111
-101
-111
-110
-101`,
-    s: `111
-100
-111
-001
-111`,
-    t: `111
-010
-010
-010
-010`,
-    u: `1001
-1001
-1001
-1001
-0110`,
-    v: `101
-101
-101
-101
-010`,
-    w: `10101
-10101
-10101
-10101
-01010`,
-    x: `1001
-1010
-0110
-0101
-1001`,
-    y: `101
-101
-111
-010
-010`,
-    z: `111
-001
-010
-100
-111`,
+    a: `¶¶©¶¶
+¶¶©©¶
+¶©¶©¶
+¶©©©©
+©¶¶¶©`,
+    b: `©©©¶
+©¶¶©
+©©©¶
+©¶¶©
+©©©©`,
+    c: `¶©©©
+©¶¶¶
+©¶¶¶
+©¶¶¶
+¶©©©`,
+    d: `©©©¶
+©¶¶©
+©¶¶©
+©¶¶©
+©©©¶`,
+    e: `©©©
+©¶¶
+©©©
+©¶¶
+©©©`,
+    f: `©©©
+©¶¶
+©©©
+©¶¶
+©¶¶`,
+    g: `¶©©©
+©¶¶¶
+©¶©©
+©¶¶©
+¶©©©`,
+    h: `©¶¶©
+©¶¶©
+©©©©
+©¶¶©
+©¶¶©`,
+    i: `©©©
+¶©¶
+¶©¶
+¶©¶
+©©©`,
+    j: `©©©©
+¶¶©¶
+¶¶©¶
+©¶©¶
+©©©¶`,
+    k: `©¶©©
+©©¶¶
+©©©¶
+©¶©©
+©¶¶©`,
+    l: `©¶¶
+©¶¶
+©¶¶
+©¶¶
+©©©`,
+    m: `©¶¶¶©
+©©¶©©
+©¶©¶©
+©¶©¶©
+©¶©¶©`,
+    n: `©¶¶©
+©©¶©
+©©©©
+©¶©©
+©¶¶©`,
+    o: `©©©©
+©¶¶©
+©¶¶©
+©¶¶©
+©©©©`,
+    p: `©©©
+©¶©
+©©©
+©¶¶
+©¶¶`,
+    q: `¶©©¶¶
+©¶¶©¶
+©¶¶©¶
+©¶©©¶
+¶©©©©`,
+    r: `©©©
+©¶©
+©©©
+©©¶
+©¶©`,
+    s: `©©©
+©¶¶
+©©©
+¶¶©
+©©©`,
+    t: `©©©
+¶©¶
+¶©¶
+¶©¶
+¶©¶`,
+    u: `©¶¶©
+©¶¶©
+©¶¶©
+©¶¶©
+¶©©¶`,
+    v: `©¶©
+©¶©
+©¶©
+©¶©
+¶©¶`,
+    w: `©¶©¶©
+©¶©¶©
+©¶©¶©
+©¶©¶©
+¶©¶©¶`,
+    x: `©¶¶©
+©¶©¶
+¶©©¶
+¶©¶©
+©¶¶©`,
+    y: `©¶©
+©¶©
+©©©
+¶©¶
+¶©¶`,
+    z: `©©©
+¶¶©
+¶©¶
+©¶¶
+©©©`,
   };
 
-  let input = "";
-  let text = "";
-  let fill = "";
-  let border = "";
+  let input = "Beef";
+  let text = ":cut_of_meat:";
+  let fill = ":chaos:";
+  let border = ":tomato:";
+
   let output = "";
   let message = "";
 
@@ -162,9 +163,15 @@
     return input.match(lettersRegex) || input == "";
   }
   function updateOutput() {
+    // "¶" = fill
+    // "©" = text
+    // "±" = border
+
+    if (input == "") return "";
+
     // make sure the input is all letters
     if (!isInputValid()) {
-      message = "Input must be only letters A-Z";
+      message = "Input must be only letters A-Z!";
       return "";
     }
     message = "";
@@ -175,18 +182,36 @@
     let newOutput = ``;
 
     // for each of the 5 lines
-    for (let i=0; i<5; i++) {
-        newOutput +="2";
+    for (let i = 0; i < 5; i++) {
+      newOutput += "±¶";
 
-        // for each character
-        for (let j=0; j<lowerInput.length; j++) {
-            newOutput += letterMasks[lowerInput.charAt(j)].split("\n")[i];
-            newOutput += "2";
-        }
-        newOutput += "\n"
+      // for each character
+      for (let j = 0; j < lowerInput.length; j++) {
+        newOutput += letterMasks[lowerInput.charAt(j)].split("\n")[i];
+        newOutput += "¶";
+      }
+      newOutput += "±\n";
     }
 
+    // add top and bottom fill
+    let buffer = "¶".repeat(newOutput.split("\n")[0].length - 2);
+    newOutput = "±" + buffer + "±\n" + newOutput + "±" + buffer + "±";
+
+    // add border to top and bottom
+    let borderFill = "±".repeat(newOutput.split("\n")[0].length);
+    newOutput = borderFill + "\n" + newOutput + "\n" + borderFill;
+
+    // replace "¶" with "fill"
+    newOutput = newOutput.replaceAll("¶", fill);
+
+    // replace "©" with "text"
+    newOutput = newOutput.replaceAll("©", text);
+
+    // replace "±" with "border"
+    newOutput = newOutput.replaceAll("±", border);
+
     // return the new output
+    output = newOutput;
     return newOutput;
   }
 </script>
@@ -213,7 +238,7 @@
     <button id="btn-clear" on:click={clearValues}
       ><img src="{base}/images/clear-icon.svg" alt="clear" /></button
     >
-      <p id="message">{message}</p>
+    <p id="message">{message}</p>
   </div>
 </div>
 
