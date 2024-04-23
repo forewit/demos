@@ -10,15 +10,15 @@
 		<link href="../app/immutable/assets/2.234832d2.css" rel="stylesheet">
 		<link href="../app/immutable/assets/7.66c3e924.css" rel="stylesheet">
 		<link href="../app/immutable/assets/Fireworks.c8075173.css" rel="stylesheet">
-		<link rel="modulepreload" href="../app/immutable/entry/start.a3d012bf.js">
+		<link rel="modulepreload" href="../app/immutable/entry/start.46c29eb1.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.38a6999c.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/singletons.bdd66851.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/singletons.c43e5c5c.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.5b11db5e.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/paths.d060add5.js">
-		<link rel="modulepreload" href="../app/immutable/entry/app.3a8968ff.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/paths.c6d8f5b0.js">
+		<link rel="modulepreload" href="../app/immutable/entry/app.aa62daff.js">
 		<link rel="modulepreload" href="../app/immutable/nodes/0.938f5d68.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/2.a1ad2941.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/stores.846ed9f5.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/2.e8eb0a0a.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/stores.8a3fed29.js">
 		<link rel="modulepreload" href="../app/immutable/nodes/7.726bf9c0.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/Fireworks.dd749715.js"><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END -->
 	</head>
@@ -45,7 +45,8 @@
     <a class="navButton svelte-1jrme3p" href="/demos/Typewriter">Typewriter</a>
     <a class="navButton svelte-1jrme3p" href="/demos/Drawing">Drawing</a>
     <a class="navButton svelte-1jrme3p" href="/demos/Firebase">Firebase</a>
-    <a class="navButton svelte-1jrme3p selected" href="/demos/DiceThronesSim">Dice Thrones Simulator</a></nav>
+    <a class="navButton svelte-1jrme3p selected" href="/demos/DiceThronesSim">Dice Thrones Simulator</a>
+    <a class="navButton svelte-1jrme3p" href="/demos/FastEmoji">Fast Emoji</a></nav>
   
 </div></div>
 </div>
@@ -54,7 +55,7 @@
 			
 			<script>
 				{
-					__sveltekit_a82u3a = {
+					__sveltekit_otog3f = {
 						assets: "/demos",
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
@@ -65,8 +66,8 @@
 					const data = [null,null,null];
 
 					Promise.all([
-						import("../app/immutable/entry/start.a3d012bf.js"),
-						import("../app/immutable/entry/app.3a8968ff.js")
+						import("../app/immutable/entry/start.46c29eb1.js"),
+						import("../app/immutable/entry/app.aa62daff.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2, 7],
