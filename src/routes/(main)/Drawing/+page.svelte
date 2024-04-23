@@ -2,54 +2,39 @@
   import Drawing from "$lib/Components/Drawing.svelte";
   import Inputs from "$lib/Components/Inputs.svelte";
 
-  function onSizeChange(size?: number) {
-    console.log(size);
+  let stroke = 5;
+  let color = "#ff0000";
+  let dashed = false;
+
+  function onColorChange(newColor?: string) {
+    if (newColor != null) color = newColor;
   }
 
-  function onColorChange(color?: string) {
-    console.log(color);
-  }
-
-  function onNameChange(name?: string) {
-    console.log(name);
-  }
-
-  function onCheckboxChange(enabled?: boolean) {
-    console.log(enabled);
+  function onDashChange(newDashed?: boolean) {
+    if (newDashed != null) dashed = newDashed;
   }
 </script>
 
 <svelte:head>
-  <title>Drawing</title>
+  <title>Draw</title>
 </svelte:head>
 
 <div class="inputs-container">
   <Inputs
     props={[
-      { title: "size", type: "number", onInput: onSizeChange, value: 1 },
-      {
-        title: "name",
-        type: "string",
-        onInput: onColorChange,
-        value: "My name",
-      },
-      {
-        title: "color",
-        type: "color",
-        onInput: onNameChange,
-        value: "#ff0000",
-      },
-      { title: "enabled", type: "checkbox", onInput: onCheckboxChange },
+      { title: "Stroke", type: "number", onInput:(newStroke)=>{stroke=newStroke}, value: stroke },
+      { title: "Color",  type: "color", onInput:(newColor)=>{color=newColor}, value: color },
+      { title: "Dashed", type: "checkbox", onInput:(newDashed)=>{dashed=newDashed}, value: dashed },
     ]}
   />
 </div>
 
-  <Drawing />
+<Drawing {dashed} {color} {stroke} />
 
 <style>
   .inputs-container {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 20px;
+    right: 20px;
   }
 </style>

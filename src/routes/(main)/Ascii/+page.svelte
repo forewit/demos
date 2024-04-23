@@ -210,7 +210,7 @@
       let borderFill = "±".repeat(newOutput.split("\n")[0].length);
       newOutput = borderFill + "\n" + newOutput + "\n" + borderFill;
     }
-    
+
     // replace "¶" with "fill"
     newOutput = newOutput.replaceAll("¶", fill);
 
@@ -306,5 +306,6 @@
   #output {
     height: 200px;
     font-family: monospace;
+    white-space: pre;
   }
 </style>

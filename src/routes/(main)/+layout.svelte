@@ -47,11 +47,9 @@
       class="navButton"
       href="{base}/Ascii"
       class:selected={$page.url.pathname === `${base}/Ascii/`}
-      style="font-family: monospace;"
-      >Ascii</a
+      style="font-family: monospace;">Ascii</a
     >
   </nav>
-  
 </div>
 
 <style>
@@ -63,22 +61,30 @@
     height: 100%;
 
     grid-template:
-      "content" 1fr
-      "nav" max-content;
+      "nav" max-content
+      "content" 1fr;
   }
   .content {
-    grid-area: "content";
+    grid-area: content;
     position: relative;
     width: 100%;
     background: whitesmoke;
     overflow: scroll;
     margin-top: env(safe-area-inset-top);
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .content::-webkit-scrollbar {
+    display: none;
   }
   .homeButton {
     width: 2em;
   }
   nav {
-    grid-area: "nav";
+    grid-area: nav;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -94,6 +100,9 @@
     padding: 5px 10px;
     transition: background-color 0.3s;
     border-radius: 4px;
+
+    display: flex;
+    align-items: center;
   }
 
   .navButton:hover:not(.selected) {

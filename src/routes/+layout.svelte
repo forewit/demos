@@ -82,8 +82,8 @@
   .content {
     /* fill container */
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
   }
 
   /* global CSS variables */
@@ -105,5 +105,6 @@
   }
   :global(html, body) {
     background: var(--global-background);
+    margin: 0;
   }
 </style>

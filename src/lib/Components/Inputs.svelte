@@ -53,15 +53,17 @@
 
 <style>
   .container {
-    padding: 0.5em;
-    padding-left: 1em;
+    padding: 1.5em;
     border-radius: 0.5em;
-    background: #333;
-    color: #fff;
     display: grid;
     grid-template-columns: min-content 2fr;
     column-gap: 0.8em;
     row-gap: 1em;
+
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
   }
 
   label {
