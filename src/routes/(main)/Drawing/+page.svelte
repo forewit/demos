@@ -5,14 +5,6 @@
   let stroke = 5;
   let color = "#ff0000";
   let dashed = false;
-
-  function onColorChange(newColor?: string) {
-    if (newColor != null) color = newColor;
-  }
-
-  function onDashChange(newDashed?: boolean) {
-    if (newDashed != null) dashed = newDashed;
-  }
 </script>
 
 <svelte:head>
@@ -49,13 +41,24 @@
     ]}
   />
 </div>
+<div class="test"></div>
 
 <Drawing {dashed} {color} {stroke} />
+
 
 <style>
   .inputs-container {
     position: absolute;
     bottom: 20px;
     right: 20px;
+    z-index: 999;
+  }
+  .test {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 200px;
+    width: 200px;
+    background-color: aquamarine;
   }
 </style>
