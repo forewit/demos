@@ -22,9 +22,30 @@
 <div class="inputs-container">
   <Inputs
     props={[
-      { title: "Stroke", type: "number", onInput:(newStroke)=>{stroke=newStroke}, value: stroke },
-      { title: "Color",  type: "color", onInput:(newColor)=>{color=newColor}, value: color },
-      { title: "Dashed", type: "checkbox", onInput:(newDashed)=>{dashed=newDashed}, value: dashed },
+      {
+        title: "Stroke",
+        type: "number",
+        onInput: (newStroke) => {
+          if (newStroke != null) stroke = newStroke;
+        },
+        value: stroke,
+      },
+      {
+        title: "Color",
+        type: "color",
+        onInput: (newColor) => {
+          if (newColor != null) color = newColor;
+        },
+        value: color,
+      },
+      {
+        title: "Dashed",
+        type: "checkbox",
+        onInput: (newDashed) => {
+          if (newDashed != null) dashed = newDashed;
+        },
+        value: dashed,
+      },
     ]}
   />
 </div>
