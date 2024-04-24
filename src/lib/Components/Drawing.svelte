@@ -11,8 +11,11 @@
   $: dash = dashed ? [stroke, stroke * 3] : [];
 
   // internal variables
-  let canvas: HTMLCanvasElement;
-  let ctx: CanvasRenderingContext2D;
+  let onScreenCanvas: HTMLCanvasElement;
+  let onScreenCtx: CanvasRenderingContext2D;
+  let offScreenCanvas: HTMLCanvasElement;
+  let offScreenCtx: CanvasRenderingContext2D;
+  let img: HTMLImageElement;
   let lastPoint: Point = { x: 0, y: 0 };
   let height = 0;
   let width = 0;
@@ -32,8 +35,6 @@
   }
   let currentPath: Path;
   let savedPaths: Path[] = []; // used to re-draw the paths if needed
-  let secondaryCanvas: HTMLCanvasElement;
-  let secondaryCtx: CanvasRenderingContext2D;
 
   // helper distance function
   let dist = function (x1: number, y1: number, x2: number, y2: number) {
@@ -43,32 +44,37 @@
   };
 
   // handle resizing
-  function resize() {
+  async function resize() {
     console.log("resizing");
 
     // stop drawing if you already are
-    if (drawing) dragEndHandler();
+    await dragEndHandler();
 
-    // update height and width
+    // step 1: resize the onScreenCanvas
     dpi = window.devicePixelRatio;
-    let rect = canvas.getBoundingClientRect();
+    let rect = onScreenCanvas.getBoundingClientRect();
+    let oldHeight = height;
+    let oldWidth = width;
     height = rect.height * dpi;
     width = rect.width * dpi;
-    canvas.width = width;
-    canvas.height = height;
-    secondaryCanvas.width = width;
-    secondaryCanvas.height = height;
+    onScreenCanvas.width = width;
+    onScreenCanvas.height = height;
 
-    // redraw saved paths
-    for (let i = 0; i < savedPaths.length; i++) {
-      drawPathToSecondaryCanvas(savedPaths[i]);
-    }
+    // step 2: render the offScreenCanvas back to the onScreenCanvas
+    img.onload = () => {
+      onScreenCtx.drawImage(img, 0, 0, oldWidth, oldHeight);
+
+      // step 3: resize the offScreenCanvas
+      offScreenCanvas.width = width;
+      offScreenCanvas.height = height;
+    };
+    img.src = offScreenCanvas.toDataURL();
   }
 
   // helper function for translating screen to canvas coordinates
   function screenToCanvas(x: number, y: number) {
     // adjust for DPI & offset
-    let rect = canvas.getBoundingClientRect();
+    let rect = onScreenCanvas.getBoundingClientRect();
     return {
       x: (x - rect.left) * dpi,
       y: (y - rect.top) * dpi,
@@ -88,19 +94,16 @@
       dash: dash,
     };
 
-    // clear context
-    ctx.clearRect(0, 0, width, height);
-
     // set path properties
-    ctx.lineWidth = stroke;
-    ctx.lineCap = lineCap;
-    ctx.strokeStyle = color;
-    ctx.setLineDash(dash);
+    onScreenCtx.lineWidth = stroke;
+    onScreenCtx.lineCap = lineCap;
+    onScreenCtx.strokeStyle = color;
+    onScreenCtx.setLineDash(dash);
 
     // start path
-    ctx.beginPath();
+    onScreenCtx.beginPath();
     lastPoint = screenToCanvas(x, y);
-    ctx.moveTo(lastPoint.x, lastPoint.y);
+    onScreenCtx.moveTo(lastPoint.x, lastPoint.y);
     currentPath.points.push(lastPoint);
   }
 
@@ -141,58 +144,64 @@
     // curve to the new point
     var xc = (lastPoint.x + newPoint.x) / 2;
     var yc = (lastPoint.y + newPoint.y) / 2;
-    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
+    onScreenCtx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
 
     // draw the curve
     lastPoint = newPoint;
-    ctx.stroke();
+    onScreenCtx.stroke();
 
     // add control point and new point to the current path
     currentPath.points.push({ x: xc, y: yc }, newPoint);
   }
 
-  function dragEndHandler() {
+  async function dragEndHandler() {
+    if (drawing) savedPaths.push(currentPath);
     drawing = false;
 
-    // clear context
-    ctx.clearRect(0, 0, width, height);
-
-    // save path and move to secondary canvas
-    savedPaths.push(currentPath);
-    drawPathToSecondaryCanvas(savedPaths[savedPaths.length - 1]);
+    // render the onScreenCanvas to the offScreenCanvas
+    await onScreenToOffScreen();
   }
 
-  function drawPathToSecondaryCanvas(path: Path) {
-    // setup context variables
-    secondaryCtx.lineWidth = path.stroke;
-    secondaryCtx.lineCap = path.lineCap;
-    secondaryCtx.strokeStyle = "#00ff00";//TODO: path.color;
-    secondaryCtx.setLineDash(path.dash);
+  function offScreenToOnScreen() {
+// render the onScreenCanvas to the offScreenCanvas
+return new Promise((resolve, reject) => {
+      img.onload = () => {
+        onScreenCtx.drawImage(img, 0, 0, onScreenCanvas.width, onScreenCanvas.height);
+        resolve(img);
+      };
+      img.onerror = reject;
+      img.src = offScreenCanvas.toDataURL();
+    });
+  }
 
-    // start path
-    secondaryCtx.beginPath();
-    secondaryCtx.moveTo(path.points[0].x, path.points[0].y);
-
-    // curve to each point / control-point pair
-    for (let j = 1; j < path.points.length; j=j+2) {
-      secondaryCtx.quadraticCurveTo(
-        path.points[j - 1].x,
-        path.points[j - 1].y,
-        path.points[j].x,
-        path.points[j].y
-      );
-      secondaryCtx.stroke();
-    }
+  function onScreenToOffScreen() {
+    // render the offScreenCanvas to the onScreenCanvas
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        offScreenCtx.drawImage(img, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
+        resolve(img);
+      };
+      img.onerror = reject;
+      img.src = onScreenCanvas.toDataURL();
+    });
   }
 
   onMount(() => {
-    // setup canvas contexts
-    ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    secondaryCtx = secondaryCanvas.getContext("2d") as CanvasRenderingContext2D;
+    // setup onscreen canvas context
+    onScreenCtx = onScreenCanvas.getContext("2d") as CanvasRenderingContext2D;
+    onScreenCtx.imageSmoothingEnabled = false;
+
+    // setup offscreen canvas
+    offScreenCanvas = document.createElement("canvas");
+    offScreenCtx = offScreenCanvas.getContext("2d") as CanvasRenderingContext2D;
+    offScreenCtx.imageSmoothingEnabled = false;
+
+    // setup image for copying canvases
+    img = new Image();
 
     // setup gesture event listeners
-    gestures.enable(canvas);
-    canvas.addEventListener("gesture", ((e: CustomEvent) => {
+    gestures.enable(onScreenCanvas);
+    onScreenCanvas.addEventListener("gesture", ((e: CustomEvent) => {
       switch (e.detail.name) {
         case "left-click-drag-start":
         case "touch-drag-start":
@@ -213,14 +222,12 @@
 
     // setup resize observer
     let resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas);
+    resizeObserver.observe(onScreenCanvas);
   });
 </script>
 
-<!-- all saved paths -->
-<canvas id="savedPaths" bind:this={secondaryCanvas}></canvas>
 <!-- current path -->
-<canvas id="canvas" bind:this={canvas} />
+<canvas id="canvas" bind:this={onScreenCanvas} />
 
 <style>
   canvas {
