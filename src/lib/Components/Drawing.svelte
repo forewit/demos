@@ -17,6 +17,7 @@
   let height = 0;
   let width = 0;
   let dpi: number;
+  let drawing = false;
 
   interface Point {
     x: number;
@@ -30,7 +31,7 @@
     dash: number[];
   }
   let currentPath: Path;
-  let savedPaths: Path[] = [];
+  let savedPaths: Path[] = []; // used to re-draw the paths if needed
   let secondaryCanvas: HTMLCanvasElement;
   let secondaryCtx: CanvasRenderingContext2D;
 
@@ -45,17 +46,14 @@
   function resize() {
     console.log("resizing");
 
-    dpi = window.devicePixelRatio;
+    // stop drawing if you already are
+    if (drawing) dragEndHandler();
 
     // update height and width
+    dpi = window.devicePixelRatio;
     let rect = canvas.getBoundingClientRect();
     height = rect.height * dpi;
     width = rect.width * dpi;
-    // canvas.setAttribute("height", height.toString());
-    // canvas.setAttribute("width", width.toString());
-    // secondaryCanvas.setAttribute("height", height.toString());
-    // secondaryCanvas.setAttribute("width", width.toString());
-
     canvas.width = width;
     canvas.height = height;
     secondaryCanvas.width = width;
@@ -79,6 +77,8 @@
 
   // custom event handlers
   function startHandle(x: number, y: number) {
+    drawing = true;
+
     // setup new path
     currentPath = {
       points: [],
@@ -105,6 +105,8 @@
   }
 
   function dragHandle(x: number, y: number) {
+    if (!drawing) return;
+
     let newPoint = screenToCanvas(x, y);
 
     // if using a drawing circle
@@ -149,7 +151,9 @@
     currentPath.points.push({ x: xc, y: yc }, newPoint);
   }
 
-  function dragEnd() {
+  function dragEndHandler() {
+    drawing = false;
+
     // clear context
     ctx.clearRect(0, 0, width, height);
 
@@ -162,7 +166,7 @@
     // setup context variables
     secondaryCtx.lineWidth = path.stroke;
     secondaryCtx.lineCap = path.lineCap;
-    secondaryCtx.strokeStyle = "#00ff00";//path.color;
+    secondaryCtx.strokeStyle = "#00ff00";//TODO: path.color;
     secondaryCtx.setLineDash(path.dash);
 
     // start path
@@ -200,7 +204,7 @@
           break;
         case "left-click-drag-end":
         case "tough-drag-end":
-          dragEnd();
+          dragEndHandler();
           break;
         default:
           break;

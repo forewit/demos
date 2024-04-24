@@ -41,7 +41,6 @@
     ]}
   />
 </div>
-<div class="test"></div>
 
 <Drawing {dashed} {color} {stroke} />
 
@@ -52,13 +51,5 @@
     bottom: 20px;
     right: 20px;
     z-index: 999;
-  }
-  .test {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    height: 200px;
-    width: 200px;
-    background-color: aquamarine;
   }
 </style>
