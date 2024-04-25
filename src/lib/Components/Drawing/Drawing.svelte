@@ -47,7 +47,8 @@
     return Math.sqrt(a * a + b * b);
   };
 
-  // helper debounce function
+  // helper debounce function 
+  // TODO: update so that resizing isn't jittery?
   const debounce = (func: Function, timeout = 300) => {
     // @ts-ignore
     let timer;
@@ -221,7 +222,7 @@
     }) as EventListener);
 
     // setup resize observer
-    let resizeObserver = new ResizeObserver(debounce(resize));
+    let resizeObserver = new ResizeObserver(debounce(resize, 150));
     resizeObserver.observe(canvas);
   });
 </script>
