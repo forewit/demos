@@ -41,10 +41,25 @@
   let savedPaths: Path[] = []; // used to re-draw the paths if needed
 
   // helper distance function
-  let dist = function (x1: number, y1: number, x2: number, y2: number) {
+  const dist = (x1: number, y1: number, x2: number, y2: number) => {
     var a = x2 - x1;
     var b = y2 - y1;
     return Math.sqrt(a * a + b * b);
+  };
+
+  // helper debounce function
+  const debounce = (func: Function, timeout = 300) => {
+    // @ts-ignore
+    let timer;
+    // @ts-ignore
+    return (...args) => {
+      // @ts-ignore
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        // @ts-ignore
+        func.apply(this, args);
+      }, timeout);
+    };
   };
 
   // handle resizing
@@ -111,7 +126,7 @@
     };
 
     // set path properties
-    ctx.lineWidth = stroke*pressure; // pressure will usually be 1
+    ctx.lineWidth = stroke * pressure; // pressure will usually be 1
     ctx.lineCap = lineCap;
     ctx.strokeStyle = color;
     ctx.setLineDash(dash);
@@ -154,13 +169,14 @@
       newPoint = temp;
 
       // prevent jagged lines by making sure new points aren't too close together
-      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= smoothness) return;
+      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= smoothness)
+        return;
     }
 
     // curve to the new point
     var xc = (lastPoint.x + newPoint.x) / 2;
     var yc = (lastPoint.y + newPoint.y) / 2;
-    ctx.lineWidth = pressure*stroke; // TODO: might need to move to after stroke()?
+    ctx.lineWidth = pressure * stroke; // TODO: might need to move to after stroke()?
     ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
 
     // draw the curve
@@ -205,7 +221,7 @@
     }) as EventListener);
 
     // setup resize observer
-    let resizeObserver = new ResizeObserver(resize);
+    let resizeObserver = new ResizeObserver(debounce(resize));
     resizeObserver.observe(canvas);
   });
 </script>
