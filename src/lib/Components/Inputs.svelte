@@ -2,13 +2,11 @@
   type Prop = {
     title: string;
   } & (
-    | {
-        type: "string" | "color";
-        onInput: (value?: string) => any;
-        value?: string;
-      }
+    | { type: "string"; onInput: (value?: string) => any; value?: string }
+    | { type: "color"; onInput: (value?: string) => any; value?: string }
     | { type: "number"; onInput: (value?: number) => any; value?: number }
     | { type: "checkbox"; onInput: (value?: boolean) => any; value?: boolean }
+    | { type: "button"; onClick: () => any; label?: string }
   );
 
   export let props: Prop[];
@@ -45,6 +43,8 @@
         bind:checked={prop.value}
         on:input={prop.onInput(!prop.value)}
       />
+    {:else if prop.type == "button"}
+      <button id={i.toString()} on:click={prop.onClick()}>{prop.label}</button>
     {:else}
       <div>Invalid input type!</div>
     {/if}
@@ -71,5 +71,10 @@
   }
   input {
     justify-self: left;
+  }
+  button {
+    justify-self: left;
+    padding: 0px 10px;
+    margin-top: -1px;
   }
 </style>

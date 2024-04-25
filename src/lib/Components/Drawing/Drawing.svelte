@@ -3,17 +3,19 @@
   import * as gestures from "$lib/modules/gestures.js";
 
   // public variables
-  export let radius = 10;
+  export let radius = 1;
   export let stroke = 5;
   export let lineCap = "round" as CanvasLineCap;
   export let color = "#000000";
   export let dashed = false;
-  $: dash = dashed ? [stroke, stroke * 3] : [];
+  export function clear() {
+    ctx.clearRect(0,0,width,height);
+  }
 
   // internal variables
+  $: dash = dashed ? [stroke, stroke * 3] : [];
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let img: HTMLImageElement;
   let lastPoint: Point = { x: 0, y: 0 };
   let height = 0;
   let width = 0;
@@ -148,7 +150,7 @@
       newPoint = temp;
 
       // prevent jagged lines by making sure new points aren't too close together
-      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= 0.1) return;
+      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= 10) return;
     }
 
     // curve to the new point
@@ -164,7 +166,7 @@
     currentPath.points.push({ x: xc, y: yc }, newPoint);
   }
 
-  async function dragEndHandler() {
+  function dragEndHandler() {
     if (drawing) savedPaths.push(currentPath);
     drawing = false;
   }

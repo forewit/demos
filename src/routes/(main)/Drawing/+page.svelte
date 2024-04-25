@@ -2,6 +2,7 @@
   import Drawing from "$lib/Components/Drawing/Drawing.svelte";
   import Inputs from "$lib/Components/Inputs.svelte";
 
+  let drawing: Drawing;
   let stroke = 5;
   let color = "#ff0000";
   let dashed = false;
@@ -38,11 +39,17 @@
         },
         value: dashed,
       },
+      {
+        title: "Clear",
+        type: "button",
+        onClick: ()=>{drawing.clear()},
+        label: "🧹"
+      }
     ]}
   />
 </div>
 
-<Drawing {dashed} {color} {stroke} />
+<Drawing {dashed} {color} {stroke} bind:this={drawing}/>
 
 
 <style>
