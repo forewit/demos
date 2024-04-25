@@ -3,9 +3,12 @@
   import Inputs from "$lib/Components/Inputs.svelte";
 
   let drawing: Drawing;
-  let stroke = 5;
+  let stroke = 10;
+  let radius = 3;
+  let smoothness = 2;
   let color = "#429A53";
   let dashed = false;
+
 </script>
 
 <svelte:head>
@@ -22,6 +25,22 @@
           if (newStroke != null) stroke = newStroke;
         },
         value: stroke,
+      },
+      {
+        title: "Radius",
+        type: "number",
+        onInput: (newRadius) => {
+          if (newRadius != null) radius = newRadius;
+        },
+        value: radius,
+      },
+      {
+        title: "Smoothness",
+        type: "number",
+        onInput: (newSmoothness) => {
+          if (newSmoothness != null) smoothness = newSmoothness;
+        },
+        value: smoothness,
       },
       {
         title: "Color",
@@ -49,7 +68,7 @@
   />
 </div>
 
-<Drawing {dashed} {color} {stroke} bind:this={drawing}/>
+<Drawing {dashed} {color} {stroke} {radius} {smoothness} bind:this={drawing}/>
 
 
 <style>

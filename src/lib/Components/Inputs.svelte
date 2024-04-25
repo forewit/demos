@@ -53,6 +53,7 @@
 
 <style>
   .container {
+
     padding: 1.5em;
     border-radius: 0.5em;
     display: grid;
@@ -66,14 +67,15 @@
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
 
+  .container > * {
+    max-width: 80px;
+  }
+
   label {
     justify-self: right;
   }
   input {
     justify-self: left;
-  }
-  input[type="color"] {
-    
   }
   button {
     justify-self: left;

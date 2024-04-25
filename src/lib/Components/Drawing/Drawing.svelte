@@ -3,13 +3,15 @@
   import * as gestures from "$lib/modules/gestures.js";
 
   // public variables
-  export let radius = 1;
+  export let radius = 3; // radius should usually be at least 2x smoothness
+  export let smoothness = 2; // higher smoothness means less points are generated
   export let stroke = 5;
   export let lineCap = "round" as CanvasLineCap;
   export let color = "#000000";
   export let dashed = false;
   export function clear() {
-    ctx.clearRect(0,0,width,height);
+    ctx.clearRect(0, 0, width, height);
+    savedPaths = [];
   }
 
   // internal variables
@@ -21,10 +23,12 @@
   let width = 0;
   let dpi: number;
   let drawing = false;
+  let pressure = 1;
 
   interface Point {
     x: number;
     y: number;
+    force?: number;
   }
   interface Path {
     points: Point[];
@@ -107,7 +111,7 @@
     };
 
     // set path properties
-    ctx.lineWidth = stroke;
+    ctx.lineWidth = stroke*pressure; // pressure will usually be 1
     ctx.lineCap = lineCap;
     ctx.strokeStyle = color;
     ctx.setLineDash(dash);
@@ -150,12 +154,13 @@
       newPoint = temp;
 
       // prevent jagged lines by making sure new points aren't too close together
-      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= 10) return;
+      if (dist(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y) <= smoothness) return;
     }
 
     // curve to the new point
     var xc = (lastPoint.x + newPoint.x) / 2;
     var yc = (lastPoint.y + newPoint.y) / 2;
+    ctx.lineWidth = pressure*stroke; // TODO: might need to move to after stroke()?
     ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
 
     // draw the curve
@@ -182,10 +187,12 @@
       switch (e.detail.name) {
         case "left-click-drag-start":
         case "touch-drag-start":
+          pressure = e.detail.force ? e.detail.force : 1;
           startHandle(e.detail.x, e.detail.y);
           break;
         case "left-click-dragging":
         case "touch-dragging":
+          pressure = e.detail.force ? e.detail.force : 1;
           dragHandle(e.detail.x, e.detail.y);
           break;
         case "left-click-drag-end":
