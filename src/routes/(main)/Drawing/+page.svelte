@@ -4,7 +4,7 @@
 
   let drawing: Drawing;
   let stroke = 5;
-  let color = "#ff0000";
+  let color = "#429A53";
   let dashed = false;
 </script>
 

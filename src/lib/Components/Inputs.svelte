@@ -72,9 +72,12 @@
   input {
     justify-self: left;
   }
+  input[type="color"] {
+    
+  }
   button {
     justify-self: left;
     padding: 0px 10px;
-    margin-top: -1px;
   }
+
 </style>
