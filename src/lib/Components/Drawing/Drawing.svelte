@@ -11,10 +11,8 @@
   $: dash = dashed ? [stroke, stroke * 3] : [];
 
   // internal variables
-  let onScreenCanvas: HTMLCanvasElement;
-  let onScreenCtx: CanvasRenderingContext2D;
-  let offScreenCanvas: HTMLCanvasElement;
-  let offScreenCtx: CanvasRenderingContext2D;
+  let canvas: HTMLCanvasElement;
+  let ctx: CanvasRenderingContext2D;
   let img: HTMLImageElement;
   let lastPoint: Point = { x: 0, y: 0 };
   let height = 0;
@@ -52,29 +50,41 @@
 
     // step 1: resize the onScreenCanvas
     dpi = window.devicePixelRatio;
-    let rect = onScreenCanvas.getBoundingClientRect();
-    let oldHeight = height;
-    let oldWidth = width;
+    let rect = canvas.getBoundingClientRect();
     height = rect.height * dpi;
     width = rect.width * dpi;
-    onScreenCanvas.width = width;
-    onScreenCanvas.height = height;
+    canvas.width = width;
+    canvas.height = height;
 
-    // step 2: render the offScreenCanvas back to the onScreenCanvas
-    img.onload = () => {
-      onScreenCtx.drawImage(img, 0, 0, oldWidth, oldHeight);
+    // render all saved paths
+    for (let i = 0; i < savedPaths.length; i++) {
+      renderPath(savedPaths[i]);
+    }
+  }
 
-      // step 3: resize the offScreenCanvas
-      offScreenCanvas.width = width;
-      offScreenCanvas.height = height;
-    };
-    img.src = offScreenCanvas.toDataURL();
+  function renderPath(path: Path) {
+    ctx.lineWidth = path.stroke;
+    ctx.lineCap = path.lineCap;
+    ctx.strokeStyle = path.color;
+    ctx.setLineDash(path.dash);
+    ctx.beginPath();
+    ctx.moveTo(path.points[0].x, path.points[0].y);
+
+    for (let i = 1; i < path.points.length; i = i + 2) {
+      ctx.quadraticCurveTo(
+        path.points[i - 1].x,
+        path.points[i - 1].y,
+        path.points[i].x,
+        path.points[i].y
+      );
+      ctx.stroke();
+    }
   }
 
   // helper function for translating screen to canvas coordinates
   function screenToCanvas(x: number, y: number) {
     // adjust for DPI & offset
-    let rect = onScreenCanvas.getBoundingClientRect();
+    let rect = canvas.getBoundingClientRect();
     return {
       x: (x - rect.left) * dpi,
       y: (y - rect.top) * dpi,
@@ -95,15 +105,15 @@
     };
 
     // set path properties
-    onScreenCtx.lineWidth = stroke;
-    onScreenCtx.lineCap = lineCap;
-    onScreenCtx.strokeStyle = color;
-    onScreenCtx.setLineDash(dash);
+    ctx.lineWidth = stroke;
+    ctx.lineCap = lineCap;
+    ctx.strokeStyle = color;
+    ctx.setLineDash(dash);
 
     // start path
-    onScreenCtx.beginPath();
+    ctx.beginPath();
     lastPoint = screenToCanvas(x, y);
-    onScreenCtx.moveTo(lastPoint.x, lastPoint.y);
+    ctx.moveTo(lastPoint.x, lastPoint.y);
     currentPath.points.push(lastPoint);
   }
 
@@ -144,11 +154,11 @@
     // curve to the new point
     var xc = (lastPoint.x + newPoint.x) / 2;
     var yc = (lastPoint.y + newPoint.y) / 2;
-    onScreenCtx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
+    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
 
     // draw the curve
     lastPoint = newPoint;
-    onScreenCtx.stroke();
+    ctx.stroke();
 
     // add control point and new point to the current path
     currentPath.points.push({ x: xc, y: yc }, newPoint);
@@ -157,51 +167,16 @@
   async function dragEndHandler() {
     if (drawing) savedPaths.push(currentPath);
     drawing = false;
-
-    // render the onScreenCanvas to the offScreenCanvas
-    await onScreenToOffScreen();
-  }
-
-  function offScreenToOnScreen() {
-// render the onScreenCanvas to the offScreenCanvas
-return new Promise((resolve, reject) => {
-      img.onload = () => {
-        onScreenCtx.drawImage(img, 0, 0, onScreenCanvas.width, onScreenCanvas.height);
-        resolve(img);
-      };
-      img.onerror = reject;
-      img.src = offScreenCanvas.toDataURL();
-    });
-  }
-
-  function onScreenToOffScreen() {
-    // render the offScreenCanvas to the onScreenCanvas
-    return new Promise((resolve, reject) => {
-      img.onload = () => {
-        offScreenCtx.drawImage(img, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
-        resolve(img);
-      };
-      img.onerror = reject;
-      img.src = onScreenCanvas.toDataURL();
-    });
   }
 
   onMount(() => {
     // setup onscreen canvas context
-    onScreenCtx = onScreenCanvas.getContext("2d") as CanvasRenderingContext2D;
-    onScreenCtx.imageSmoothingEnabled = false;
-
-    // setup offscreen canvas
-    offScreenCanvas = document.createElement("canvas");
-    offScreenCtx = offScreenCanvas.getContext("2d") as CanvasRenderingContext2D;
-    offScreenCtx.imageSmoothingEnabled = false;
-
-    // setup image for copying canvases
-    img = new Image();
+    ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    ctx.imageSmoothingEnabled = false;
 
     // setup gesture event listeners
-    gestures.enable(onScreenCanvas);
-    onScreenCanvas.addEventListener("gesture", ((e: CustomEvent) => {
+    gestures.enable(canvas);
+    canvas.addEventListener("gesture", ((e: CustomEvent) => {
       switch (e.detail.name) {
         case "left-click-drag-start":
         case "touch-drag-start":
@@ -222,12 +197,12 @@ return new Promise((resolve, reject) => {
 
     // setup resize observer
     let resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(onScreenCanvas);
+    resizeObserver.observe(canvas);
   });
 </script>
 
 <!-- current path -->
-<canvas id="canvas" bind:this={onScreenCanvas} />
+<canvas id="canvas" bind:this={canvas} />
 
 <style>
   canvas {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Drawing from "$lib/Components/Drawing.svelte";
+  import Drawing from "$lib/Components/Drawing/Drawing.svelte";
   import Inputs from "$lib/Components/Inputs.svelte";
 
   let stroke = 5;
