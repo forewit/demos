@@ -54,6 +54,12 @@
         type: "button",
         onClick: ()=>{drawing.clear()},
         label: "🧹"
+      },
+      {
+        title: "Undo",
+        type: "button",
+        onClick: ()=>{drawing.undo()},
+        label: "🔙"
       }
     ]}
   />

@@ -12,6 +12,19 @@
     ctx.clearRect(0, 0, width, height);
     savedPaths = [];
   }
+  export function undo() {
+    if (savedPaths.length == 0) return;
+    log.innerHTML = "Undo"
+
+    // remove most recent path and clear the canvas
+    savedPaths.pop();
+    ctx.clearRect(0, 0, width, height);
+
+    // render all saved paths
+    for (let i = 0; i < savedPaths.length; i++) {
+      renderPath(savedPaths[i]);
+    }
+  }
 
   // internal variables
   let canvas: HTMLCanvasElement;
@@ -56,10 +69,6 @@
     };
   };
 
-  // helper easing function
-  function easeInOutSine(x: number): number {
-    return -(Math.cos(Math.PI * x) - 1) / 2;
-  }
   // helper function for translating screen to canvas coordinates
   function screenToCanvas(x: number, y: number) {
     // adjust for DPI & offset
@@ -87,7 +96,34 @@
 
     // render all saved paths
     for (let i = 0; i < savedPaths.length; i++) {
-      //renderPath(savedPaths[i]);
+      renderPath(savedPaths[i]);
+    }
+  }
+
+  function renderPath(path: Path) {
+    // set canvas properties
+    ctx.lineWidth = path.lineWidths[0];
+    ctx.lineCap = "round";
+    ctx.strokeStyle = path.color;
+
+    // draw first point
+    ctx.beginPath();
+    ctx.moveTo(path.points[0].x, path.points[0].y);
+    ctx.stroke();
+
+    console.log(path)
+    // curve to each other point
+    for (let i = 0; i < path.points.length; i++) {
+      ctx.lineWidth = path.lineWidths[i];
+      ctx.quadraticCurveTo(
+        path.points[i].x,
+        path.points[i].y,
+        path.ctrlPoints[i].x,
+        path.ctrlPoints[i].y,
+      );
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(path.ctrlPoints[i].x, path.ctrlPoints[i].y);
     }
   }
 
@@ -114,9 +150,9 @@
 
     // save new path
     currentPath = {
-      points: [lastPoint],
+      points: [],
       ctrlPoints: [],
-      lineWidths: [lastLineWidth],
+      lineWidths: [],
       color: color,
     };
   }
@@ -207,7 +243,7 @@
           dragHandle(e.detail.x, e.detail.y, e.detail.force);
           break;
         case "left-click-drag-end":
-        case "tough-drag-end":
+        case "touch-drag-end":
           dragEndHandler();
           break;
         default:
@@ -216,7 +252,7 @@
     }) as EventListener);
 
     // setup resize observer
-    let resizeObserver = new ResizeObserver(debounce(resize, 150));
+    let resizeObserver = new ResizeObserver(debounce(resize, 0));
     resizeObserver.observe(canvas);
   });
 </script>
