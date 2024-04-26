@@ -222,7 +222,7 @@
     }) as EventListener);
 
     // setup resize observer
-    let resizeObserver = new ResizeObserver(debounce(resize, 150));
+    let resizeObserver = new ResizeObserver(debounce(resize,150));
     resizeObserver.observe(canvas);
   });
 </script>
