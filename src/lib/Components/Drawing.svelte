@@ -18,19 +18,15 @@
   $: dash = dashed ? [stroke, stroke * 3] : [];
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let lastPoint: Point = { x: 0, y: 0 };
+  let lastPoint = { x: 0, y: 0 };
   let height = 0;
   let width = 0;
   let dpi: number;
   let drawing = false;
-  let pressure = 1;
+  let log: HTMLDivElement;
 
-  interface Point {
-    x: number;
-    y: number;
-  }
   interface Path {
-    points: Point[];
+    points: { x: number; y: number; lineWidth: number }[];
     pressures: number[];
     stroke: number;
     lineCap: CanvasLineCap;
@@ -114,7 +110,7 @@
   }
 
   // custom event handlers
-  function startHandle(x: number, y: number) {
+  function startHandle(x: number, y: number, pressure: number) {
     drawing = true;
 
     // setup new path
@@ -130,6 +126,7 @@
     // set path properties
     ctx.lineCap = lineCap;
     ctx.strokeStyle = color;
+    ctx.lineWidth = Math.log(pressure + 1) * stroke;
     ctx.setLineDash(dash);
 
     // start path
@@ -138,10 +135,10 @@
     ctx.beginPath();
     ctx.moveTo(lastPoint.x, lastPoint.y);
     ctx.stroke();
-    currentPath.points.push(lastPoint);
+    currentPath.points.push({ x: lastPoint.x, y: lastPoint.y, lineWidth: ctx.lineWidth });
   }
 
-  function dragHandle(x: number, y: number) {
+  function dragHandle(x: number, y: number, pressure: number) {
     if (!drawing) return;
 
     let newPoint = screenToCanvas(x, y);
@@ -176,25 +173,25 @@
         return;
     }
 
-    // curve to the new point
-    var xc = (lastPoint.x + newPoint.x) / 2;
-    var yc = (lastPoint.y + newPoint.y) / 2;
-    
-    
-
-    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
+    // set control points
+    let xc = (lastPoint.x + newPoint.x) / 2;
+    let yc = (lastPoint.y + newPoint.y) / 2;
 
     // draw the curve
-    lastPoint = newPoint;
+    ctx.lineWidth = Math.log(pressure + 1) * stroke;
+
+    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(xc,yc);
 
-    // TODO: might need to move to after stroke()?
-    ctx.lineWidth = pressure * stroke; 
+    ctx.moveTo(xc, yc);
+
     // add control point and new point to the current path
-    currentPath.points.push({ x: xc, y: yc }, newPoint);
-    currentPath.pressures.push(pressure);
+    lastPoint = newPoint;
+    currentPath.points.push(
+      { x: xc, y: yc, lineWidth: ctx.lineWidth },
+      { x: newPoint.x, y: newPoint.y, lineWidth: ctx.lineWidth },
+    );
   }
 
   function dragEndHandler() {
@@ -213,13 +210,20 @@
       switch (e.detail.name) {
         case "left-click-drag-start":
         case "touch-drag-start":
-          pressure = e.detail.force ? e.detail.force : 1;
-          startHandle(e.detail.x, e.detail.y);
+          var pressure =
+            e.detail.force !== undefined
+              ? e.detail.force
+              : 0.5;
+          startHandle(e.detail.x, e.detail.y, pressure);
           break;
         case "left-click-dragging":
         case "touch-dragging":
-          pressure = e.detail.force ? e.detail.force : 1;
-          dragHandle(e.detail.x, e.detail.y);
+          var pressure =
+            e.detail.force !== undefined
+              ? e.detail.force
+              : 0.5;
+          if (e.detail.force > 0.8) log.innerHTML = e.detail.force;
+          dragHandle(e.detail.x, e.detail.y, pressure);
           break;
         case "left-click-drag-end":
         case "tough-drag-end":
@@ -238,6 +242,7 @@
 
 <!-- current path -->
 <canvas id="canvas" bind:this={canvas} />
+<div class="log" bind:this={log}>LOG</div>
 
 <style>
   canvas {
@@ -247,5 +252,10 @@
 
     /* fix ghost margin below html5 canvas: https://stackoverflow.com/questions/9878090/eliminate-ghost-margin-below-html5-canvas-element */
     vertical-align: bottom;
+  }
+  .log {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
   }
 </style>
