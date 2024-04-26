@@ -3,7 +3,7 @@
   import Inputs from "$lib/Components/Inputs.svelte";
 
   let drawing: Drawing;
-  let strokeWidth = 10;
+  let stroke = 10;
   let radius = 3;
   let smoothness = 2;
   let color = "#429A53";
@@ -19,23 +19,26 @@
     props={[
       {
         title: "Stroke",
-        type: "number",
+        type: "slider",
+        max:50,
         onInput: (newStroke) => {
-          if (newStroke != null) strokeWidth = newStroke;
+          if (newStroke != null) stroke = newStroke;
         },
-        value: strokeWidth,
+        value: stroke,
       },
       {
         title: "Radius",
-        type: "number",
+        type: "slider",
+        max:50,
         onInput: (newRadius) => {
-          if (newRadius != null) radius = newRadius;
+          if (newRadius != undefined) radius = newRadius;
         },
         value: radius,
       },
       {
         title: "Smoothness",
-        type: "number",
+        type: "slider",
+        max:50,
         onInput: (newSmoothness) => {
           if (newSmoothness != null) smoothness = newSmoothness;
         },
@@ -65,7 +68,7 @@
   />
 </div>
 
-<Drawing {color} {strokeWidth} {radius} {smoothness} bind:this={drawing}/>
+<Drawing {color} {stroke} {radius} {smoothness} bind:this={drawing}/>
 
 
 <style>

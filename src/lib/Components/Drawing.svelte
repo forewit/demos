@@ -5,7 +5,7 @@
   // public variables
   export let radius = 3; // radius should usually be at least 2x smoothness
   export let smoothness = 2; // higher smoothness means less points are generated
-  export let strokeWidth = 5;
+  export let stroke = 5;
   export let pressureScaler = 5;
   export let color = "#000000";
   export function clear() {
@@ -27,6 +27,7 @@
   }
 
   // internal variables
+  $: strokeWidth = Math.max(stroke, 1);
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   let lastPoint = { x: 0, y: 0 };
@@ -111,7 +112,6 @@
     ctx.moveTo(path.points[0].x, path.points[0].y);
     ctx.stroke();
 
-    console.log(path)
     // curve to each other point
     for (let i = 0; i < path.points.length; i++) {
       ctx.lineWidth = path.lineWidths[i];
