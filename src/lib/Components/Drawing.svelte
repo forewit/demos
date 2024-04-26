@@ -28,10 +28,10 @@
   interface Point {
     x: number;
     y: number;
-    force?: number;
   }
   interface Path {
     points: Point[];
+    pressures: number[];
     stroke: number;
     lineCap: CanvasLineCap;
     color: string;
@@ -47,7 +47,7 @@
     return Math.sqrt(a * a + b * b);
   };
 
-  // helper debounce function 
+  // helper debounce function
   // TODO: update so that resizing isn't jittery?
   const debounce = (func: Function, timeout = 300) => {
     // @ts-ignore
@@ -97,7 +97,7 @@
         path.points[i - 1].x,
         path.points[i - 1].y,
         path.points[i].x,
-        path.points[i].y
+        path.points[i].y,
       );
       ctx.stroke();
     }
@@ -120,6 +120,7 @@
     // setup new path
     currentPath = {
       points: [],
+      pressures: [],
       stroke: stroke,
       lineCap: lineCap,
       color: color,
@@ -127,15 +128,16 @@
     };
 
     // set path properties
-    ctx.lineWidth = stroke * pressure; // pressure will usually be 1
     ctx.lineCap = lineCap;
     ctx.strokeStyle = color;
     ctx.setLineDash(dash);
 
     // start path
-    ctx.beginPath();
     lastPoint = screenToCanvas(x, y);
+
+    ctx.beginPath();
     ctx.moveTo(lastPoint.x, lastPoint.y);
+    ctx.stroke();
     currentPath.points.push(lastPoint);
   }
 
@@ -161,7 +163,7 @@
           2 * newPoint.x * lastPoint.x +
           lastPoint.x * lastPoint.x -
           2 * newPoint.y * lastPoint.y +
-          lastPoint.y * lastPoint.y
+          lastPoint.y * lastPoint.y,
       );
       let temp = {
         x: newPoint.x + radius * ((lastPoint.x - newPoint.x) / denominator),
@@ -177,15 +179,22 @@
     // curve to the new point
     var xc = (lastPoint.x + newPoint.x) / 2;
     var yc = (lastPoint.y + newPoint.y) / 2;
-    ctx.lineWidth = pressure * stroke; // TODO: might need to move to after stroke()?
+    
+    
+
     ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
 
     // draw the curve
     lastPoint = newPoint;
     ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(xc,yc);
 
+    // TODO: might need to move to after stroke()?
+    ctx.lineWidth = pressure * stroke; 
     // add control point and new point to the current path
     currentPath.points.push({ x: xc, y: yc }, newPoint);
+    currentPath.pressures.push(pressure);
   }
 
   function dragEndHandler() {
@@ -222,7 +231,7 @@
     }) as EventListener);
 
     // setup resize observer
-    let resizeObserver = new ResizeObserver(debounce(resize,150));
+    let resizeObserver = new ResizeObserver(debounce(resize, 150));
     resizeObserver.observe(canvas);
   });
 </script>

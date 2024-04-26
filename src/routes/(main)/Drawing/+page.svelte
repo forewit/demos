@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Drawing from "$lib/Components/Drawing/Drawing.svelte";
+  import Drawing from "$lib/Components/Drawing.svelte";
   import Inputs from "$lib/Components/Inputs.svelte";
 
   let drawing: Drawing;
-  let stroke = 10;
+  let stroke = 100;
   let radius = 3;
   let smoothness = 2;
   let color = "#429A53";
