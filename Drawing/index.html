@@ -8,17 +8,17 @@
 		
 		<link href="../app/immutable/assets/0.f05bdba3.css" rel="stylesheet">
 		<link href="../app/immutable/assets/2.0ffd49a5.css" rel="stylesheet">
-		<link href="../app/immutable/assets/9.db6517e2.css" rel="stylesheet">
-		<link rel="modulepreload" href="../app/immutable/entry/start.7be4a493.js">
+		<link href="../app/immutable/assets/9.165c63bf.css" rel="stylesheet">
+		<link rel="modulepreload" href="../app/immutable/entry/start.6ea92643.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.513dcc03.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/singletons.d96c1b4d.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/singletons.0d8a7621.js">
 		<link rel="modulepreload" href="../app/immutable/chunks/index.965e08d6.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/paths.34c27dfa.js">
-		<link rel="modulepreload" href="../app/immutable/entry/app.2e9a1bd8.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/paths.a62a404e.js">
+		<link rel="modulepreload" href="../app/immutable/entry/app.70c36fe6.js">
 		<link rel="modulepreload" href="../app/immutable/nodes/0.2c117ba7.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/2.1401a064.js">
-		<link rel="modulepreload" href="../app/immutable/chunks/stores.8fdc1bbb.js">
-		<link rel="modulepreload" href="../app/immutable/nodes/9.9d13c275.js"><title>Draw</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-94kuob_START --><!-- HEAD_svelte-94kuob_END -->
+		<link rel="modulepreload" href="../app/immutable/nodes/2.7e32151d.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/stores.b183f824.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/9.aca10497.js"><title>Draw</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-94kuob_START --><!-- HEAD_svelte-94kuob_END -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
@@ -29,17 +29,18 @@
 
 <div class="container svelte-vw21jt"><div class="content svelte-vw21jt"><div class="grid svelte-qx80ww"><div class="content svelte-qx80ww">
 
-<div class="inputs-container svelte-igcq23"><div class="container svelte-pbwowc"><label for="0" class="svelte-pbwowc">Stroke</label>
-    <input id="0" type="number" class="svelte-pbwowc" value="10"><label for="1" class="svelte-pbwowc">Radius</label>
-    <input id="1" type="number" class="svelte-pbwowc" value="3"><label for="2" class="svelte-pbwowc">Smoothness</label>
-    <input id="2" type="number" class="svelte-pbwowc" value="2"><label for="3" class="svelte-pbwowc">Color</label>
-    <input id="3" type="color" class="svelte-pbwowc" value="#429A53"><label for="4" class="svelte-pbwowc">Dashed</label>
-    <input id="4" type="checkbox" class="svelte-pbwowc"><label for="5" class="svelte-pbwowc">Clear</label>
-    <button id="5" class="svelte-pbwowc">🧹</button>
+<div class="inputs-container svelte-igcq23"><div class="container svelte-1ewzb7u"><label for="0" class="svelte-1ewzb7u">Stroke</label>
+    <input id="0" type="range" min="0" max="50" step="1" class="svelte-1ewzb7u" value="10"><label for="1" class="svelte-1ewzb7u">Radius</label>
+    <input id="1" type="range" min="0" max="50" step="1" class="svelte-1ewzb7u" value="3"><label for="2" class="svelte-1ewzb7u">Smoothness</label>
+    <input id="2" type="range" min="0" max="50" step="1" class="svelte-1ewzb7u" value="2"><label for="3" class="svelte-1ewzb7u">Color</label>
+    <input id="3" type="color" class="svelte-1ewzb7u" value="#429A53"><label for="4" class="svelte-1ewzb7u">Clear</label>
+    <button id="4" class="svelte-1ewzb7u">🧹</button><label for="5" class="svelte-1ewzb7u">Undo</label>
+    <button id="5" class="svelte-1ewzb7u">🔙</button>
 </div></div>
 
 
-<canvas id="canvas" class="svelte-16hz5p5"></canvas></div>
+<canvas id="canvas" class="svelte-18vcmku"></canvas>
+<div class="log svelte-18vcmku">LOG</div></div>
   <nav class="svelte-qx80ww"><a class="homeButton svelte-qx80ww" href="/demos/"><img src="/demos/images/pen-square.svg" alt="Home" class="svelte-qx80ww"></a>
     <a class="navButton svelte-qx80ww" href="/demos/Articles">Articles</a>
     <a class="navButton svelte-qx80ww" href="/demos/Fireworks">Fireworks</a>
@@ -55,7 +56,7 @@
 			
 			<script>
 				{
-					__sveltekit_1w947r0 = {
+					__sveltekit_1rnliba = {
 						assets: "/demos",
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
@@ -66,8 +67,8 @@
 					const data = [null,null,null];
 
 					Promise.all([
-						import("../app/immutable/entry/start.7be4a493.js"),
-						import("../app/immutable/entry/app.2e9a1bd8.js")
+						import("../app/immutable/entry/start.6ea92643.js"),
+						import("../app/immutable/entry/app.70c36fe6.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2, 9],
