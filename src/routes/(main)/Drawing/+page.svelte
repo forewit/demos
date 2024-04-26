@@ -3,11 +3,10 @@
   import Inputs from "$lib/Components/Inputs.svelte";
 
   let drawing: Drawing;
-  let stroke = 100;
+  let strokeWidth = 10;
   let radius = 3;
   let smoothness = 2;
   let color = "#429A53";
-  let dashed = false;
 
 </script>
 
@@ -22,9 +21,9 @@
         title: "Stroke",
         type: "number",
         onInput: (newStroke) => {
-          if (newStroke != null) stroke = newStroke;
+          if (newStroke != null) strokeWidth = newStroke;
         },
-        value: stroke,
+        value: strokeWidth,
       },
       {
         title: "Radius",
@@ -51,14 +50,6 @@
         value: color,
       },
       {
-        title: "Dashed",
-        type: "checkbox",
-        onInput: (newDashed) => {
-          if (newDashed != null) dashed = newDashed;
-        },
-        value: dashed,
-      },
-      {
         title: "Clear",
         type: "button",
         onClick: ()=>{drawing.clear()},
@@ -68,7 +59,7 @@
   />
 </div>
 
-<Drawing {dashed} {color} {stroke} {radius} {smoothness} bind:this={drawing}/>
+<Drawing {color} {strokeWidth} {radius} {smoothness} bind:this={drawing}/>
 
 
 <style>

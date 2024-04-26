@@ -5,20 +5,19 @@
   // public variables
   export let radius = 3; // radius should usually be at least 2x smoothness
   export let smoothness = 2; // higher smoothness means less points are generated
-  export let stroke = 5;
-  export let lineCap = "round" as CanvasLineCap;
+  export let strokeWidth = 5;
+  export let pressureScaler = 5;
   export let color = "#000000";
-  export let dashed = false;
   export function clear() {
     ctx.clearRect(0, 0, width, height);
     savedPaths = [];
   }
 
   // internal variables
-  $: dash = dashed ? [stroke, stroke * 3] : [];
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   let lastPoint = { x: 0, y: 0 };
+  let lastLineWidth = 0;
   let height = 0;
   let width = 0;
   let dpi: number;
@@ -26,12 +25,10 @@
   let log: HTMLDivElement;
 
   interface Path {
-    points: { x: number; y: number; lineWidth: number }[];
-    pressures: number[];
-    stroke: number;
-    lineCap: CanvasLineCap;
+    points: { x: number; y: number }[];
+    lineWidths: number[];
+    ctrlPoints: { x: number; y: number }[];
     color: string;
-    dash: number[];
   }
   let currentPath: Path;
   let savedPaths: Path[] = []; // used to re-draw the paths if needed
@@ -59,12 +56,26 @@
     };
   };
 
+  // helper easing function
+  function easeInOutSine(x: number): number {
+    return -(Math.cos(Math.PI * x) - 1) / 2;
+  }
+  // helper function for translating screen to canvas coordinates
+  function screenToCanvas(x: number, y: number) {
+    // adjust for DPI & offset
+    let rect = canvas.getBoundingClientRect();
+    return {
+      x: (x - rect.left) * dpi,
+      y: (y - rect.top) * dpi,
+    };
+  }
+
   // handle resizing
-  async function resize() {
+  function resize() {
     console.log("resizing");
 
     // stop drawing if you already are
-    await dragEndHandler();
+    dragEndHandler();
 
     // step 1: resize the onScreenCanvas
     dpi = window.devicePixelRatio;
@@ -76,66 +87,38 @@
 
     // render all saved paths
     for (let i = 0; i < savedPaths.length; i++) {
-      renderPath(savedPaths[i]);
+      //renderPath(savedPaths[i]);
     }
-  }
-
-  function renderPath(path: Path) {
-    ctx.lineWidth = path.stroke;
-    ctx.lineCap = path.lineCap;
-    ctx.strokeStyle = path.color;
-    ctx.setLineDash(path.dash);
-    ctx.beginPath();
-    ctx.moveTo(path.points[0].x, path.points[0].y);
-
-    for (let i = 1; i < path.points.length; i = i + 2) {
-      ctx.quadraticCurveTo(
-        path.points[i - 1].x,
-        path.points[i - 1].y,
-        path.points[i].x,
-        path.points[i].y,
-      );
-      ctx.stroke();
-    }
-  }
-
-  // helper function for translating screen to canvas coordinates
-  function screenToCanvas(x: number, y: number) {
-    // adjust for DPI & offset
-    let rect = canvas.getBoundingClientRect();
-    return {
-      x: (x - rect.left) * dpi,
-      y: (y - rect.top) * dpi,
-    };
   }
 
   // custom event handlers
   function startHandle(x: number, y: number, pressure: number) {
     drawing = true;
-
-    // setup new path
-    currentPath = {
-      points: [],
-      pressures: [],
-      stroke: stroke,
-      lineCap: lineCap,
-      color: color,
-      dash: dash,
-    };
-
-    // set path properties
-    ctx.lineCap = lineCap;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = Math.log(pressure + 1) * stroke;
-    ctx.setLineDash(dash);
-
-    // start path
     lastPoint = screenToCanvas(x, y);
 
+    if (pressure !== undefined && pressure > 0) {
+      lastLineWidth = Math.log(pressure + 1) * pressureScaler * strokeWidth;
+    } else {
+      lastLineWidth = strokeWidth;
+    }
+
+    // set canvas properties
+    ctx.lineWidth = lastLineWidth;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = color;
+
+    // draw path
     ctx.beginPath();
     ctx.moveTo(lastPoint.x, lastPoint.y);
     ctx.stroke();
-    currentPath.points.push({ x: lastPoint.x, y: lastPoint.y, lineWidth: ctx.lineWidth });
+
+    // save new path
+    currentPath = {
+      points: [lastPoint],
+      ctrlPoints: [],
+      lineWidths: [lastLineWidth],
+      color: color,
+    };
   }
 
   function dragHandle(x: number, y: number, pressure: number) {
@@ -177,21 +160,27 @@
     let xc = (lastPoint.x + newPoint.x) / 2;
     let yc = (lastPoint.y + newPoint.y) / 2;
 
-    // draw the curve
-    ctx.lineWidth = Math.log(pressure + 1) * stroke;
+    // update line width
+    if (pressure !== undefined && pressure > 0) {
+      lastLineWidth =
+        Math.log(pressure + 1) * pressureScaler * strokeWidth * 0.2 +
+        lastLineWidth * 0.8;
+    }
 
+    // draw path
+    ctx.lineWidth = lastLineWidth;
     ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, xc, yc);
     ctx.stroke();
     ctx.beginPath();
-
     ctx.moveTo(xc, yc);
 
     // add control point and new point to the current path
+    currentPath.points.push(lastPoint);
+    currentPath.ctrlPoints.push({ x: xc, y: yc });
+    currentPath.lineWidths.push(lastLineWidth);
+
+    // update last point
     lastPoint = newPoint;
-    currentPath.points.push(
-      { x: xc, y: yc, lineWidth: ctx.lineWidth },
-      { x: newPoint.x, y: newPoint.y, lineWidth: ctx.lineWidth },
-    );
   }
 
   function dragEndHandler() {
@@ -210,20 +199,12 @@
       switch (e.detail.name) {
         case "left-click-drag-start":
         case "touch-drag-start":
-          var pressure =
-            e.detail.force !== undefined
-              ? e.detail.force
-              : 0.5;
-          startHandle(e.detail.x, e.detail.y, pressure);
+          startHandle(e.detail.x, e.detail.y, e.detail.force);
           break;
         case "left-click-dragging":
         case "touch-dragging":
-          var pressure =
-            e.detail.force !== undefined
-              ? e.detail.force
-              : 0.5;
-          if (e.detail.force > 0.8) log.innerHTML = e.detail.force;
-          dragHandle(e.detail.x, e.detail.y, pressure);
+          if (e.detail.force > 0) log.innerHTML = e.detail.force;
+          dragHandle(e.detail.x, e.detail.y, e.detail.force);
           break;
         case "left-click-drag-end":
         case "tough-drag-end":
