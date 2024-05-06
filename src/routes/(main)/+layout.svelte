@@ -1,6 +1,10 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { base } from "$app/paths";
+  import { onMount } from "svelte";
+  import { isMobile } from "$lib/modules/utils";
+
+  let mobile: boolean;
 
   let navigationButtons = [
     { name: "📃", path: "/articles" },
@@ -11,9 +15,17 @@
     { name: "🎆", path: "/fireworks" },
     { name: "ASCII", path: "/ascii" },
   ];
+
+  onMount(() => {
+    let resizeObserver = new ResizeObserver(() => {
+      mobile = isMobile();
+    });
+
+    resizeObserver.observe(document.body);
+  });
 </script>
 
-<div class="grid">
+<div class="grid" class:mobile>
   <div class="content">
     <slot />
   </div>
@@ -44,6 +56,13 @@
       "nav" max-content
       "content" 1fr;
   }
+
+  .grid.mobile {
+    grid-template:
+      "content" 1fr
+      "nav" max-content;
+  }
+
   .content {
     grid-area: content;
     position: relative;
@@ -72,7 +91,7 @@
     justify-content: center;
     flex-wrap: wrap;
     padding: 10px;
-    gap: .5em;
+    gap: 0.5em;
   }
 
   .navButton {
