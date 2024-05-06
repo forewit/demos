@@ -5,7 +5,7 @@
 
   function launch() {
     fireworks.launch(
-      -1,
+      3,
       {
         color: "lightgreen",
         left: 50,
@@ -40,19 +40,19 @@
 </svelte:head>
 
 <div id="container">
-    <Fireworks bind:this={fireworks} />
+  <Fireworks bind:this={fireworks} />
 
-    <div id="button-container">
-      <button on:click={launch}>Go</button>
-    </div>
+  <div id="button-container">
+    <button on:click={launch}>Launch</button>
+  </div>
 </div>
 
 <style>
-    #container {
-        width: 100%;
-        height: 100%;
-        background: #234;
-    }
+  #container {
+    width: 100%;
+    height: 100%;
+    background: #234;
+  }
   #button-container {
     position: absolute;
     bottom: 30%;
