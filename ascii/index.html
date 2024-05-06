@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../images/pen-square.svg" />
+		<link rel="manifest" href="/demos/manifest.json" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link href="../app/immutable/assets/0.f05bdba3.css" rel="stylesheet">
+		<link href="../app/immutable/assets/2.aef38a9c.css" rel="stylesheet">
+		<link href="../app/immutable/assets/7.f6a87da4.css" rel="stylesheet">
+		<link rel="modulepreload" href="../app/immutable/entry/start.01c9a631.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/index.da2e7d86.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/singletons.18d765c6.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/index.7220d4ff.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/paths.1f4209e5.js">
+		<link rel="modulepreload" href="../app/immutable/entry/app.11cf8f26.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/0.d174d4cc.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/2.c64a6070.js">
+		<link rel="modulepreload" href="../app/immutable/chunks/stores.c753d354.js">
+		<link rel="modulepreload" href="../app/immutable/nodes/7.8cf9f2ee.js"><title>Ascii</title><!-- HEAD_svelte-1xk05yi_START --><meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"><!-- HEAD_svelte-1xk05yi_END --><!-- HEAD_svelte-13ahe2i_START --><!-- HEAD_svelte-13ahe2i_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+
+
+
+
+
+<div class="container svelte-vw21jt"><div class="content svelte-vw21jt"><div class="grid svelte-1iwyram"><div class="content svelte-1iwyram">
+
+<div class="grid svelte-nj5chu"><h3 class="svelte-nj5chu">Input</h3>
+  <input name="input" type="text" class="svelte-nj5chu" value="hi">
+  <h3 class="svelte-nj5chu">Replacement characters</h3>
+  <label for="text">Text:</label>
+  <input name="text" type="text" class="svelte-nj5chu" value="**">
+  <label for="fill">Fill:</label>
+  <input name="fill" type="text" class="svelte-nj5chu" value="  ">
+  <label for="border">Border:</label>
+  <input name="border" type="text" class="svelte-nj5chu" value="||">
+  <h3 class="svelte-nj5chu">Output</h3>
+  <textarea spellcheck="false" id="output" name="output" class="svelte-nj5chu">||||||||||||||||||||||||
+||                    ||
+||  **    **  ******  ||
+||  **    **    **    ||
+||  ********    **    ||
+||  **    **    **    ||
+||  **    **  ******  ||
+||                    ||
+||||||||||||||||||||||||</textarea>
+
+  <div class="buttons svelte-nj5chu"><button id="btn-copy" class="svelte-nj5chu"><img src="/demos/images/copy-icon.svg" alt="copy" class="svelte-nj5chu"></button>
+    <button id="btn-clear" class="svelte-nj5chu"><img src="/demos/images/clear-icon.svg" alt="clear" class="svelte-nj5chu"></button>
+    <p id="message" class="svelte-nj5chu"></p></div>
+</div></div>
+  <nav class="svelte-1iwyram"><a class="homeButton svelte-1iwyram" href="/demos/"><img src="/demos/images/pen-square.svg" alt="Home" class="svelte-1iwyram"></a>
+
+    <a class="navButton svelte-1iwyram" href="/demos/articles">📃</a><a class="navButton svelte-1iwyram" href="/demos/drawing">✏️</a><a class="navButton svelte-1iwyram" href="/demos/firebase">🔥</a><a class="navButton svelte-1iwyram" href="/demos/dicethrones">🎲</a><a class="navButton svelte-1iwyram" href="/demos/typewriter">⌨️</a><a class="navButton svelte-1iwyram" href="/demos/fireworks">🎆</a><a class="navButton svelte-1iwyram selected" href="/demos/ascii">ASCII</a></nav>
+</div></div>
+</div>
+
+
+			
+			<script>
+				{
+					__sveltekit_tj4k70 = {
+						assets: "/demos",
+						base: new URL("..", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null,null];
+
+					Promise.all([
+						import("../app/immutable/entry/start.01c9a631.js"),
+						import("../app/immutable/entry/app.11cf8f26.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 7],
+							data,
+							form: null,
+							error: null
+						});
+					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('../service-worker.js');
+						});
+					}
+				}
+			</script>
+		</div>
+	</body>
+</html>
