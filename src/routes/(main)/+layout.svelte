@@ -77,7 +77,7 @@
     color: white;
     text-decoration: none;
     font-size: 16px;
-    padding: 5px 10px;
+    padding: 10px 10px;
     transition: background-color 0.3s;
     border-radius: 4px;
 
