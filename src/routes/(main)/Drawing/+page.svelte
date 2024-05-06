@@ -71,6 +71,7 @@
 <Drawing {color} {stroke} {radius} {smoothness} bind:this={drawing}/>
 
 
+
 <style>
   .inputs-container {
     position: absolute;
