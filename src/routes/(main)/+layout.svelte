@@ -1,6 +1,16 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { base } from "$app/paths";
+
+  let navigationButtons = [
+    { name: "📃", path: "/articles" },
+    { name: "✏️", path: "/drawing" },
+    { name: "🔥", path: "/firebase" },
+    { name: "🎲", path: "/dicethrones" },
+    { name: "⌨️", path: "/typewriter" },
+    { name: "🎆", path: "/fireworks" },
+    { name: "ASCII", path: "/ascii" },
+  ];
 </script>
 
 <div class="grid">
@@ -11,44 +21,14 @@
     <a class="homeButton" href="{base}/">
       <img src="{base}/images/pen-square.svg" alt="Home" />
     </a>
-    <a
-      class="navButton"
-      href="{base}/Articles"
-      class:selected={$page.url.pathname === `${base}/Articles/`}>Articles</a
-    >
-    <a
-      class="navButton"
-      href="{base}/Fireworks"
-      class:selected={$page.url.pathname === `${base}/Fireworks/`}>Fireworks</a
-    >
-    <a
-      class="navButton"
-      href="{base}/Typewriter"
-      class:selected={$page.url.pathname === `${base}/Typewriter/`}
-      >Typewriter</a
-    >
-    <a
-      class="navButton"
-      href="{base}/Drawing"
-      class:selected={$page.url.pathname === `${base}/Drawing/`}>Drawing</a
-    >
-    <a
-      class="navButton"
-      href="{base}/Firebase"
-      class:selected={$page.url.pathname === `${base}/Firebase/`}>Firebase</a
-    >
-    <a
-      class="navButton"
-      href="{base}/DiceThronesSim"
-      class:selected={$page.url.pathname === `${base}/DiceThronesSim/`}
-      >Dice Thrones Simulator</a
-    >
-    <a
-      class="navButton"
-      href="{base}/Ascii"
-      class:selected={$page.url.pathname === `${base}/Ascii/`}
-      style="font-family: monospace;">Ascii</a
-    >
+
+    {#each navigationButtons as { name, path }}
+      <a
+        class="navButton"
+        href="{base}{path}"
+        class:selected={$page.url.pathname === `${base}${path}/`}>{name}</a
+      >
+    {/each}
   </nav>
 </div>
 
