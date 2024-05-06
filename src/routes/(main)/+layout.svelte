@@ -62,6 +62,9 @@
   }
   .homeButton {
     width: 2em;
+    margin-top: 2px;
+    margin-bottom: -2px;
+    margin-right: 1em;
   }
   nav {
     grid-area: nav;
@@ -69,7 +72,7 @@
     justify-content: center;
     flex-wrap: wrap;
     padding: 10px;
-    gap: 10px;
+    gap: .5em;
   }
 
   .navButton {
@@ -77,9 +80,10 @@
     color: white;
     text-decoration: none;
     font-size: 16px;
-    padding: 10px 10px;
+    padding: 5px 10px;
     transition: background-color 0.3s;
     border-radius: 4px;
+    height: 2em;
 
     display: flex;
     align-items: center;
