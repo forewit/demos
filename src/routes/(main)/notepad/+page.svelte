@@ -8,18 +8,24 @@
 
 <div class="main-grid">
   <div class="top-grid">
+    <div class="back"></div>
+
     <div class="tabs-container">
+
       <div class="tabs">
         {#each tabs as tab}
           <div class="tab">{tab.title}</div>
         {/each}
       </div>
+
     </div>
+    <div class="forward"></div>
+
     <div class="controls-container"></div>
   </div>
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea name="editor" id="text"></textarea>
+    <textarea spellcheck="false" name="editor" id="text"></textarea>
   </div>
   <div class="status-bar"></div>
 </div>
@@ -31,7 +37,7 @@
     --toolbar-color: #1a2220;
     --highlight-color: #9f9f9f; /* scrollbar, badges, etc.*/
     --dark-color: #000e0f;
-    --font-family: "Consolas", monospace;    
+    --font-family: "Consolas", monospace;
 
     height: 100%;
     display: grid;
@@ -41,20 +47,38 @@
   .top-grid {
     background: var(--dark-color);
     display: grid;
-    grid-template-columns: 1fr 4rem;
+    grid-template-columns: 2rem 1fr 2rem 4rem;
   }
+  .back {
+    border: 1px solid lightblue;
+  }
+  .forward {
+    border: 1px solid yellow;
+  }
+
+  @media (min-width: 300px) {
+    .back, .forward {
+      display: none;
+    }
+    .top-grid {
+      grid-template-columns: 1fr 4rem;
+    }
+  }
+  
   .controls-container {
     border: 1px solid green;
-    
-}
+  }
   .tabs-container {
     border: 1px solid red;
+    min-width: 50px;
     overflow-x: scroll;
+  }
+  .tabs-container::-webkit-scrollbar {
+    display: none;
   }
   .tabs {
     min-width: 200px;
     display: flex;
-
   }
   .tab {
     color: var(--text-color);
@@ -64,6 +88,9 @@
     margin: 5px;
     background-color: var(--toolbar-color);
   }
+
+  
+
   .toolbar {
     background: var(--toolbar-color);
   }
