@@ -14,6 +14,7 @@
     { name: "⌨️", path: "/typewriter" },
     { name: "🎆", path: "/fireworks" },
     { name: "ASCII", path: "/ascii" },
+    { name: "📝", path: "/notepad" },
   ];
 
   onMount(() => {
