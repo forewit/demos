@@ -1,5 +1,22 @@
-<div class="grid">
-  <div class="tabs"></div>
+<script>
+  let tabs = [
+    { title: "tab 1", text: "" },
+    { title: "tab 2", text: "" },
+    { title: "tab 3", text: "" },
+  ];
+</script>
+
+<div class="main-grid">
+  <div class="top-grid">
+    <div class="tabs-container">
+      <div class="tabs">
+        {#each tabs as tab}
+          <div class="tab">{tab.title}</div>
+        {/each}
+      </div>
+    </div>
+    <div class="controls-container"></div>
+  </div>
   <div class="toolbar"></div>
   <div class="editor">
     <textarea name="editor" id="text"></textarea>
@@ -8,21 +25,44 @@
 </div>
 
 <style>
-  .grid {
+  .main-grid {
     --text-color: #fff;
     --background-color: #272727;
     --toolbar-color: #1a2220;
     --highlight-color: #9f9f9f; /* scrollbar, badges, etc.*/
     --dark-color: #000e0f;
-    --font-family: "Consolas", monospace;
+    --font-family: "Consolas", monospace;    
 
     height: 100%;
     display: grid;
     grid-template-rows: 2rem 2rem 1fr 2rem;
   }
 
-  .tabs {
+  .top-grid {
     background: var(--dark-color);
+    display: grid;
+    grid-template-columns: 1fr 4rem;
+  }
+  .controls-container {
+    border: 1px solid green;
+    
+}
+  .tabs-container {
+    border: 1px solid red;
+    overflow-x: scroll;
+  }
+  .tabs {
+    min-width: 200px;
+    display: flex;
+
+  }
+  .tab {
+    color: var(--text-color);
+    max-width: 100px;
+    flex-grow: 1;
+    padding-inline: 10px;
+    margin: 5px;
+    background-color: var(--toolbar-color);
   }
   .toolbar {
     background: var(--toolbar-color);
