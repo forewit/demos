@@ -13,15 +13,16 @@
   let activeTab = 0;
   let tabsElm: HTMLElement;
 
+  
+  function checkTabsOverflow() {
+    tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
+  }
+
   function scroll(direction: number) {
     tabsElm.scrollBy({
       left: direction,
       behavior: "smooth",
     });
-  }
-
-  function checkTabsOverflow() {
-    tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
   }
 
   function newTab() {
