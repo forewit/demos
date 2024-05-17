@@ -187,7 +187,7 @@
   .tab.active {
     background-color: var(--toolbar-color);
   }
-  .tab:not(:hover) .tab-bar-btn {
+  .tab:not(:hover):not(.active) .tab-bar-btn {
     display: none;
   }
   .tab p {
@@ -285,7 +285,7 @@
     justify-content: center;
   }
   .tab-bar-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(120, 120, 120, 0.1);
   }
   .tab-bar-btn:active {
     opacity: 0.8;
