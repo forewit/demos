@@ -13,7 +13,6 @@
   let activeTab = 0;
   let tabsElm: HTMLElement;
 
-  
   function checkTabsOverflow() {
     tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
   }
@@ -52,7 +51,12 @@
 <div class="main-grid">
   <div class="tab-bar" class:minimal={!tabsOverflowed}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div id="back" class="tab-bar-btn" class:hide={!tabsOverflowed} on:click={() => scroll(-80)}>
+    <div
+      id="back"
+      class="tab-bar-btn"
+      class:hide={!tabsOverflowed}
+      on:click={() => scroll(-80)}
+    >
       <svg
         viewBox="-3 -3 22 22"
         xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +77,9 @@
           class:active={activeTab == i}
           on:click={() => (activeTab = i)}
         >
+          {#if i!=0 && i!=activeTab && i!=activeTab+1}
+            <div class="tab-divider"></div>
+          {/if}
           <p>{tab.title}</p>
           <div
             class="close tab-bar-btn"
@@ -95,7 +102,14 @@
       {/each}
     </div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div id="forward" class="tab-bar-btn" class:hide={!tabsOverflowed} on:click={()=>{scroll(80)}}>
+    <div
+      id="forward"
+      class="tab-bar-btn"
+      class:hide={!tabsOverflowed}
+      on:click={() => {
+        scroll(80);
+      }}
+    >
       <svg
         viewBox="-3 -3 22 22"
         xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +122,7 @@
       </svg>
     </div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div id="new-tab" class="tab-bar-btn" on:click={newTab} >
+    <div id="new-tab" class="tab-bar-btn" on:click={newTab}>
       <svg
         fill="currentColor"
         version="1.1"
@@ -141,6 +155,8 @@
     --dark-color: #000e0f;
     --editor-font-family: "Consolas", monospace;
     --default-font-family: "Segoe UI", sans-serif;
+    --slight-transparent: rgba(120, 120, 120, 0.1);
+    --tab-radius: 6px;
 
     height: 100%;
     display: grid;
@@ -161,12 +177,28 @@
     overflow-x: scroll;
     max-width: max-content;
     display: flex;
-    padding-inline: 6px;
+    column-gap: 2px;
+
+    padding-inline: var(--tab-radius);
   }
   .tab-bar.minimal #tabs {
     padding-left: 20px;
   }
   #tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+ .tab-divider {
+    position: absolute;
+    bottom: 7px;
+    left: -2px;
+    width: 2px;
+    height: 14px;
+    border-radius: 1px;
+    background: var(--toolbar-color);
+  }
+  .tab:hover .tab-divider,
+  .tab:hover + .tab .tab-divider {
     display: none;
   }
 
@@ -180,15 +212,18 @@
     display: grid;
     grid-template-columns: 1fr auto;
 
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-top-left-radius: var(--tab-radius);
+    border-top-right-radius: var(--tab-radius);
 
     position: relative;
+  }
+  .tab:hover {
+    background-color: var(--slight-transparent);
   }
   .tab.active {
     background-color: var(--toolbar-color);
   }
-  .tab:not(:hover):not(.active) .tab-bar-btn {
+  .tab:not(:hover, .active) .tab-bar-btn {
     display: none;
   }
   .tab p {
@@ -204,21 +239,25 @@
     content: "";
     position: absolute;
     bottom: 0;
-    width: 6px;
-    height: 6px;
-    left: -6px;
-    border-bottom-right-radius: 100%;
-    box-shadow: 0 3px 0 0 var(--toolbar-color);
+    width: var(--tab-radius);
+    height: calc(2 * var(--tab-radius));
+    left: calc(var(--tab-radius) * -1);
+    border-bottom-right-radius: 100vw;
+    background-color: transparent;
+    box-shadow: 0 var(--tab-radius) 0 0 var(--toolbar-color);
+    z-index: 1;
   }
   .tab.active:after {
     content: "";
     position: absolute;
     bottom: 0;
-    width: 6px;
-    height: 6px;
-    right: -6px;
-    border-bottom-left-radius: 100%;
-    box-shadow: 0 3px 0 0 var(--toolbar-color);
+    width: var(--tab-radius);
+    height: calc(2 * var(--tab-radius));
+    right: calc(var(--tab-radius) * -1);
+    border-bottom-left-radius: 100vw;
+    background-color: transparent;
+    box-shadow: 0 var(--tab-radius) 0 0 var(--toolbar-color);
+    z-index: 1;
   }
 
   .toolbar {
@@ -286,7 +325,7 @@
     justify-content: center;
   }
   .tab-bar-btn:hover {
-    background-color: rgba(120, 120, 120, 0.1);
+    background-color: var(--slight-transparent);
   }
   .tab-bar-btn:active {
     opacity: 0.8;
