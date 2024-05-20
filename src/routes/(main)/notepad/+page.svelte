@@ -77,9 +77,7 @@
           class:active={activeTab == i}
           on:click={() => (activeTab = i)}
         >
-          {#if i!=0 && i!=activeTab && i!=activeTab+1}
-            <div class="tab-divider"></div>
-          {/if}
+          <div class="tab-divider"></div>
           <p>{tab.title}</p>
           <div
             class="close tab-bar-btn"
@@ -188,7 +186,7 @@
     display: none;
   }
 
- .tab-divider {
+  .tab-divider {
     position: absolute;
     bottom: 7px;
     left: -2px;
@@ -197,6 +195,9 @@
     border-radius: 1px;
     background: var(--toolbar-color);
   }
+  .tab:first-child .tab-divider,
+  .tab.active .tab-divider,
+  .tab.active + .tab .tab-divider,
   .tab:hover .tab-divider,
   .tab:hover + .tab .tab-divider {
     display: none;
