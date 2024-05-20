@@ -200,8 +200,8 @@ const wheelHandler = (e: WheelEvent) => {
     dispatchGesture(e.target as HTMLElement, { name: "wheel", x: e.clientX, y: e.clientY, event: e });
 
     // prevent page scrolling
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 }
 
 const contextmenuHandler = (e: Event) => {

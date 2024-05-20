@@ -1,12 +1,19 @@
 <script lang="ts">
+  /**
+   * TODO:
+   * - add undo/redo
+   * - add slash commands
+   * - add drag and drop tabs using gestures
+   */
   import { afterUpdate } from "svelte";
+  import * as gestures from "$lib/modules/gestures";
 
   let tabs = [
-    { title: "tab 1 long", text: "" },
-    { title: "Untitled", text: "" },
-    { title: "Untitled", text: "" },
-    { title: "New Note", text: "" },
-    { title: "Untitled", text: "" },
+    { title: "tab 1 long... really long" },
+    { title: "Untitled" },
+    { title: "Untitled" },
+    { title: "Untitled" },
+    { title: "Untitled" },
   ];
 
   let tabsOverflowed = false;
@@ -25,7 +32,7 @@
   }
 
   function newTab() {
-    tabs.push({ title: "Untitled", text: "" });
+    tabs.push({ title: "Untitled" });
     tabs = tabs; // force reactivity
     activeTab = tabs.length - 1;
 
@@ -43,7 +50,54 @@
     activeTab = Math.max(0, activeTab - 1);
   }
 
-  afterUpdate(checkTabsOverflow);
+
+  /********************** TODO: *****************************/
+  let dragElm: HTMLElement;
+  let offsetX = 0;
+  let placeholderElm: HTMLElement;
+
+  function dragStart(e: CustomEvent) {
+    // toggle class of target
+
+    dragElm = e.target as HTMLElement;
+    offsetX = dragElm.getBoundingClientRect().left - e.detail.x;
+    tabsElm.insertBefore(placeholderElm, dragElm);
+    placeholderElm.classList.remove("hide");
+  }
+  function drag(e: CustomEvent) {
+
+  }
+  function dragEnd(e: CustomEvent) {
+    placeholderElm.classList.add("hide");
+  }
+  /**********************************************************/
+
+  function handleGestures(e: CustomEvent) {
+    switch (e.detail.name) {
+      case "left-click-drag-start":
+        dragStart(e);
+        break;
+      case "left-click-dragging":
+        drag(e);
+        break;
+      case "left-click-drag-end":
+        dragEnd(e);
+        break;
+    }
+  }
+
+  afterUpdate(() => {
+    checkTabsOverflow();
+
+    // disable and re-enable gestures on tabs
+    gestures.disable();
+    for (let i = 0; i < tabsElm.children.length; i++) {
+      let tab = tabsElm.children[i] as HTMLElement;
+
+      gestures.enable(tab);
+      tab.addEventListener("gesture", handleGestures as EventListener);
+    }
+  });
 </script>
 
 <svelte:window on:resize={checkTabsOverflow} />
@@ -73,16 +127,14 @@
       {#each tabs as tab, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
+          id={i.toString()}
           class="tab"
           class:active={activeTab == i}
           on:click={() => (activeTab = i)}
         >
           <div class="tab-divider"></div>
           <p>{tab.title}</p>
-          <div
-            class="close tab-bar-btn"
-            on:click|stopPropagation={() => closeTab(i)}
-          >
+          <div class="close tab-bar-btn" on:click={() => closeTab(i)}>
             <svg
               fill="currentColor"
               version="1.1"
@@ -98,6 +150,9 @@
           </div>
         </div>
       {/each}
+      <div class="tab placeholder hide" bind:this={placeholderElm}>
+        <div class="tab-divider"></div>
+      </div>
     </div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
@@ -232,7 +287,7 @@
     font-size: 12px;
     margin: auto 0 7px 9px;
 
-    user-select: none;
+    pointer-events: none;
     overflow: hidden;
     white-space: nowrap;
   }
