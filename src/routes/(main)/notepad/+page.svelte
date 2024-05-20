@@ -278,7 +278,7 @@
     padding: 1rem;
     border: none;
     outline: none;
-    width: calc(100%-1rem);
+    width: calc(100% - 1rem);
     height: 100%;
     width: 100%;
   }
