@@ -65,7 +65,7 @@
     placeholderElm.classList.remove("hide");
   }
   function drag(e: CustomEvent) {
-
+    console.log(e.detail.x)
   }
   function dragEnd(e: CustomEvent) {
     placeholderElm.classList.add("hide");
