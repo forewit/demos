@@ -5,26 +5,27 @@
    * - add slash commands
    * - add drag and drop tabs using gestures
    */
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
 
-  let tabs = [
-    { title: "tab 1 long... really long" },
-    { title: "Untitled" },
-    { title: "Untitled" },
-    { title: "Untitled" },
-    { title: "Untitled" },
-  ];
+  type Tab = {
+    id: string;
+    title: string;
+    text: string;
+  };
+
+  let tabs: Tab[] = [{ id: Date.now().toString(), title: "long... really long", text: "sup!" }];
 
   let tabsOverflowed = false;
-  let activeTab = 0;
-  let tabsElm: HTMLElement;
+  let activeTabID: string;
+  let tabsElm: HTMLDivElement;
+  let editorElm: HTMLTextAreaElement;
 
   function checkTabsOverflow() {
     tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
   }
 
-  function scroll(direction: number) {
+  function scrollTabs(direction: number) {
     tabsElm.scrollBy({
       left: direction,
       behavior: "smooth",
@@ -32,9 +33,9 @@
   }
 
   function newTab() {
-    tabs.push({ title: "Untitled" });
+    tabs.push({ id: Date.now().toString(), title: "tab " + (tabs.length + 1), text: "" });
     tabs = tabs; // force reactivity
-    activeTab = tabs.length - 1;
+    setActiveTab(tabs[tabs.length - 1].id);
 
     // wait for reactivity then scroll
     setTimeout(() => {
@@ -42,49 +43,118 @@
     }, 0);
   }
 
-  function closeTab(index: number) {
+  function closeTab(id: string, prevID: string) {
+    let index = tabs.findIndex((tab) => tab.id === id);
     tabs.splice(index, 1);
     tabs = tabs; // force reactivity
 
-    if (tabs.length == 0) newTab();
-    activeTab = Math.max(0, activeTab - 1);
+    if (tabs.length == 0) {
+      newTab();
+      return;
+    }
+
+    setActiveTab(prevID);
   }
 
+  function setActiveTab(id: string) {
+    activeTabID = id;
+  }
 
-  /********************** TODO: *****************************/
+  /********************** dragging tabs logic *****************************/
   let dragElm: HTMLElement;
-  let offsetX = 0;
   let placeholderElm: HTMLElement;
+  let offsetX = 0;
+  let x = 0;
+  let dragging = false;
 
   function dragStart(e: CustomEvent) {
-    // toggle class of target
-
+    dragging = true;
     dragElm = e.target as HTMLElement;
-    offsetX = dragElm.getBoundingClientRect().left - e.detail.x;
-    tabsElm.insertBefore(placeholderElm, dragElm);
-    placeholderElm.classList.remove("hide");
+    offsetX = e.detail.x - dragElm.getBoundingClientRect().x;
+
+    dragElm.insertAdjacentElement("afterend", placeholderElm);
+    tabsElm.insertAdjacentElement("afterend", dragElm);
+
+    dragElm.classList.add("dragging");
+    requestAnimationFrame(scrollTabsWhileDragging);
   }
   function drag(e: CustomEvent) {
-    console.log(e.detail.x)
+    x = e.detail.x;
+    dragElm.style.setProperty("--x", `${x - offsetX}px`);
+
+    let threshold = dragElm.getBoundingClientRect().x + dragElm.offsetWidth / 2;
+
+    for (let i = 0; i < tabsElm.children.length; i++) {
+      let tab = tabsElm.children[i] as HTMLElement;
+
+      if (tab === placeholderElm) continue;
+
+      let tabRect = tab.getBoundingClientRect();
+
+      if (threshold < tabRect.left || threshold > tabRect.right) continue;
+
+      if (placeholderElm.getBoundingClientRect().left > tabRect.left) {
+        tab.insertAdjacentElement("beforebegin", placeholderElm);
+        console.log("swap left");
+      } else {
+        tab.insertAdjacentElement("afterend", placeholderElm);
+        console.log("swap right");
+      }
+
+      break;
+    }
   }
-  function dragEnd(e: CustomEvent) {
-    placeholderElm.classList.add("hide");
+  function dragEnd() {
+    dragging = false;
+    dragElm.classList.remove("dragging");
+    placeholderElm.insertAdjacentElement("afterend", dragElm);
+    placeholderElm.remove();
+
+    console.log(tabs);
+  }
+
+  function scrollTabsWhileDragging() {
+    if (!dragging) return;
+
+    if (x < tabsElm.offsetLeft && tabsElm.scrollLeft > 0) {
+      tabsElm.scrollBy({ left: -10, behavior: "instant" });
+    }
+
+    if (
+      x > tabsElm.offsetLeft + tabsElm.clientWidth &&
+      tabsElm.scrollLeft + tabsElm.clientWidth < tabsElm.scrollWidth
+    ) {
+      tabsElm.scrollBy({ left: 10, behavior: "instant" });
+    }
+
+    requestAnimationFrame(scrollTabsWhileDragging);
   }
   /**********************************************************/
 
   function handleGestures(e: CustomEvent) {
     switch (e.detail.name) {
       case "left-click-drag-start":
+      case "touch-drag-start":
         dragStart(e);
         break;
       case "left-click-dragging":
+      case "touch-dragging":
         drag(e);
         break;
       case "left-click-drag-end":
-        dragEnd(e);
+      case "touch-drag-end":
+        dragEnd();
+        break;
+      case "left-click":
+      case "tap":
+        setActiveTab(e.target.id);
         break;
     }
   }
+
+  onMount(() => {
+    placeholderElm.remove();
+  });
 
   afterUpdate(() => {
     checkTabsOverflow();
@@ -109,7 +179,7 @@
       id="back"
       class="tab-bar-btn"
       class:hide={!tabsOverflowed}
-      on:click={() => scroll(-80)}
+      on:click={() => scrollTabs(-80)}
     >
       <svg
         viewBox="-3 -3 22 22"
@@ -127,14 +197,13 @@
       {#each tabs as tab, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
-          id={i.toString()}
+          id={tab.id}
           class="tab"
-          class:active={activeTab == i}
-          on:click={() => (activeTab = i)}
+          class:active={tab.id === activeTabID}
         >
           <div class="tab-divider"></div>
           <p>{tab.title}</p>
-          <div class="close tab-bar-btn" on:click={() => closeTab(i)}>
+          <div id="close-tab" class="tab-bar-btn" on:click={() => closeTab(tab.id, tabs[Math.max(i - 1, 0)].id)}>
             <svg
               fill="currentColor"
               version="1.1"
@@ -150,7 +219,7 @@
           </div>
         </div>
       {/each}
-      <div class="tab placeholder hide" bind:this={placeholderElm}>
+      <div bind:this={placeholderElm} class="tab">
         <div class="tab-divider"></div>
       </div>
     </div>
@@ -160,7 +229,7 @@
       class="tab-bar-btn"
       class:hide={!tabsOverflowed}
       on:click={() => {
-        scroll(80);
+        scrollTabs(80);
       }}
     >
       <svg
@@ -193,7 +262,7 @@
 
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea spellcheck="false" name="editor" id="text"></textarea>
+    <textarea bind:this={editorElm} spellcheck="false" name="editor" id="text"></textarea>
   </div>
   <div class="status-bar"></div>
 </div>
@@ -205,6 +274,7 @@
     --background-color: #272727;
     --toolbar-color: #1a2220;
     --highlight-color: #9f9f9f; /* scrollbar, badges, etc.*/
+    --tab-hover-color: #0c1919;
     --dark-color: #000e0f;
     --editor-font-family: "Consolas", monospace;
     --default-font-family: "Segoe UI", sans-serif;
@@ -218,6 +288,7 @@
 
   .tab-bar {
     background: var(--dark-color);
+    position: relative;
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: min-content auto min-content 1fr;
@@ -231,6 +302,7 @@
     max-width: max-content;
     display: flex;
     column-gap: 2px;
+    align-items: end;
 
     padding-inline: var(--tab-radius);
   }
@@ -264,7 +336,8 @@
 
     min-width: 80px;
     width: 100px;
-    margin-top: 10px;
+    height: 30px;
+
     display: grid;
     grid-template-columns: 1fr auto;
 
@@ -274,12 +347,12 @@
     position: relative;
   }
   .tab:hover {
-    background-color: var(--slight-transparent);
+    background-color: var(--tab-hover-color);
   }
   .tab.active {
     background-color: var(--toolbar-color);
   }
-  .tab:not(:hover, .active) .tab-bar-btn {
+  .tab:not(:hover, .active, .dragging) .tab-bar-btn {
     display: none;
   }
   .tab p {
@@ -314,6 +387,16 @@
     background-color: transparent;
     box-shadow: 0 var(--tab-radius) 0 0 var(--toolbar-color);
     z-index: 1;
+  }
+
+  .tab:global(.dragging) {
+    position: absolute;
+    left: var(--x);
+    bottom: 0;
+    z-index: 2;
+  }
+  .tab:global(.dragging):not(.active) {
+    background-color: var(--tab-hover-color);
   }
 
   .toolbar {
