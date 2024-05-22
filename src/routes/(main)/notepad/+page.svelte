@@ -3,7 +3,8 @@
    * TODO:
    * - add undo/redo
    * - add slash commands
-   * - add drag and drop tabs using gestures
+   * - add themes (including mobile sizing)
+   * ✅ add drag and drop tabs using gestures
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
@@ -21,7 +22,6 @@
   let tabsOverflowed = false;
   let activeTabID = tabs[0].id;
   let tabsElm: HTMLDivElement;
-  let editorElm: HTMLTextAreaElement;
 
   function checkTabsOverflow() {
     tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
@@ -83,6 +83,7 @@
     tabsElm.insertAdjacentElement("afterend", dragElm);
 
     dragElm.classList.add("dragging");
+    dragElm.style.setProperty("--max-width", `${placeholderElm.clientWidth}px`);
     requestAnimationFrame(scrollTabsWhileDragging);
   }
   function drag(e: CustomEvent) {
@@ -154,7 +155,7 @@
         break;
       case "left-click":
       case "tap":
-        setActiveTab(e.target.id);
+        setActiveTab((e.target as HTMLElement).id);
         break;
     }
   }
@@ -188,6 +189,7 @@
       class:hide={!tabsOverflowed}
       on:click={() => scrollTabs(-80)}
     >
+    
       <svg
         viewBox="-3 -3 22 22"
         xmlns="http://www.w3.org/2000/svg"
@@ -266,7 +268,11 @@
 
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea bind:this={editorElm} spellcheck="false" name="editor" id="text"
+    <textarea
+      bind:value={tabs[tabs.findIndex((tab) => tab.id == activeTabID)].text}
+      spellcheck="false"
+      name="editor"
+      id="text"
     ></textarea>
   </div>
   <div class="status-bar"></div>
@@ -284,7 +290,7 @@
     --editor-font-family: "Consolas", monospace;
     --default-font-family: "Segoe UI", sans-serif;
     --slight-transparent: rgba(120, 120, 120, 0.1);
-    --tab-radius: 6px;
+    --tab-radius: 8px;
 
     height: 100%;
     display: grid;
@@ -400,6 +406,7 @@
   .tab:global(.dragging) {
     position: absolute;
     left: var(--x);
+    max-width: var(--max-width);
     bottom: 0;
     z-index: 2;
   }
