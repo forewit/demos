@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { getApps, initializeApp, getApp, deleteApp} from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration

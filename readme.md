@@ -1,64 +1,67 @@
-# create-svelte
-
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
+## Initial Setup
+#### Setup svelte static site
+1. install svelte and the static adapter
 ```bash
-# create a new project in the current directory
 npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-
-# install static adapter for static sites
 npm i -D @sveltejs/adapter-static
 ```
 
+2. update svelte.config.js to be compatible with the static adapter and gh-pages
+```js
+// Change adapter from adapter-auto to adapter-static...
+import adapter from '@sveltejs/adapter-static';
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+// Add the following to config.kit...
+const config = {
+    // ...
+    kit: {
+        // ...
+		appDir: 'app',
+		paths: {
+			base: process.env.NODE_ENV === "production" ? "/YOUR_GITHUB_REPO" : "",
+		}
+	}
+}
 ```
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
+3. add the following to /src/+layout.ts (or create the file):
+```ts
+export const prerender = true;
+export const trailingSlash = "always";
 ```
 
-You can preview the production build with `npm run preview`.
+#### Setup deploy to gh-pages
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+1. Install gh-pages
+```bash
+npm install gh-pages --save-dev
+```
 
+1. Add scripts to package.json
+```json
+{
+    "deploy": "touch build/.nojekyll && gh-pages -d build -t true",
+    "magic":"git add . && git commit -am 'na' && git push origin main && vite build && touch build/.nojekyll && gh-pages -d build -t true"
+}
+```
 
-## deploy to gh-pages
-Install : `npm install gh-pages --save-dev`
-add "deploy" script: `"deploy": "touch build/.nojekyll && gh-pages -d build -t true"`` to package.json
-add "magic" script: `"magic":"git add . && git commit -am 'na' && git push origin main && vite build && touch build/.nojekyll && gh-pages -d build -t true"`` to package.json
-
+1. How to run (deploy will publish to gh-pages, magic will commit, push, and publish):
 ```bash
 npm run deploy
 npm run magic
 ```
 See: https://github.com/metonym/sveltekit-gh-pages
 
-## firebase auth
+#### Setup firebase
 
-1. install: `npm install firebase`
-2. configure in `$lib/firebase/firebase.client.js`
-3. store environment variables from firebase console: `/.env` (naming convention for keys "VITE_NAME")
+1. Install firebase
+```bash
+npm install firebase
+```
 
+1. Add firebase config to $lib/firebase/firebase.client.js (see [Demos](https://github.com/forewit/demos) repo for an example)
+
+2. Add your environment variables to /.env 
 ```env
 VITE_APIKEY=
 VITE_AUTHDOMAIN=
@@ -67,5 +70,22 @@ VITE_STORAGEBUCKET=
 VITE_MESSAGINGSENDERID=
 VITE_APPID=
 ```
-4. Svelte Store for firebase auth & handlers: `stores/authStore.js`
-5. TIP: use +layout.svelte to subscribe to auth updates and keep the Svelte Store up-to-date
+
+TIP: use Svelte Store for firebase auth & handlers: `stores/authStore.js`
+TIP: use +layout.svelte to subscribe to auth updates and keep the Svelte Store up-to-date
+
+
+#### Setup service-worker and page caching
+(see [Demos](https://github.com/forewit/demos) repo for example of a manifest.json and service-worker.js for page caching)
+
+1. create service worker: /src/service-worker.js 
+2. create manifest: /static/manifest.json
+3. update /src/app.html to include the manifest:
+```html
+<html lang="en">
+    ...
+    <head>
+        ... 
+        <!-- add the following line -->
+		<link rel="manifest" href="/demos/manifest.json" />
+```
