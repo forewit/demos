@@ -14,10 +14,12 @@
     text: string;
   };
 
-  let tabs: Tab[] = [{ id: Date.now().toString(), title: "long... really long", text: "sup!" }];
+  let tabs: Tab[] = [
+    { id: Date.now().toString(), title: "long... really long", text: "sup!" },
+  ];
 
   let tabsOverflowed = false;
-  let activeTabID: string;
+  let activeTabID = tabs[0].id;
   let tabsElm: HTMLDivElement;
   let editorElm: HTMLTextAreaElement;
 
@@ -33,7 +35,11 @@
   }
 
   function newTab() {
-    tabs.push({ id: Date.now().toString(), title: "tab " + (tabs.length + 1), text: "" });
+    tabs.push({
+      id: Date.now().toString(),
+      title: "tab " + (tabs.length + 1),
+      text: "",
+    });
     tabs = tabs; // force reactivity
     setActiveTab(tabs[tabs.length - 1].id);
 
@@ -57,6 +63,7 @@
   }
 
   function setActiveTab(id: string) {
+    if (activeTabID === id) return;
     activeTabID = id;
   }
 
@@ -117,14 +124,14 @@
     if (!dragging) return;
 
     if (x < tabsElm.offsetLeft && tabsElm.scrollLeft > 0) {
-      tabsElm.scrollBy({ left: -10, behavior: "instant" });
+      tabsElm.scrollBy({ left: -2, behavior: "instant" });
     }
 
     if (
       x > tabsElm.offsetLeft + tabsElm.clientWidth &&
       tabsElm.scrollLeft + tabsElm.clientWidth < tabsElm.scrollWidth
     ) {
-      tabsElm.scrollBy({ left: 10, behavior: "instant" });
+      tabsElm.scrollBy({ left: 2, behavior: "instant" });
     }
 
     requestAnimationFrame(scrollTabsWhileDragging);
@@ -134,15 +141,15 @@
   function handleGestures(e: CustomEvent) {
     switch (e.detail.name) {
       case "left-click-drag-start":
-      case "touch-drag-start":
+      case "longpress-drag-start":
         dragStart(e);
         break;
       case "left-click-dragging":
-      case "touch-dragging":
+      case "longpress-dragging":
         drag(e);
         break;
       case "left-click-drag-end":
-      case "touch-drag-end":
+      case "longpress-drag-end":
         dragEnd();
         break;
       case "left-click":
@@ -195,21 +202,20 @@
     </div>
     <div id="tabs" bind:this={tabsElm}>
       {#each tabs as tab, i}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div
-          id={tab.id}
-          class="tab"
-          class:active={tab.id === activeTabID}
-        >
+        <div id={tab.id} class="tab" class:active={tab.id === activeTabID}>
           <div class="tab-divider"></div>
           <p>{tab.title}</p>
-          <div id="close-tab" class="tab-bar-btn" on:click={() => closeTab(tab.id, tabs[Math.max(i - 1, 0)].id)}>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div
+            id="close-tab"
+            class="tab-bar-btn"
+            on:click={() => closeTab(tab.id, tabs[Math.max(i - 1, 0)].id)}
+          >
             <svg
               fill="currentColor"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 42 42"
-              xml:space="preserve"
             >
               <path
                 fill-rule="evenodd"
@@ -219,9 +225,7 @@
           </div>
         </div>
       {/each}
-      <div bind:this={placeholderElm} class="tab">
-        <div class="tab-divider"></div>
-      </div>
+      <div id="placeholder" bind:this={placeholderElm} class="tab"></div>
     </div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
@@ -262,7 +266,8 @@
 
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea bind:this={editorElm} spellcheck="false" name="editor" id="text"></textarea>
+    <textarea bind:this={editorElm} spellcheck="false" name="editor" id="text"
+    ></textarea>
   </div>
   <div class="status-bar"></div>
 </div>
@@ -326,7 +331,9 @@
   .tab.active .tab-divider,
   .tab.active + .tab .tab-divider,
   .tab:hover .tab-divider,
-  .tab:hover + .tab .tab-divider {
+  .tab:hover + .tab .tab-divider,
+  .tab-bar > .tab .tab-divider,
+  #placeholder + .tab .tab-divider {
     display: none;
   }
 
@@ -361,6 +368,7 @@
     margin: auto 0 7px 9px;
 
     pointer-events: none;
+    user-select: none;
     overflow: hidden;
     white-space: nowrap;
   }
@@ -445,12 +453,7 @@
   }
 
   .status-bar {
-    /* theme */
     background: var(--toolbar-color);
-  }
-
-  .hide {
-    display: none !important;
   }
 
   .tab-bar-btn {
@@ -470,8 +473,11 @@
     opacity: 0.8;
   }
   .tab-bar-btn svg {
-    align-self: center;
     width: 10px;
     color: var(--highlight-color);
+  }
+
+  .hide {
+    display: none !important;
   }
 </style>

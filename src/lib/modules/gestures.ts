@@ -206,8 +206,8 @@ const wheelHandler = (e: WheelEvent) => {
 
 const contextmenuHandler = (e: Event) => {
     // right-clicks are handled by the mouseup handler
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 }
 
 const mousedownHandler = (e: MouseEvent) => {
@@ -240,8 +240,8 @@ const mousedownHandler = (e: MouseEvent) => {
     }
 
     // prevent default
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 }
 
 const mousemoveHandler = (e: MouseEvent) => {
@@ -352,16 +352,16 @@ const mouseupHandler = (e: MouseEvent) => {
 const touchstartHandler = (e: TouchEvent) => {
     // prevent pinch-zoom
     if (e.touches.length > 1) {
-        e.preventDefault();
-        e.stopPropagation();
+        //e.preventDefault();
+        //e.stopPropagation();
     }
 
     // return if touch is not on active element
     if (document.activeElement === e.target) return;
 
     // prevent default
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 
     // don't handle multiple touches at once
     if (e.touches.length > 1) {
@@ -399,8 +399,8 @@ const touchstartHandler = (e: TouchEvent) => {
 }
 
 const touchmoveHandler = (e: TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 
     if (touch.isDragging) {
         // capture previous position
