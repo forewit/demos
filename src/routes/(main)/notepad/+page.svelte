@@ -3,7 +3,6 @@
    * TODO:
    * - add slash commands
    * - create the theme colors/sizing variables
-   * - double click to edit tab title
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
@@ -18,7 +17,7 @@
   let tabsOrder: string[] = [];
   let activeTabID: string | null = null;
   $: activeTab = tabs.find((tab) => tab.id == activeTabID) || {
-    text: "NEW TAB",
+    text: "Click the ➕ above to create a new tab.",
   };
   let tabsElm: HTMLDivElement;
   let dragElm: HTMLElement;
@@ -95,7 +94,6 @@
       elm.remove();
     });
     isTabClosing = false;
-    console.log("finished closing tabs");
   }, 700);
 
   const setActiveTab = (id: string | null) => {
@@ -167,7 +165,7 @@
     if (!tabElm.classList.contains("tab")) return;
     let inputElm = tabElm.children.namedItem("title-input") as HTMLInputElement;
     inputElm.select();
-  }
+  };
 
   const resetGestures = () => {
     gestures.disable();
@@ -214,11 +212,17 @@
   });
 </script>
 
+<svelte:head>
+  <title>Not Notepad</title>
+</svelte:head>
 <svelte:window on:resize={checkTabsOverflow} />
 
 <div class="main-grid">
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="tab-bar" class:minimal={!isTabsElmOverflowed}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       id="back"
       class="tab-bar-btn"
@@ -239,6 +243,7 @@
     </div>
     <div id="tabs" bind:this={tabsElm}>
       {#each tabs as tab, i}
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           id={tab.id}
           class="tab"
@@ -247,7 +252,7 @@
         >
           <div class="tab-divider"></div>
           <!-- focus on doubleclick -->
-          <input name="title-input" type="text" bind:value={tab.title}/>
+          <input name="title-input" type="text" bind:value={tab.title} />
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
             id="close-tab"
@@ -290,7 +295,6 @@
         />
       </svg>
     </div>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div id="new-tab" class="tab-bar-btn" on:click={newTab}>
       <svg
         fill="currentColor"
@@ -301,7 +305,7 @@
       >
         <path
           d="M39.5,22.5v-3c0-1.48-0.43-2-2-2h-13v-13c0-1.48-0.49-2-2-2h-3c-1.55,0-2,0.52-2,2v13h-14c-1.48,0-2,0.49-2,2v3
-                c0,1.55,0.52,2,2,2h14v14c0,1.51,0.48,2,2,2h3c1.48,0,2-0.43,2-2v-14h13C39.01,24.5,39.5,24.02,39.5,22.5z"
+                  c0,1.55,0.52,2,2,2h14v14c0,1.51,0.48,2,2,2h3c1.48,0,2-0.43,2-2v-14h13C39.01,24.5,39.5,24.02,39.5,22.5z"
         />
       </svg>
     </div>
