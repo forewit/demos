@@ -1,10 +1,9 @@
 <script lang="ts">
   /**
    * TODO:
-   * - add undo/redo
    * - add slash commands
-   * - add themes (including mobile sizing)
-   * ✅ add drag and drop tabs using gestures
+   * - create the theme colors/sizing variables
+   * - double click to edit tab title
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
