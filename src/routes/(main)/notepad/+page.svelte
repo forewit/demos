@@ -15,11 +15,16 @@
   };
 
   let tabs: Tab[] = [
-    { id: Date.now().toString(), title: "long... really long", text: "sup!" },
+    {
+      id: Date.now().toString(),
+      title: "long... really long",
+      text: "sup!",
+    },
   ];
-
+  let tabsOrder: string[] = [tabs[0].id];
   let tabsOverflowed = false;
-  let activeTabID = tabs[0].id;
+  let activeTabID: string | null = tabs[0].id;
+  $: activeTab = tabs.find((tab) => tab.id == activeTabID) || {text:"ERROR"};
   let tabsElm: HTMLDivElement;
 
   function checkTabsOverflow() {
@@ -34,36 +39,46 @@
   }
 
   function newTab() {
+    let newID = Date.now().toString();
     tabs.push({
-      id: Date.now().toString(),
+      id: newID,
       title: "tab " + (tabs.length + 1),
-      text: "",
+      text: "sup " + (tabs.length + 1),
     });
+    tabsOrder.push(newID);
     tabs = tabs; // force reactivity
-    setActiveTab(tabs[tabs.length - 1].id);
+    setActiveTab(newID);
 
-    // wait for reactivity then scroll
     setTimeout(() => {
       tabsElm.scrollLeft = tabsElm.scrollWidth;
     }, 0);
   }
 
-  function closeTab(id: string, prevID: string) {
-    let index = tabs.findIndex((tab) => tab.id === id);
-    tabs.splice(index, 1);
-    tabs = tabs; // force reactivity
+  function closeTab(id: string) {
+    let tabIndex = tabsOrder.indexOf(id);
 
-    if (tabs.length == 0) {
-      newTab();
-      return;
-    }
+    tabs = tabs.filter((tab) => tab.id != id);
+    tabsOrder = tabsOrder.filter((tabID) => tabID != id);
 
-    setActiveTab(prevID);
+    if (activeTabID != id) return
+    setActiveTab(tabsOrder[Math.min(tabIndex,tabsOrder.length-1)] || null);
   }
 
-  function setActiveTab(id: string) {
-    if (activeTabID === id) return;
+  function setActiveTab(id: string | null) {
+    if (activeTabID == id) return;
+    if (id == null || !tabsOrder.includes(id)) activeTabID = null;
     activeTabID = id;
+  }
+
+  function rebuildTabsOrder() {
+    tabsOrder = [];
+    for (let i = 0; i < tabsElm.children.length; i++) {
+      let tabElm = tabsElm.children[i] as HTMLElement;
+      if (!tabElm.classList.contains("tab")) continue;
+      tabsOrder.push(tabElm.id);
+    }
+    
+    if (tabsOrder.length != tabs.length) console.error("tabsOrder.length != tabs.length", tabsOrder, tabs);
   }
 
   /********************** dragging tabs logic *****************************/
@@ -92,22 +107,17 @@
     let threshold = dragElm.getBoundingClientRect().x + dragElm.offsetWidth / 2;
 
     for (let i = 0; i < tabsElm.children.length; i++) {
-      let tab = tabsElm.children[i] as HTMLElement;
+      let tabElm = tabsElm.children[i] as HTMLElement;
+      if (tabElm === placeholderElm) continue;
 
-      if (tab === placeholderElm) continue;
-
-      let tabRect = tab.getBoundingClientRect();
-
+      let tabRect = tabElm.getBoundingClientRect();
       if (threshold < tabRect.left || threshold > tabRect.right) continue;
 
       if (placeholderElm.getBoundingClientRect().left > tabRect.left) {
-        tab.insertAdjacentElement("beforebegin", placeholderElm);
-        console.log("swap left");
+        tabElm.insertAdjacentElement("beforebegin", placeholderElm);
       } else {
-        tab.insertAdjacentElement("afterend", placeholderElm);
-        console.log("swap right");
+        tabElm.insertAdjacentElement("afterend", placeholderElm);
       }
-
       break;
     }
   }
@@ -116,8 +126,7 @@
     dragElm.classList.remove("dragging");
     placeholderElm.insertAdjacentElement("afterend", dragElm);
     placeholderElm.remove();
-
-    console.log(tabs);
+    rebuildTabsOrder();
   }
 
   function scrollTabsWhileDragging() {
@@ -188,7 +197,6 @@
       class:hide={!tabsOverflowed}
       on:click={() => scrollTabs(-80)}
     >
-    
       <svg
         viewBox="-3 -3 22 22"
         xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +218,7 @@
           <div
             id="close-tab"
             class="tab-bar-btn"
-            on:click={() => closeTab(tab.id, tabs[Math.max(i - 1, 0)].id)}
+            on:click={() => closeTab(tab.id)}
           >
             <svg
               fill="currentColor"
@@ -267,12 +275,7 @@
 
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea
-      bind:value={tabs[tabs.findIndex((tab) => tab.id == activeTabID)].text}
-      spellcheck="false"
-      name="editor"
-      id="text"
-    ></textarea>
+    <textarea bind:value={activeTab.text} spellcheck="false" name="editor" id="text"></textarea>
   </div>
   <div class="status-bar"></div>
 </div>
