@@ -4,47 +4,60 @@
    * - add slash commands
    * - create the theme colors/sizing variables
    * - double click to edit tab title
+   * - debounce resizing tabs
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
 
-  type Tab = {
+  interface Tab {
     id: string;
     title: string;
     text: string;
-  };
-
-  let tabs: Tab[] = [
-    {
-      id: Date.now().toString(),
-      title: "long... really long",
-      text: "sup!",
-    },
-  ];
-  let tabsOrder: string[] = [tabs[0].id];
-  let tabsOverflowed = false;
-  let activeTabID: string | null = tabs[0].id;
-  $: activeTab = tabs.find((tab) => tab.id == activeTabID) || {text:"ERROR"};
-  let tabsElm: HTMLDivElement;
-
-  function checkTabsOverflow() {
-    tabsOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
   }
 
-  function scrollTabs(direction: number) {
+  let tabs: Tab[] = [];
+  let tabsOrder: string[] = [];
+  let activeTabID: string | null = null;
+  $: activeTab = tabs.find((tab) => tab.id == activeTabID) || {
+    text: "NEW TAB",
+  };
+  let tabsElm: HTMLDivElement;
+  let dragElm: HTMLElement;
+  let placeholderElm: HTMLElement;
+  let offsetX = 0;
+  let pointerX = 0;
+  let isDragging = false;
+  let isTabsElmOverflowed = false;
+
+  const debounce = (func: Function, timeout = 300) => {
+    //@ts-ignore
+    let timer;
+    //@ts-ignore
+    return (...args) => {
+      //@ts-ignore
+      clearTimeout(timer);
+      //@ts-ignore
+      timer = setTimeout(() => {
+        //@ts-ignore
+        func.apply(this, args);
+      }, timeout);
+    };
+  };
+
+  const checkTabsOverflow = () => {
+    isTabsElmOverflowed = tabsElm.scrollWidth > tabsElm.clientWidth;
+  };
+
+  const scrollTabsElm = (direction: number) => {
     tabsElm.scrollBy({
       left: direction,
       behavior: "smooth",
     });
-  }
+  };
 
-  function newTab() {
+  const newTab = () => {
     let newID = Date.now().toString();
-    tabs.push({
-      id: newID,
-      title: "tab " + (tabs.length + 1),
-      text: "sup " + (tabs.length + 1),
-    });
+    tabs.push({ id: newID, title: "Untitled", text: "" });
     tabsOrder.push(newID);
     tabs = tabs; // force reactivity
     setActiveTab(newID);
@@ -52,44 +65,31 @@
     setTimeout(() => {
       tabsElm.scrollLeft = tabsElm.scrollWidth;
     }, 0);
-  }
+  };
 
-  function closeTab(id: string) {
+  const closeTab = (id: string) => {
     let tabIndex = tabsOrder.indexOf(id);
 
     tabs = tabs.filter((tab) => tab.id != id);
     tabsOrder = tabsOrder.filter((tabID) => tabID != id);
 
-    if (activeTabID != id) return
-    setActiveTab(tabsOrder[Math.min(tabIndex,tabsOrder.length-1)] || null);
-  }
+    let fillerElm = document.createElement("div");
+    fillerElm.classList.add("tab");
+    tabsElm.insertAdjacentElement("beforeend", fillerElm);
+    debounce(() => fillerElm.remove(), 2000)();
 
-  function setActiveTab(id: string | null) {
+    if (activeTabID != id) return;
+    setActiveTab(tabsOrder[Math.min(tabIndex, tabsOrder.length - 1)] || null);
+  };
+
+  const setActiveTab = (id: string | null) => {
     if (activeTabID == id) return;
     if (id == null || !tabsOrder.includes(id)) activeTabID = null;
     activeTabID = id;
-  }
+  };
 
-  function rebuildTabsOrder() {
-    tabsOrder = [];
-    for (let i = 0; i < tabsElm.children.length; i++) {
-      let tabElm = tabsElm.children[i] as HTMLElement;
-      if (!tabElm.classList.contains("tab")) continue;
-      tabsOrder.push(tabElm.id);
-    }
-    
-    if (tabsOrder.length != tabs.length) console.error("tabsOrder.length != tabs.length", tabsOrder, tabs);
-  }
-
-  /********************** dragging tabs logic *****************************/
-  let dragElm: HTMLElement;
-  let placeholderElm: HTMLElement;
-  let offsetX = 0;
-  let x = 0;
-  let dragging = false;
-
-  function dragStart(e: CustomEvent) {
-    dragging = true;
+  const dragStartHandler = (e: CustomEvent) => {
+    isDragging = true;
     dragElm = e.target as HTMLElement;
     offsetX = e.detail.x - dragElm.getBoundingClientRect().x;
 
@@ -98,11 +98,12 @@
 
     dragElm.classList.add("dragging");
     dragElm.style.setProperty("--max-width", `${placeholderElm.clientWidth}px`);
-    requestAnimationFrame(scrollTabsWhileDragging);
-  }
-  function drag(e: CustomEvent) {
-    x = e.detail.x;
-    dragElm.style.setProperty("--x", `${x - offsetX}px`);
+    requestAnimationFrame(scrollTabsElmWhileDragging);
+  };
+
+  const draggingHandler = (e: CustomEvent) => {
+    pointerX = e.detail.x;
+    dragElm.style.setProperty("--x", `${pointerX - offsetX}px`);
 
     let threshold = dragElm.getBoundingClientRect().x + dragElm.offsetWidth / 2;
 
@@ -120,53 +121,62 @@
       }
       break;
     }
-  }
-  function dragEnd() {
-    dragging = false;
+  };
+
+  const dragEndHandler = () => {
+    isDragging = false;
     dragElm.classList.remove("dragging");
     placeholderElm.insertAdjacentElement("afterend", dragElm);
     placeholderElm.remove();
-    rebuildTabsOrder();
-  }
 
-  function scrollTabsWhileDragging() {
-    if (!dragging) return;
-
-    if (x < tabsElm.offsetLeft && tabsElm.scrollLeft > 0) {
-      tabsElm.scrollBy({ left: -2, behavior: "instant" });
+    tabsOrder = [];
+    for (let i = 0; i < tabsElm.children.length; i++) {
+      let tabElm = tabsElm.children[i] as HTMLElement;
+      if (!tabElm.classList.contains("tab")) continue;
+      tabsOrder.push(tabElm.id);
     }
 
-    if (
-      x > tabsElm.offsetLeft + tabsElm.clientWidth &&
-      tabsElm.scrollLeft + tabsElm.clientWidth < tabsElm.scrollWidth
-    ) {
-      tabsElm.scrollBy({ left: 2, behavior: "instant" });
+    resetGestures();
+  };
+
+  const scrollTabsElmWhileDragging = () => {
+    if (!isDragging) return;
+    if (pointerX < tabsElm.offsetLeft) tabsElm.scrollLeft -= 2;
+    if (pointerX > tabsElm.offsetLeft + tabsElm.clientWidth)
+      tabsElm.scrollLeft += 2;
+    requestAnimationFrame(scrollTabsElmWhileDragging);
+  };
+
+  const resetGestures = () => {
+    gestures.disable();
+    for (let i = 0; i < tabsElm.children.length; i++) {
+      let tab = tabsElm.children[i] as HTMLElement;
+      if (!tab.classList.contains("tab")) continue;
+      gestures.enable(tab);
+      tab.addEventListener("gesture", handleTabGestures as EventListener);
     }
+  };
 
-    requestAnimationFrame(scrollTabsWhileDragging);
-  }
-  /**********************************************************/
-
-  function handleGestures(e: CustomEvent) {
+  const handleTabGestures = (e: CustomEvent) => {
     switch (e.detail.name) {
       case "left-click-drag-start":
       case "longpress-drag-start":
-        dragStart(e);
+        dragStartHandler(e);
         break;
       case "left-click-dragging":
       case "longpress-dragging":
-        drag(e);
+        draggingHandler(e);
         break;
       case "left-click-drag-end":
       case "longpress-drag-end":
-        dragEnd();
+        dragEndHandler();
         break;
       case "left-click":
       case "tap":
         setActiveTab((e.target as HTMLElement).id);
         break;
     }
-  }
+  };
 
   onMount(() => {
     placeholderElm.remove();
@@ -174,28 +184,20 @@
 
   afterUpdate(() => {
     checkTabsOverflow();
-
-    // disable and re-enable gestures on tabs
-    gestures.disable();
-    for (let i = 0; i < tabsElm.children.length; i++) {
-      let tab = tabsElm.children[i] as HTMLElement;
-
-      gestures.enable(tab);
-      tab.addEventListener("gesture", handleGestures as EventListener);
-    }
+    resetGestures();
   });
 </script>
 
 <svelte:window on:resize={checkTabsOverflow} />
 
 <div class="main-grid">
-  <div class="tab-bar" class:minimal={!tabsOverflowed}>
+  <div class="tab-bar" class:minimal={!isTabsElmOverflowed}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       id="back"
       class="tab-bar-btn"
-      class:hide={!tabsOverflowed}
-      on:click={() => scrollTabs(-80)}
+      class:hide={!isTabsElmOverflowed}
+      on:click={() => scrollTabsElm(-80)}
     >
       <svg
         viewBox="-3 -3 22 22"
@@ -240,9 +242,9 @@
     <div
       id="forward"
       class="tab-bar-btn"
-      class:hide={!tabsOverflowed}
+      class:hide={!isTabsElmOverflowed}
       on:click={() => {
-        scrollTabs(80);
+        scrollTabsElm(80);
       }}
     >
       <svg
@@ -275,7 +277,12 @@
 
   <div class="toolbar"></div>
   <div class="editor">
-    <textarea bind:value={activeTab.text} spellcheck="false" name="editor" id="text"></textarea>
+    <textarea
+      bind:value={activeTab.text}
+      spellcheck="false"
+      name="editor"
+      id="text"
+    ></textarea>
   </div>
   <div class="status-bar"></div>
 </div>
@@ -350,7 +357,7 @@
     font-family: var(--default-font-family);
 
     min-width: 80px;
-    width: 100px;
+    width: 140px;
     height: 30px;
 
     display: grid;
