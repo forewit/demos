@@ -4,7 +4,6 @@
    * - add slash commands
    * - create the theme colors/sizing variables
    * - double click to edit tab title
-   * - debounce resizing tabs
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
@@ -26,6 +25,8 @@
   let placeholderElm: HTMLElement;
   let offsetX = 0;
   let pointerX = 0;
+  let closingTabWidth = 0;
+  let isTabClosing = false;
   let isDragging = false;
   let isTabsElmOverflowed = false;
 
@@ -73,14 +74,29 @@
     tabs = tabs.filter((tab) => tab.id != id);
     tabsOrder = tabsOrder.filter((tabID) => tabID != id);
 
-    let fillerElm = document.createElement("div");
-    fillerElm.classList.add("tab");
-    tabsElm.insertAdjacentElement("beforeend", fillerElm);
-    debounce(() => fillerElm.remove(), 2000)();
+    isTabClosing = true;
+    closingTabWidth = tabsElm.children[tabIndex].clientWidth;
+    tabsElm.style.setProperty("--max-width", `${closingTabWidth}px`);
+    if (isTabsElmOverflowed) {
+      let filler = placeholderElm.cloneNode() as HTMLElement;
+      filler.classList.add("filler");
+      filler.style.backgroundColor = "transparent";
+      filler.style.pointerEvents = "none";
+      tabsElm.appendChild(filler);
+    }
+    debouncedClosingTabs();
 
     if (activeTabID != id) return;
     setActiveTab(tabsOrder[Math.min(tabIndex, tabsOrder.length - 1)] || null);
   };
+
+  const debouncedClosingTabs = debounce(() => {
+    tabsElm.querySelectorAll(".filler").forEach((elm) => {
+      elm.remove();
+    });
+    isTabClosing = false;
+    console.log("finished closing tabs");
+  }, 700);
 
   const setActiveTab = (id: string | null) => {
     if (activeTabID == id) return;
@@ -147,6 +163,12 @@
     requestAnimationFrame(scrollTabsElmWhileDragging);
   };
 
+  const renameTab = (tabElm: HTMLElement) => {
+    if (!tabElm.classList.contains("tab")) return;
+    let inputElm = tabElm.children.namedItem("title-input") as HTMLInputElement;
+    inputElm.select();
+  }
+
   const resetGestures = () => {
     gestures.disable();
     for (let i = 0; i < tabsElm.children.length; i++) {
@@ -174,6 +196,10 @@
       case "left-click":
       case "tap":
         setActiveTab((e.target as HTMLElement).id);
+        break;
+      case "double-click":
+      case "double-tap":
+        renameTab(e.target as HTMLElement);
         break;
     }
   };
@@ -213,9 +239,15 @@
     </div>
     <div id="tabs" bind:this={tabsElm}>
       {#each tabs as tab, i}
-        <div id={tab.id} class="tab" class:active={tab.id === activeTabID}>
+        <div
+          id={tab.id}
+          class="tab"
+          class:closing={isTabClosing}
+          class:active={tab.id === activeTabID}
+        >
           <div class="tab-divider"></div>
-          <p>{tab.title}</p>
+          <!-- focus on doubleclick -->
+          <input name="title-input" type="text" bind:value={tab.title}/>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
             id="close-tab"
@@ -355,18 +387,15 @@
   .tab {
     color: var(--text-grey-color);
     font-family: var(--default-font-family);
-
+    border-top-left-radius: var(--tab-radius);
+    border-top-right-radius: var(--tab-radius);
+    user-select: none;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
     min-width: 80px;
     width: 140px;
     height: 30px;
-
-    display: grid;
-    grid-template-columns: 1fr auto;
-
-    border-top-left-radius: var(--tab-radius);
-    border-top-right-radius: var(--tab-radius);
-
-    position: relative;
   }
   .tab:hover {
     background-color: var(--tab-hover-color);
@@ -376,16 +405,6 @@
   }
   .tab:not(:hover, .active, .dragging) .tab-bar-btn {
     display: none;
-  }
-  .tab p {
-    font-family: var(--default-font-family);
-    font-size: 12px;
-    margin: auto 0 7px 9px;
-
-    pointer-events: none;
-    user-select: none;
-    overflow: hidden;
-    white-space: nowrap;
   }
   .tab.active:before {
     content: "";
@@ -411,6 +430,22 @@
     box-shadow: 0 var(--tab-radius) 0 0 var(--toolbar-color);
     z-index: 1;
   }
+  .tab input {
+    font-family: var(--default-font-family);
+    color: var(--text-grey-color);
+    background-color: transparent;
+    font-size: 12px;
+    margin: auto 0 7px 9px;
+    white-space: nowrap;
+    outline: none;
+    border: none;
+
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .tab input:focus {
+    pointer-events: all;
+  }
 
   .tab:global(.dragging) {
     position: absolute;
@@ -421,6 +456,9 @@
   }
   .tab:global(.dragging):not(.active) {
     background-color: var(--tab-hover-color);
+  }
+  .tab.closing {
+    max-width: var(--max-width);
   }
 
   .toolbar {
