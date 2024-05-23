@@ -3,6 +3,8 @@
    * TODO:
    * - add slash commands
    * - create the theme colors/sizing variables
+   * - fix coloring of scrollbar buttons
+   * - fix SVGs in general on iOS (removing svg transforms)
    */
   import { afterUpdate, onMount } from "svelte";
   import * as gestures from "$lib/modules/gestures";
@@ -112,7 +114,13 @@
 
     dragElm.classList.add("dragging");
     dragElm.style.setProperty("--max-width", `${placeholderElm.clientWidth}px`);
+
     requestAnimationFrame(scrollTabsElmWhileDragging);
+    draggingHandler(e);
+
+    setTimeout(() => {
+      dragElm.classList.add("dragging-then");
+    }, 0);
   };
 
   const draggingHandler = (e: CustomEvent) => {
@@ -140,6 +148,7 @@
   const dragEndHandler = () => {
     isDragging = false;
     dragElm.classList.remove("dragging");
+    dragElm.classList.remove("dragging-then");
     placeholderElm.insertAdjacentElement("afterend", dragElm);
     placeholderElm.remove();
 
@@ -180,15 +189,21 @@
   const handleTabGestures = (e: CustomEvent) => {
     switch (e.detail.name) {
       case "left-click-drag-start":
-      case "longpress-drag-start":
+      case "longclick":
+      case "longpress":
+        e.detail.event.preventDefault();
         dragStartHandler(e);
         break;
       case "left-click-dragging":
+      case "longclick-dragging":
       case "longpress-dragging":
         draggingHandler(e);
         break;
       case "left-click-drag-end":
+      case "longclick-drag-end":
+      case "longclick-release":
       case "longpress-drag-end":
+      case "longpress-release":
         dragEndHandler();
         break;
       case "left-click":
@@ -197,8 +212,8 @@
         break;
       case "double-click":
       case "double-tap":
-        renameTab(e.target as HTMLElement);
-        break;
+        renameTab(e.target as HTMLElement); 
+        break;   
     }
   };
 
@@ -335,7 +350,7 @@
     --editor-font-family: "Consolas", monospace;
     --default-font-family: "Segoe UI", sans-serif;
     --slight-transparent: rgba(120, 120, 120, 0.1);
-    --tab-radius: 8px;
+    --tab-radius: 10px;
 
     height: 100%;
     display: grid;
@@ -393,6 +408,7 @@
     font-family: var(--default-font-family);
     border-top-left-radius: var(--tab-radius);
     border-top-right-radius: var(--tab-radius);
+    transition: opacity 200ms;
     user-select: none;
     position: relative;
     display: grid;
@@ -461,12 +477,20 @@
   .tab:global(.dragging):not(.active) {
     background-color: var(--tab-hover-color);
   }
+  .tab:global(.dragging-then){
+    /* can be used to add a little animation to the dragging tab */
+  }
+  .tab:global(:not(.dragging)):has(~ #placeholder),
+  #placeholder ~ .tab:global(:not(.dragging)) {
+    opacity: 0.6;
+  }
   .tab.closing {
     max-width: var(--max-width);
   }
 
   .toolbar {
     background: var(--toolbar-color);
+    z-index: 3;
   }
   .editor {
     display: grid;
@@ -489,7 +513,6 @@
   }
   #text::-webkit-scrollbar {
     width: 5px;
-    color: white;
     /**add margin top and bottom*/
     margin-inline: 0.5rem;
   }
